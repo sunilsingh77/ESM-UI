@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host 0.0.0.0 --port 4200",
     "build": "ng build",
+    "e2e:login": "node tools/e2e/login.test.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:employee-skills-client": "node dist/employee-skills-client/server/server.mjs"
@@ -32,6 +33,7 @@
     "@types/node": "^20.17.19",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
+    "puppeteer": "^21.6.0",
     "typescript": "^6.0.3",
     "vitest": "^4.0.8"
   }
