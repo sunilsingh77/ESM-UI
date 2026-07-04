@@ -18,4 +18,28 @@
       <strong>{{ dashboard.roles.join(', ') || 'No roles assigned' }}</strong>
     </article>
   </div>
+
+  <section style="margin-top:20px">
+    <h3>Employee Skill Summary</h3>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+      <input placeholder="Search employee by name" [(ngModel)]="searchTerm" />
+      <button type="button" class="secondary" (click)="searchByName()">Search</button>
+      <select [(ngModel)]="selectedEmployeeId">
+        <option [ngValue]="0">-- Select Employee --</option>
+        <option *ngFor="let e of employees" [ngValue]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
+      </select>
+    </div>
+
+    <div *ngIf="selectedEmployeeId === 0">No employee selected.</div>
+    <ul *ngIf="selectedEmployeeId !== 0">
+      <li *ngFor="let es of employeeSkillsForSelected()">
+        <strong>{{ es.skillName }}</strong> — {{ es.proficiencyLevel }} ({{ es.yearsOfExperience }} yrs)
+      </li>
+    </ul>
+
+    <div style="margin-top:16px">
+      <button type="button" (click)="seedDefaults()">Seed Default Data</button>
+      <span style="margin-left:12px">{{ seedMessage }}</span>
+    </div>
+  </section>
 </section>

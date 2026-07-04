@@ -35,10 +35,11 @@ input, select {
   background: #fbfdff;
   border: 1px solid #d8e2ef;
   border-radius: 6px;
-  height: 42px;
-  min-height: 40px;
-  padding: 8px 10px;
+  height: 34px;
+  min-height: 32px;
+  padding: 6px 8px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 input:focus,
@@ -76,6 +77,13 @@ th {
   gap: 22px;
 }
 
+.page-content {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
 .page-header {
   align-items: center;
   display: flex;
@@ -97,9 +105,9 @@ th {
   border: 1px solid #e4edf7;
   border-radius: 8px;
   display: grid;
-  gap: 22px 28px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  padding: 24px;
+  gap: 18px 20px;
+  grid-template-columns: 1fr;
+  padding: 18px;
   box-shadow: 0 8px 24px rgba(50, 70, 100, .05);
 }
 

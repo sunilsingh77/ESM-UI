@@ -1,11 +1,17 @@
 <div class="login">
   <h2>Login</h2>
-  <form (ngSubmit)="submit()">
+
+  <div class="validation-status" *ngIf="isValidating">
+    <span class="loading-dot"></span> Validating session...
+  </div>
+
+  <form (ngSubmit)="submit()" *ngIf="!isValidating">
     <label>Email</label>
     <input [(ngModel)]="email" name="email" type="email" required />
     <label>Password</label>
     <input [(ngModel)]="password" name="password" type="password" required />
     <button type="submit" [disabled]="isSubmitting">{{ isSubmitting ? 'Signing in...' : 'Login' }}</button>
   </form>
+
   <div class="error" *ngIf="error">{{ error }}</div>
 </div>

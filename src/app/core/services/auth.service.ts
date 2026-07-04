@@ -2,22 +2,23 @@ import { Injectable } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Inject, PLATFORM_ID } from '@angular/core';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { LoginResponse } from '../../shared/models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private api = 'http://localhost:5137/api/auth';
+  private loggedInSubject = new BehaviorSubject<boolean>(this.hasStoredToken());
+  loggedIn$ = this.loggedInSubject.asObservable();
 
   constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: object) {}
 
   login(email: string, password: string) {
     return this.http.post<LoginResponse>(`${this.api}/login`, { email, password })
       .pipe(tap(res => {
-        if (this.isBrowser()) {
-          localStorage.setItem('access_token', res.accessToken);
-          localStorage.setItem('refresh_token', res.refreshToken);
-        }
+        this.storeAuthTokens(res);
+        this.loggedInSubject.next(true);
       }));
   }
 
@@ -27,23 +28,53 @@ export class AuthService {
       this.http.post(`${this.api}/logout`, { refreshToken: rt }).subscribe();
     }
     if (this.isBrowser()) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
+      sessionStorage.removeItem('access_token');
+      sessionStorage.removeItem('refresh_token');
     }
+    this.loggedInSubject.next(false);
+  }
+
+  validateToken(): Observable<boolean> {
+    const token = this.getAccessToken();
+    if (!token) {
+      return of(false);
+    }
+
+    return this.http.get<void>(`${this.api}/validate`).pipe(
+      map(() => true),
+      catchError(() => of(false))
+    );
+  }
+
+  private storeAuthTokens(response: any) {
+    const accessToken = response?.accessToken || response?.AccessToken || response?.access_token || response?.token;
+    const refreshToken = response?.refreshToken || response?.RefreshToken || response?.refresh_token;
+    if (!this.isBrowser() || !accessToken) {
+      return;
+    }
+
+    sessionStorage.setItem('access_token', accessToken);
+    if (refreshToken) {
+      sessionStorage.setItem('refresh_token', refreshToken);
+    }
+  }
+
+  private hasStoredToken() {
+    return this.isBrowser() && !!sessionStorage.getItem('access_token');
   }
 
   getAccessToken() {
     if (!this.isBrowser()) {
       return null;
     }
-    return localStorage.getItem('access_token');
+    return sessionStorage.getItem('access_token');
   }
 
   getRefreshToken() {
     if (!this.isBrowser()) {
       return null;
     }
-    return localStorage.getItem('refresh_token');
+    return sessionStorage.getItem('refresh_token');
   }
 
   getUserName(): string {
@@ -66,12 +97,12 @@ export class AuthService {
 
   refresh() {
     const rt = this.getRefreshToken();
-    if (!rt) return null;
+    if (!rt) return of(null);
     return this.http.post<LoginResponse>(`${this.api}/refresh`, { refreshToken: rt })
       .pipe(tap(res => {
         if (this.isBrowser()) {
-          localStorage.setItem('access_token', res.accessToken);
-          localStorage.setItem('refresh_token', res.refreshToken);
+          sessionStorage.setItem('access_token', res.accessToken);
+          sessionStorage.setItem('refresh_token', res.refreshToken);
         }
       }));
   }

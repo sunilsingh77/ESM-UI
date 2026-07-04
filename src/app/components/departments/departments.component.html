@@ -6,28 +6,32 @@
     </div>
   </div>
 
-  <form class="form-grid" (ngSubmit)="save()">
-    <label>Name <input [(ngModel)]="form.name" name="name" required /></label>
-    <label>Description <input [(ngModel)]="form.description" name="description" required /></label>
-    <div class="form-actions">
-      <button type="submit">{{ editingId ? 'Update' : 'Create' }}</button>
-      <button type="button" class="secondary" (click)="reset()">Clear</button>
+  <div class="page-content">
+    <form class="form-grid" (ngSubmit)="save()">
+      <label>Name <input [(ngModel)]="form.name" name="name" required /></label>
+      <label>Description <input [(ngModel)]="form.description" name="description" required /></label>
+      <div class="form-actions">
+        <button type="submit">{{ editingId ? 'Update' : 'Create' }}</button>
+        <button type="button" class="secondary" (click)="reset()">Clear</button>
+      </div>
+    </form>
+
+    <div>
+      <div class="alert error" *ngIf="error">{{ error }}</div>
+
+      <table>
+        <thead><tr><th>Name</th><th>Description</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let department of departments">
+            <td>{{ department.name }}</td>
+            <td>{{ department.description }}</td>
+            <td class="actions">
+              <button type="button" class="secondary" (click)="edit(department)">Edit</button>
+              <button type="button" class="danger" (click)="delete(department.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </form>
-
-  <div class="alert error" *ngIf="error">{{ error }}</div>
-
-  <table>
-    <thead><tr><th>Name</th><th>Description</th><th>Actions</th></tr></thead>
-    <tbody>
-      <tr *ngFor="let department of departments">
-        <td>{{ department.name }}</td>
-        <td>{{ department.description }}</td>
-        <td class="actions">
-          <button type="button" class="secondary" (click)="edit(department)">Edit</button>
-          <button type="button" class="danger" (click)="delete(department.id)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  </div>
 </section>

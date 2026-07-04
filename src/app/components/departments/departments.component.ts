@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { ApiError, Department } from '../../shared/models/api.models';
+import { NavigationLoadService } from '../../core/services/navigation-load.service';
 
 @Component({
   selector: 'app-departments',
@@ -10,16 +13,27 @@ import { ApiError, Department } from '../../shared/models/api.models';
   imports: [CommonModule, FormsModule],
   templateUrl: './departments.component.html'
 })
-export class DepartmentsComponent implements OnInit {
+export class DepartmentsComponent implements OnInit, OnDestroy {
   departments: Department[] = [];
+  private destroy$ = new Subject<void>();
   form: Omit<Department, 'id'> = { name: '', description: '' };
   editingId?: number;
   error = '';
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private route: ActivatedRoute, private navigationLoad: NavigationLoadService) {}
 
   ngOnInit(): void {
-    this.load();
+    const resolved = this.route.snapshot.data['departments'] as Department[] | undefined;
+    if (resolved) {
+      this.departments = resolved;
+    } else {
+      this.load();
+    }
+    this.navigationLoad.routeChange$.pipe(takeUntil(this.destroy$)).subscribe((route) => {
+      if (route === '/departments') {
+        this.load();
+      }
+    });
   }
 
   load(): void {
@@ -59,5 +73,10 @@ export class DepartmentsComponent implements OnInit {
     this.editingId = undefined;
     this.form = { name: '', description: '' };
     this.error = '';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

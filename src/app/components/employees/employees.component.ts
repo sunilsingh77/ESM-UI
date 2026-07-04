@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { ApiError, Department, Employee } from '../../shared/models/api.models';
+import { NavigationLoadService } from '../../core/services/navigation-load.service';
 
 type EmployeeForm = Omit<Employee, 'id' | 'departmentName' | 'skills'>;
 
@@ -12,18 +15,29 @@ type EmployeeForm = Omit<Employee, 'id' | 'departmentName' | 'skills'>;
   imports: [CommonModule, FormsModule],
   templateUrl: './employees.component.html'
 })
-export class EmployeesComponent implements OnInit {
+export class EmployeesComponent implements OnInit, OnDestroy {
   employees: Employee[] = [];
   departments: Department[] = [];
+  private destroy$ = new Subject<void>();
   form: EmployeeForm = this.emptyForm();
   editingId?: number;
   error = '';
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private route: ActivatedRoute, private navigationLoad: NavigationLoadService) {}
 
   ngOnInit(): void {
-    this.load();
+    const resolved = this.route.snapshot.data['employees'] as Employee[] | undefined;
+    if (resolved) {
+      this.employees = resolved;
+    } else {
+      this.load();
+    }
     this.api.getDepartments().subscribe({ next: (items) => this.departments = items });
+    this.navigationLoad.routeChange$.pipe(takeUntil(this.destroy$)).subscribe((route) => {
+      if (route === '/employees') {
+        this.load();
+      }
+    });
   }
 
   load(): void {
@@ -76,6 +90,11 @@ export class EmployeesComponent implements OnInit {
     this.editingId = undefined;
     this.form = this.emptyForm();
     this.error = '';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private emptyForm(): EmployeeForm {

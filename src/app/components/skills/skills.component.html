@@ -6,30 +6,34 @@
     </div>
   </div>
 
-  <form class="form-grid" (ngSubmit)="save()">
-    <label>Name <input [(ngModel)]="form.name" name="name" required /></label>
-    <label>Category <input [(ngModel)]="form.category" name="category" required /></label>
-    <label class="wide">Description <input [(ngModel)]="form.description" name="description" required /></label>
-    <div class="form-actions">
-      <button type="submit">{{ editingId ? 'Update' : 'Create' }}</button>
-      <button type="button" class="secondary" (click)="reset()">Clear</button>
+  <div class="page-content">
+    <form class="form-grid" (ngSubmit)="save()">
+      <label>Name <input [(ngModel)]="form.name" name="name" required /></label>
+      <label>Category <input [(ngModel)]="form.category" name="category" required /></label>
+      <label class="wide">Description <input [(ngModel)]="form.description" name="description" required /></label>
+      <div class="form-actions">
+        <button type="submit">{{ editingId ? 'Update' : 'Create' }}</button>
+        <button type="button" class="secondary" (click)="reset()">Clear</button>
+      </div>
+    </form>
+
+    <div>
+      <div class="alert error" *ngIf="error">{{ error }}</div>
+
+      <table>
+        <thead><tr><th>Name</th><th>Category</th><th>Description</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let skill of skills">
+            <td>{{ skill.name }}</td>
+            <td>{{ skill.category }}</td>
+            <td>{{ skill.description }}</td>
+            <td class="actions">
+              <button type="button" class="secondary" (click)="edit(skill)">Edit</button>
+              <button type="button" class="danger" (click)="delete(skill.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </form>
-
-  <div class="alert error" *ngIf="error">{{ error }}</div>
-
-  <table>
-    <thead><tr><th>Name</th><th>Category</th><th>Description</th><th>Actions</th></tr></thead>
-    <tbody>
-      <tr *ngFor="let skill of skills">
-        <td>{{ skill.name }}</td>
-        <td>{{ skill.category }}</td>
-        <td>{{ skill.description }}</td>
-        <td class="actions">
-          <button type="button" class="secondary" (click)="edit(skill)">Edit</button>
-          <button type="button" class="danger" (click)="delete(skill.id)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  </div>
 </section>

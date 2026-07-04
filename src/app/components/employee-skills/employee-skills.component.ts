@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { ApiError, Employee, EmployeeSkill, Skill } from '../../shared/models/api.models';
+import { NavigationLoadService } from '../../core/services/navigation-load.service';
 
 type EmployeeSkillForm = Omit<EmployeeSkill, 'id' | 'skillName' | 'acquiredDate'>;
 
@@ -12,20 +15,31 @@ type EmployeeSkillForm = Omit<EmployeeSkill, 'id' | 'skillName' | 'acquiredDate'
   imports: [CommonModule, FormsModule],
   templateUrl: './employee-skills.component.html'
 })
-export class EmployeeSkillsComponent implements OnInit {
+export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   employeeSkills: EmployeeSkill[] = [];
+  private destroy$ = new Subject<void>();
   employees: Employee[] = [];
   skills: Skill[] = [];
   form: EmployeeSkillForm = this.emptyForm();
   editingId?: number;
   error = '';
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private route: ActivatedRoute, private navigationLoad: NavigationLoadService) {}
 
   ngOnInit(): void {
-    this.load();
+    const resolved = this.route.snapshot.data['employeeSkills'] as EmployeeSkill[] | undefined;
+    if (resolved) {
+      this.employeeSkills = resolved;
+    } else {
+      this.load();
+    }
     this.api.getEmployees().subscribe({ next: (items) => this.employees = items });
     this.api.getSkills().subscribe({ next: (items) => this.skills = items });
+    this.navigationLoad.routeChange$.pipe(takeUntil(this.destroy$)).subscribe((route) => {
+      if (route === '/employee-skills') {
+        this.load();
+      }
+    });
   }
 
   load(): void {
@@ -82,6 +96,11 @@ export class EmployeeSkillsComponent implements OnInit {
     this.editingId = undefined;
     this.form = this.emptyForm();
     this.error = '';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private emptyForm(): EmployeeSkillForm {
