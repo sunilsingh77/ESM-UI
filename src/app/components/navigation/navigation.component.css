@@ -1,0 +1,139 @@
+.navbar {
+  background: #eef5ff;
+  padding: 0;
+  border-bottom: 1px solid #dbe8f7;
+  box-shadow: 0 6px 18px rgba(50, 70, 100, .05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navbar-brand {
+  font-size: 24px;
+  font-weight: 700;
+  color: #4061c7;
+  letter-spacing: 1px;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin: 0;
+}
+
+.user-role {
+  align-items: center;
+  display: flex;
+}
+
+.user-role span {
+  background: #ffffff;
+  border: 1px solid #dbe8f7;
+  border-radius: 999px;
+  color: #4061c7;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+
+.nav-link {
+  color: #46566b;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #ffffff;
+  color: #4061c7;
+  transform: translateY(-2px);
+}
+
+.nav-button {
+  background: transparent;
+  border: 0;
+  min-height: auto;
+}
+
+.mobile-toggle {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  gap: 6px;
+}
+
+.mobile-toggle span {
+  width: 25px;
+  height: 3px;
+  background-color: #4061c7;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 15px 15px;
+  }
+
+  .mobile-toggle {
+    display: flex;
+  }
+
+  .nav-menu {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background-color: #eef5ff;
+    padding: 20px 0;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .nav-menu.active {
+    max-height: 520px;
+  }
+
+  .nav-item {
+    padding: 15px 30px;
+  }
+
+  .nav-link {
+    padding: 0;
+  }
+
+  .user-role span {
+    border-radius: 4px;
+  }
+
+  .navbar-brand {
+    font-size: 20px;
+  }
+}

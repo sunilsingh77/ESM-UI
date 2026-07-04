@@ -1,0 +1,46 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h2>Employees</h2>
+      <p>Create and maintain employee records.</p>
+    </div>
+  </div>
+
+  <form class="form-grid" (ngSubmit)="save()">
+    <label>First name <input [(ngModel)]="form.firstName" name="firstName" required /></label>
+    <label>Last name <input [(ngModel)]="form.lastName" name="lastName" required /></label>
+    <label>Email <input [(ngModel)]="form.email" name="email" type="email" required /></label>
+    <label>Phone <input [(ngModel)]="form.phoneNumber" name="phoneNumber" required /></label>
+    <label>Position <input [(ngModel)]="form.position" name="position" required /></label>
+    <label>
+      Department
+      <select [(ngModel)]="form.departmentId" name="departmentId" required>
+        <option [ngValue]="0">Select department</option>
+        <option *ngFor="let department of departments" [ngValue]="department.id">{{ department.name }}</option>
+      </select>
+    </label>
+    <label *ngIf="!editingId">Hire date <input [(ngModel)]="form.hireDate" name="hireDate" type="date" required /></label>
+    <div class="form-actions">
+      <button type="submit">{{ editingId ? 'Update' : 'Create' }}</button>
+      <button type="button" class="secondary" (click)="reset()">Clear</button>
+    </div>
+  </form>
+
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <table>
+    <thead><tr><th>Name</th><th>Email</th><th>Department</th><th>Position</th><th>Actions</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let employee of employees">
+        <td>{{ employee.firstName }} {{ employee.lastName }}</td>
+        <td>{{ employee.email }}</td>
+        <td>{{ employee.departmentName }}</td>
+        <td>{{ employee.position }}</td>
+        <td class="actions">
+          <button type="button" class="secondary" (click)="edit(employee)">Edit</button>
+          <button type="button" class="danger" (click)="delete(employee.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

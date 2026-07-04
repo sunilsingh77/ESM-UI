@@ -1,0 +1,33 @@
+.login {
+  background: #fff;
+  border: 1px solid #e4edf7;
+  border-radius: 8px;
+  margin: 30px auto;
+  max-width: 420px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(50, 70, 100, .05);
+}
+
+.login form {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.login label {
+  color: #334155;
+  display: grid;
+  font-size: 14px;
+  font-weight: 600;
+  gap: 8px;
+}
+
+.login button {
+  width: 100%;
+}
+
+.login .error {
+  border-radius: 8px;
+  margin-top: 14px;
+  padding: 10px 12px;
+}

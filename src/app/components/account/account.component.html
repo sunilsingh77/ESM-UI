@@ -1,0 +1,36 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h2>Account</h2>
+      <p>Create application users and assign roles.</p>
+    </div>
+  </div>
+
+  <form class="form-grid" (ngSubmit)="register()">
+    <label>
+      User name
+      <input [(ngModel)]="form.userName" name="userName" required />
+    </label>
+    <label>
+      Email
+      <input [(ngModel)]="form.email" name="email" type="email" required />
+    </label>
+    <label>
+      Password
+      <input [(ngModel)]="form.password" name="password" type="password" required />
+    </label>
+    <fieldset>
+      <legend>Roles</legend>
+      <label class="check-row" *ngFor="let role of availableRoles">
+        <input type="checkbox" [checked]="form.roles.includes(role)" (change)="toggleRole(role, $any($event.target).checked)" />
+        {{ role }}
+      </label>
+    </fieldset>
+    <div class="form-actions">
+      <button type="submit">Register</button>
+    </div>
+  </form>
+
+  <div class="alert success" *ngIf="message">{{ message }}</div>
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+</section>

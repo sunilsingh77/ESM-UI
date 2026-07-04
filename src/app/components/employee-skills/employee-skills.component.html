@@ -1,0 +1,62 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h2>Employee Skills</h2>
+      <p>Assign skills and proficiency levels to employees.</p>
+    </div>
+  </div>
+
+  <form class="form-grid" (ngSubmit)="save()">
+    <label>
+      Employee
+      <select [(ngModel)]="form.employeeId" name="employeeId" [disabled]="!!editingId" required>
+        <option [ngValue]="0">Select employee</option>
+        <option *ngFor="let employee of employees" [ngValue]="employee.id">{{ employee.firstName }} {{ employee.lastName }}</option>
+      </select>
+    </label>
+    <label>
+      Skill
+      <select [(ngModel)]="form.skillId" name="skillId" [disabled]="!!editingId" required>
+        <option [ngValue]="0">Select skill</option>
+        <option *ngFor="let skill of skills" [ngValue]="skill.id">{{ skill.name }}</option>
+      </select>
+    </label>
+    <label>
+      Proficiency
+      <select [(ngModel)]="form.proficiencyLevel" name="proficiencyLevel" required>
+        <option>Beginner</option>
+        <option>Intermediate</option>
+        <option>Advanced</option>
+        <option>Expert</option>
+      </select>
+    </label>
+    <label>Years <input [(ngModel)]="form.yearsOfExperience" name="yearsOfExperience" type="number" min="0" required /></label>
+    <label class="check-row">
+      <input [(ngModel)]="form.isPrimary" name="isPrimary" type="checkbox" />
+      Primary skill
+    </label>
+    <div class="form-actions">
+      <button type="submit">{{ editingId ? 'Update' : 'Assign' }}</button>
+      <button type="button" class="secondary" (click)="reset()">Clear</button>
+    </div>
+  </form>
+
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <table>
+    <thead><tr><th>Employee</th><th>Skill</th><th>Level</th><th>Years</th><th>Primary</th><th>Actions</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let item of employeeSkills">
+        <td>{{ employeeName(item.employeeId) }}</td>
+        <td>{{ item.skillName }}</td>
+        <td>{{ item.proficiencyLevel }}</td>
+        <td>{{ item.yearsOfExperience }}</td>
+        <td>{{ item.isPrimary ? 'Yes' : 'No' }}</td>
+        <td class="actions">
+          <button type="button" class="secondary" (click)="edit(item)">Edit</button>
+          <button type="button" class="danger" (click)="delete(item.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

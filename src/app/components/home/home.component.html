@@ -1,0 +1,21 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h2>Home</h2>
+      <p *ngIf="dashboard">{{ dashboard.message }}</p>
+    </div>
+  </div>
+
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <div class="stats-grid" *ngIf="dashboard">
+    <article class="stat-card">
+      <span>Email</span>
+      <strong>{{ dashboard.email }}</strong>
+    </article>
+    <article class="stat-card">
+      <span>Roles</span>
+      <strong>{{ dashboard.roles.join(', ') || 'No roles assigned' }}</strong>
+    </article>
+  </div>
+</section>
