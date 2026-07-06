@@ -1,0 +1,39 @@
+
+
+.navbar-brand{
+
+    color:#2563EB !important;
+
+    font-size:28px;
+
+    font-weight:700;
+
+}
+
+.nav-link{
+
+    color:#334155 !important;
+
+    padding:10px 16px;
+
+    border-radius:8px;
+
+    transition:.3s;
+
+}
+
+.nav-link:hover{
+
+    background:#DBEAFE;
+
+    color:#2563EB !important;
+
+}
+
+.nav-link.active{
+
+    background:#2563EB;
+
+    color:white !important;
+
+}

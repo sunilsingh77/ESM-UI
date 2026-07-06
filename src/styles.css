@@ -1,3 +1,12 @@
+:root{
+  --primary:#2563EB;
+  --background:#F8FAFC;
+  --card:#FFFFFF;
+  --border:#E2E8F0;
+  --text:#1E293B;
+  --text-light:#64748B;
+}
+
 body {
   color: #243447;
 }
@@ -219,4 +228,17 @@ th {
     grid-template-columns: 1fr;
     padding: 16px;
   }
+}
+.navbar{
+    background:var(--background);
+    border-bottom:1px solid var(--border);
+}
+
+.footer{
+    background:var(--background);
+    border-top:1px solid var(--border);
+}
+
+.dashboard-card{
+    background:var(--card);
 }

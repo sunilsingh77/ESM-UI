@@ -8,12 +8,12 @@ import { DashboardResponse, ApiError, Employee, EmployeeSkill, Skill } from '../
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './home.component.html'
+  templateUrl: './dashboard.component.html'
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy {
   dashboard?: DashboardResponse;
   error = '';
   employees: Employee[] = [];
