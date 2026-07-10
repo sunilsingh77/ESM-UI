@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Inject, PLATFORM_ID } from '@angular/core';
+import { PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { LoginResponse } from '../../shared/models/api.models';
@@ -12,15 +12,16 @@ export class AuthService {
   private loggedInSubject = new BehaviorSubject<boolean>(this.hasStoredToken());
   loggedIn$ = this.loggedInSubject.asObservable();
 
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: object) {}
+  private http = inject(HttpClient);
+  private platformId = inject(PLATFORM_ID);
 
   login(email: string, password: string) {
-    return this.http.post<LoginResponse>(`${this.api}/login`, { email, password })
-      .pipe(tap(res => {
+    return this.http.post<LoginResponse>(`${this.api}/login`, { email, password }).pipe(
+      tap((res) => {
         this.storeAuthTokens(res);
         this.loggedInSubject.next(true);
-       
-      }));
+      })
+    );
   }
 
   logout() {
@@ -99,13 +100,14 @@ export class AuthService {
   refresh() {
     const rt = this.getRefreshToken();
     if (!rt) return of(null);
-    return this.http.post<LoginResponse>(`${this.api}/refresh`, { refreshToken: rt })
-      .pipe(tap(res => {
+    return this.http.post<LoginResponse>(`${this.api}/refresh`, { refreshToken: rt }).pipe(
+      tap((res) => {
         if (this.isBrowser()) {
           sessionStorage.setItem('access_token', res.accessToken);
           sessionStorage.setItem('refresh_token', res.refreshToken);
         }
-      }));
+      })
+    );
   }
 
   isLoggedIn() {

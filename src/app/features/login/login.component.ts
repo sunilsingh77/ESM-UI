@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { ApiError } from '../../shared/models/api.models';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
   email = 'sunilsingh77@gmail.com';
@@ -19,22 +19,26 @@ export class LoginComponent implements OnInit {
   isSubmitting = false;
   isValidating = false;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
   ngOnInit(): void {
     if (this.auth.isLoggedIn()) {
       this.isValidating = true;
-      this.auth.validateToken().subscribe(valid => {
-        this.isValidating = false;
-        if (valid) {
-          this.router.navigateByUrl('/home');
-        } else {
+      this.auth.validateToken().subscribe(
+        (valid) => {
+          this.isValidating = false;
+          if (valid) {
+            this.router.navigateByUrl('/home');
+          } else {
+            this.auth.logout();
+          }
+        },
+        () => {
+          this.isValidating = false;
           this.auth.logout();
         }
-      }, () => {
-        this.isValidating = false;
-        this.auth.logout();
-      });
+      );
     }
   }
 
@@ -49,7 +53,7 @@ export class LoginComponent implements OnInit {
       error: (err: ApiError) => {
         this.isSubmitting = false;
         this.error = err.message || 'Login failed. Please check your email and password.';
-      }
+      },
     });
   }
 }

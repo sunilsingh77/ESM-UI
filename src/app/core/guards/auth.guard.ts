@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -6,7 +6,8 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-  constructor(private auth: AuthService, private router: Router) {}
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
   canActivate(): Observable<boolean | UrlTree> {
     if (!this.auth.isLoggedIn()) {
@@ -14,7 +15,7 @@ export class AuthGuard implements CanActivate {
     }
 
     return this.auth.validateToken().pipe(
-      map(valid => valid ? true : this.router.createUrlTree(['/login'])),
+      map((valid) => (valid ? true : this.router.createUrlTree(['/login']))),
       catchError(() => {
         this.auth.logout();
         return of(this.router.createUrlTree(['/login']));

@@ -21,16 +21,25 @@
     </label>
     <fieldset>
       <legend>Roles</legend>
-      <label class="check-row" *ngFor="let role of availableRoles">
-        <input type="checkbox" [checked]="form.roles.includes(role)" (change)="toggleRole(role, $any($event.target).checked)" />
-        {{ role }}
-      </label>
+      @for (role of availableRoles; track role) {
+        <label class="check-row">
+          <input
+            type="checkbox"
+            [checked]="form.roles.includes(role)"
+            (change)="toggleRole(role, $any($event.target).checked)"
+          />
+          {{ role }}
+        </label>
+      }
     </fieldset>
     <div class="form-actions">
       <button type="submit">Register</button>
     </div>
   </form>
-
-  <div class="alert success" *ngIf="message">{{ message }}</div>
-  <div class="alert error" *ngIf="error">{{ error }}</div>
+  @if (message) {
+    <div class="alert success">{{ message }}</div>
+  }
+  @if (error) {
+    <div class="alert error">{{ error }}</div>
+  }
 </section>

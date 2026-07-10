@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
@@ -8,7 +8,7 @@ import { ApiError, RegisterRequest } from '../../shared/models/api.models';
   selector: 'app-account',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './account.component.html'
+  templateUrl: './account.component.html',
 })
 export class AccountComponent {
   form: RegisterRequest = { email: '', userName: '', password: '', roles: ['Employee'] };
@@ -16,7 +16,7 @@ export class AccountComponent {
   message = '';
   error = '';
 
-  constructor(private api: ApiService) {}
+  private api = inject(ApiService);
 
   toggleRole(role: string, checked: boolean): void {
     this.form.roles = checked
@@ -32,7 +32,7 @@ export class AccountComponent {
         this.message = 'User registered successfully.';
         this.form = { email: '', userName: '', password: '', roles: ['Employee'] };
       },
-      error: (err: ApiError) => this.error = err.message || 'Unable to register user.'
+      error: (err: ApiError) => (this.error = err.message || 'Unable to register user.'),
     });
   }
 }

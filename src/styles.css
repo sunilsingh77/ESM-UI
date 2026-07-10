@@ -1,17 +1,19 @@
-:root{
-  --primary:#2563EB;
-  --background:#F8FAFC;
-  --card:#FFFFFF;
-  --border:#E2E8F0;
-  --text:#1E293B;
-  --text-light:#64748B;
+:root {
+  --primary: #2563eb;
+  --background: #f8fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --text-light: #64748b;
 }
 
 body {
   color: #243447;
 }
 
-button, input, select {
+button,
+input,
+select {
   font: inherit;
 }
 
@@ -28,7 +30,7 @@ button {
 
 button:disabled {
   cursor: not-allowed;
-  opacity: .65;
+  opacity: 0.65;
 }
 
 button.secondary {
@@ -40,7 +42,8 @@ button.danger {
   background: #d45b5b;
 }
 
-input, select {
+input,
+select {
   background: #fbfdff;
   border: 1px solid #d8e2ef;
   border-radius: 6px;
@@ -54,7 +57,7 @@ input, select {
 input:focus,
 select:focus {
   border-color: #8cb4ff;
-  box-shadow: 0 0 0 3px rgba(79, 125, 243, .12);
+  box-shadow: 0 0 0 3px rgba(79, 125, 243, 0.12);
   outline: none;
 }
 
@@ -62,13 +65,14 @@ table {
   background: #ffffff;
   border-collapse: collapse;
   border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(50, 70, 100, .06);
+  box-shadow: 0 8px 24px rgba(50, 70, 100, 0.06);
   margin-top: 22px;
   overflow: hidden;
   width: 100%;
 }
 
-th, td {
+th,
+td {
   border-bottom: 1px solid #edf2f7;
   padding: 12px;
   text-align: left;
@@ -117,7 +121,7 @@ th {
   gap: 18px 20px;
   grid-template-columns: 1fr;
   padding: 18px;
-  box-shadow: 0 8px 24px rgba(50, 70, 100, .05);
+  box-shadow: 0 8px 24px rgba(50, 70, 100, 0.05);
 }
 
 .form-grid label,
@@ -172,7 +176,8 @@ th {
   width: auto;
 }
 
-.form-actions, .actions {
+.form-actions,
+.actions {
   align-items: end;
   display: flex;
   flex-wrap: wrap;
@@ -189,7 +194,8 @@ th {
   padding: 12px 14px;
 }
 
-.alert.error, .error {
+.alert.error,
+.error {
   background: #fff1f2;
   color: #a53c3c;
 }
@@ -210,7 +216,7 @@ th {
   border: 1px solid #e4edf7;
   border-radius: 8px;
   padding: 18px;
-  box-shadow: 0 8px 24px rgba(50, 70, 100, .05);
+  box-shadow: 0 8px 24px rgba(50, 70, 100, 0.05);
 }
 
 .stat-card span {
@@ -229,27 +235,25 @@ th {
     padding: 16px;
   }
 }
-.navbar{
-    background:var(--background);
-    border-bottom:1px solid var(--border);
+.navbar {
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
 }
 
-.footer{
-    background:var(--background);
-    border-top:1px solid var(--border);
+.footer {
+  background: var(--background);
+  border-top: 1px solid var(--border);
 }
 
-.dashboard-card{
-    background:var(--card);
+.dashboard-card {
+  background: var(--card);
 }
-.alert{
+.alert {
+  padding: 12px 16px;
 
-    padding:12px 16px;
+  border-radius: 10px;
 
-    border-radius:10px;
+  margin-bottom: 20px;
 
-    margin-bottom:20px;
-
-    font-weight:500;
-
+  font-weight: 500;
 }

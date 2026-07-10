@@ -17,11 +17,10 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 import { ReportsComponent } from './features/reports/reports.component';
 
 export const routes: Routes = [
-
   {
     path: 'login',
     component: LoginComponent,
-    canActivate: [LoginRedirectGuard]
+    canActivate: [LoginRedirectGuard],
   },
 
   {
@@ -29,42 +28,40 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-
       {
         path: 'home',
         component: DashboardComponent,
-        resolve: { dashboard: HomeResolver }
+        resolve: { dashboard: HomeResolver },
       },
 
       {
         path: 'account',
-        component: AccountComponent
+        component: AccountComponent,
       },
 
       {
         path: 'departments',
         component: DepartmentsComponent,
-        resolve: { departments: DepartmentsResolver }
+        resolve: { departments: DepartmentsResolver },
       },
 
       {
         path: 'employees',
         component: EmployeesComponent,
-        resolve: { employees: EmployeesResolver }
+        resolve: { employees: EmployeesResolver },
       },
 
       {
         path: 'employee-skills',
         component: EmployeeSkillsComponent,
-        resolve: { employeeSkills: EmployeeSkillsResolver }
+        resolve: { employeeSkills: EmployeeSkillsResolver },
       },
 
       {
         path: 'skills',
         component: SkillsComponent,
-        resolve: { skills: SkillsResolver }
+        resolve: { skills: SkillsResolver },
       },
-
 
       {
         path: 'reports',
@@ -72,19 +69,16 @@ export const routes: Routes = [
         //resolve: { reports: ReportsComponent }
       },
 
-
       {
         path: '',
         redirectTo: 'home',
-        pathMatch: 'full'
-      }
-
-    ]
+        pathMatch: 'full',
+      },
+    ],
   },
 
   {
     path: '**',
-    redirectTo: 'home'
-  }
-
+    redirectTo: 'home',
+  },
 ];

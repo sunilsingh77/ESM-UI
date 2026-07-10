@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -7,7 +7,7 @@ import { EmployeeSkill } from '../../shared/models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeSkillsResolver implements Resolve<EmployeeSkill[]> {
-  constructor(private api: ApiService) {}
+  private api = inject(ApiService);
 
   resolve(): Observable<EmployeeSkill[]> {
     return this.api.getEmployeeSkills().pipe(catchError(() => of([])));

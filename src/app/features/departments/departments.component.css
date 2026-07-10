@@ -4,7 +4,7 @@
    ========================================================== */
 
 :host {
-    display: block;
+  display: block;
 }
 
 /* ==========================================================
@@ -12,13 +12,11 @@
    ========================================================== */
 
 .page {
+  display: flex;
 
-    display: flex;
+  flex-direction: column;
 
-    flex-direction: column;
-
-    gap: 24px;
-
+  gap: 24px;
 }
 
 /* ==========================================================
@@ -26,35 +24,29 @@
    ========================================================== */
 
 .page-header {
+  display: flex;
 
-    display: flex;
+  justify-content: space-between;
 
-    justify-content: space-between;
-
-    align-items: center;
-
+  align-items: center;
 }
 
 .page-header h2 {
+  margin: 0;
 
-    margin: 0;
+  color: var(--text);
 
-    color: var(--text);
+  font-size: 34px;
 
-    font-size: 34px;
-
-    font-weight: 700;
-
+  font-weight: 700;
 }
 
 .page-header p {
+  margin-top: 8px;
 
-    margin-top: 8px;
+  color: var(--text-light);
 
-    color: var(--text-light);
-
-    font-size: 15px;
-
+  font-size: 15px;
 }
 
 /* ==========================================================
@@ -62,15 +54,13 @@
    ========================================================== */
 
 .page-content {
+  display: grid;
 
-    display: grid;
+  grid-template-columns: 380px 1fr;
 
-    grid-template-columns: 380px 1fr;
+  gap: 24px;
 
-    gap: 24px;
-
-    align-items: start;
-
+  align-items: start;
 }
 
 /* ==========================================================
@@ -79,17 +69,15 @@
 
 .form-card,
 .table-card {
+  background: var(--card);
 
-    background: var(--card);
+  border: 1px solid var(--border);
 
-    border: 1px solid var(--border);
+  border-radius: 14px;
 
-    border-radius: 14px;
+  overflow: hidden;
 
-    overflow: hidden;
-
-    box-shadow: 0 8px 30px rgba(15,23,42,.06);
-
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
 }
 
 /* ==========================================================
@@ -97,29 +85,25 @@
    ========================================================== */
 
 .card-header {
+  display: flex;
 
-    display: flex;
+  justify-content: space-between;
 
-    justify-content: space-between;
+  align-items: center;
 
-    align-items: center;
+  padding: 18px 22px;
 
-    padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
 
-    border-bottom: 1px solid var(--border);
-
-    background: #F8FAFC;
-
+  background: #f8fafc;
 }
 
 .card-header h3 {
+  margin: 0;
 
-    margin: 0;
+  color: var(--text);
 
-    color: var(--text);
-
-    font-size: 19px;
-
+  font-size: 19px;
 }
 
 /* ==========================================================
@@ -127,19 +111,17 @@
    ========================================================== */
 
 .badge {
+  background: var(--primary);
 
-    background: var(--primary);
+  color: white;
 
-    color: white;
+  border-radius: 20px;
 
-    border-radius: 20px;
+  padding: 4px 12px;
 
-    padding: 4px 12px;
+  font-size: 13px;
 
-    font-size: 13px;
-
-    font-weight: 600;
-
+  font-weight: 600;
 }
 
 /* ==========================================================
@@ -147,71 +129,57 @@
    ========================================================== */
 
 form {
-
-    padding: 22px;
-
+  padding: 22px;
 }
 
 .form-group {
-
-    margin-bottom: 22px;
-
+  margin-bottom: 22px;
 }
 
 .form-group label {
+  display: block;
 
-    display: block;
+  margin-bottom: 8px;
 
-    margin-bottom: 8px;
+  color: var(--text);
 
-    color: var(--text);
-
-    font-weight: 600;
-
+  font-weight: 600;
 }
 
 .required {
-
-    color: #DC2626;
-
+  color: #dc2626;
 }
 
 .form-control {
+  width: 100%;
 
-    width: 100%;
+  padding: 11px 14px;
 
-    padding: 11px 14px;
+  border: 1px solid var(--border);
 
-    border: 1px solid var(--border);
+  border-radius: 8px;
 
-    border-radius: 8px;
+  background: white;
 
-    background: white;
+  font-size: 14px;
 
-    font-size: 14px;
+  transition: all 0.25s;
 
-    transition: all .25s;
-
-    box-sizing: border-box;
-
+  box-sizing: border-box;
 }
 
 textarea.form-control {
+  resize: vertical;
 
-    resize: vertical;
-
-    min-height: 120px;
-
+  min-height: 120px;
 }
 
 .form-control:focus {
+  outline: none;
 
-    outline: none;
+  border-color: var(--primary);
 
-    border-color: var(--primary);
-
-    box-shadow: 0 0 0 4px rgba(37,99,235,.12);
-
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
 }
 
 /* ==========================================================
@@ -219,27 +187,21 @@ textarea.form-control {
    ========================================================== */
 
 .form-control.ng-invalid.ng-touched {
-
-    border-color: #DC2626;
-
+  border-color: #dc2626;
 }
 
 .form-control.ng-valid.ng-touched {
-
-    border-color: #22C55E;
-
+  border-color: #22c55e;
 }
 
 .validation-error {
+  display: block;
 
-    display: block;
+  margin-top: 6px;
 
-    margin-top: 6px;
+  color: #dc2626;
 
-    color: #DC2626;
-
-    font-size: 13px;
-
+  font-size: 13px;
 }
 
 /* ==========================================================
@@ -247,61 +209,49 @@ textarea.form-control {
    ========================================================== */
 
 .form-actions {
+  display: flex;
 
-    display: flex;
+  gap: 12px;
 
-    gap: 12px;
-
-    margin-top: 30px;
-
+  margin-top: 30px;
 }
 
 button {
+  min-width: 130px;
 
-    min-width: 130px;
+  border: none;
 
-    border: none;
+  border-radius: 8px;
 
-    border-radius: 8px;
+  padding: 11px 18px;
 
-    padding: 11px 18px;
+  font-size: 14px;
 
-    font-size: 14px;
+  font-weight: 600;
 
-    font-weight: 600;
+  cursor: pointer;
 
-    cursor: pointer;
-
-    transition: .25s;
-
+  transition: 0.25s;
 }
 
 button:hover {
-
-    transform: translateY(-2px);
-
+  transform: translateY(-2px);
 }
 
 button:disabled {
+  opacity: 0.6;
 
-    opacity: .6;
-
-    cursor: not-allowed;
-
+  cursor: not-allowed;
 }
 
 button.secondary {
+  background: #f1f5f9;
 
-    background: #F1F5F9;
-
-    color: var(--text);
-
+  color: var(--text);
 }
 
 button.secondary:hover {
-
-    background: #E2E8F0;
-
+  background: #e2e8f0;
 }
 
 /* ==========================================================
@@ -309,39 +259,33 @@ button.secondary:hover {
    ========================================================== */
 
 .alert {
+  padding: 15px 18px;
 
-    padding: 15px 18px;
+  border-radius: 10px;
 
-    border-radius: 10px;
+  font-size: 14px;
 
-    font-size: 14px;
+  display: flex;
 
-    display: flex;
+  align-items: center;
 
-    align-items: center;
-
-    gap: 10px;
-
+  gap: 10px;
 }
 
 .alert.success {
+  background: #ecfdf5;
 
-    background: #ECFDF5;
+  border: 1px solid #bbf7d0;
 
-    border: 1px solid #BBF7D0;
-
-    color: #166534;
-
+  color: #166534;
 }
 
 .alert.error {
+  background: #fef2f2;
 
-    background: #FEF2F2;
+  border: 1px solid #fecaca;
 
-    border: 1px solid #FECACA;
-
-    color: #991B1B;
-
+  color: #991b1b;
 }
 
 /* ==========================================================
@@ -349,47 +293,37 @@ button.secondary:hover {
    ========================================================== */
 
 .loading-container {
+  text-align: center;
 
-    text-align: center;
-
-    padding: 60px;
-
+  padding: 60px;
 }
 
 .loader {
+  width: 44px;
 
-    width: 44px;
+  height: 44px;
 
-    height: 44px;
+  margin: auto;
 
-    margin: auto;
+  border: 4px solid #e2e8f0;
 
-    border: 4px solid #E2E8F0;
+  border-top: 4px solid var(--primary);
 
-    border-top: 4px solid var(--primary);
+  border-radius: 50%;
 
-    border-radius: 50%;
-
-    animation: spin .8s linear infinite;
-
+  animation: spin 0.8s linear infinite;
 }
 
 .loading-container p {
+  margin-top: 16px;
 
-    margin-top: 16px;
-
-    color: var(--text-light);
-
+  color: var(--text-light);
 }
 
 @keyframes spin {
-
-    to {
-
-        transform: rotate(360deg);
-
-    }
-
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ==========================================================
@@ -397,53 +331,41 @@ button.secondary:hover {
    ========================================================== */
 
 table {
+  width: 100%;
 
-    width: 100%;
-
-    border-collapse: collapse;
-
+  border-collapse: collapse;
 }
 
 thead {
-
-    background: #F8FAFC;
-
+  background: #f8fafc;
 }
 
 thead th {
+  padding: 14px;
 
-    padding: 14px;
+  text-align: left;
 
-    text-align: left;
+  color: var(--text-light);
 
-    color: var(--text-light);
+  font-size: 13px;
 
-    font-size: 13px;
+  text-transform: uppercase;
 
-    text-transform: uppercase;
-
-    border-bottom: 1px solid var(--border);
-
+  border-bottom: 1px solid var(--border);
 }
 
 tbody td {
+  padding: 14px;
 
-    padding: 14px;
-
-    border-bottom: 1px solid var(--border);
-
+  border-bottom: 1px solid var(--border);
 }
 
 tbody tr {
-
-    transition: .25s;
-
+  transition: 0.25s;
 }
 
 tbody tr:hover {
-
-    background: #F8FAFC;
-
+  background: #f8fafc;
 }
 
 /* ==========================================================
@@ -451,59 +373,47 @@ tbody tr:hover {
    ========================================================== */
 
 .actions {
+  display: flex;
 
-    display: flex;
-
-    gap: 8px;
-
+  gap: 8px;
 }
 
 .actions button {
+  min-width: 40px;
 
-    min-width: 40px;
+  width: 40px;
 
-    width: 40px;
+  height: 40px;
 
-    height: 40px;
+  padding: 0;
 
-    padding: 0;
+  border-radius: 8px;
 
-    border-radius: 8px;
+  display: flex;
 
-    display: flex;
+  align-items: center;
 
-    align-items: center;
-
-    justify-content: center;
-
+  justify-content: center;
 }
 
 .actions .edit {
+  background: #2563eb;
 
-    background: #2563EB;
-
-    color: white;
-
+  color: white;
 }
 
 .actions .edit:hover {
-
-    background: #1D4ED8;
-
+  background: #1d4ed8;
 }
 
 .actions .delete {
+  background: #dc2626;
 
-    background: #DC2626;
-
-    color: white;
-
+  color: white;
 }
 
 .actions .delete:hover {
-
-    background: #B91C1C;
-
+  background: #b91c1c;
 }
 
 /* ==========================================================
@@ -511,29 +421,23 @@ tbody tr:hover {
    ========================================================== */
 
 .empty-state {
+  padding: 60px;
 
-    padding: 60px;
+  text-align: center;
 
-    text-align: center;
-
-    color: var(--text-light);
-
+  color: var(--text-light);
 }
 
 .empty-state i {
+  color: #94a3b8;
 
-    color: #94A3B8;
-
-    margin-bottom: 12px;
-
+  margin-bottom: 12px;
 }
 
 .empty-state p {
+  margin-top: 10px;
 
-    margin-top: 10px;
-
-    font-size: 15px;
-
+  font-size: 15px;
 }
 
 /* ==========================================================
@@ -541,51 +445,35 @@ tbody tr:hover {
    ========================================================== */
 
 @media (max-width: 992px) {
-
-    .page-content {
-
-        grid-template-columns: 1fr;
-
-    }
-
+  .page-content {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
 
-    .page-header {
+    align-items: flex-start;
 
-        flex-direction: column;
+    gap: 15px;
+  }
 
-        align-items: flex-start;
+  .form-actions {
+    flex-direction: column;
+  }
 
-        gap: 15px;
+  .form-actions button {
+    width: 100%;
+  }
 
-    }
+  .actions {
+    justify-content: center;
+  }
 
-    .form-actions {
+  table {
+    display: block;
 
-        flex-direction: column;
-
-    }
-
-    .form-actions button {
-
-        width: 100%;
-
-    }
-
-    .actions {
-
-        justify-content: center;
-
-    }
-
-    table {
-
-        display: block;
-
-        overflow-x: auto;
-
-    }
-
+    overflow-x: auto;
+  }
 }

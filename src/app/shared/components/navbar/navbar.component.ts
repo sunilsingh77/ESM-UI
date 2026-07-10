@@ -1,11 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import {
-  Router,
-  RouterLink,
-  RouterLinkActive
-} from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -19,19 +15,12 @@ export interface MenuItem {
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    RouterLinkActive
-  ],
-  templateUrl: './navbar.component.html'
+  imports: [CommonModule, RouterLink, RouterLinkActive],
+  templateUrl: './navbar.component.html',
 })
 export class NavbarComponent {
-
-  constructor(
-    public auth: AuthService,
-    private router: Router
-  ) { }
+  public auth = inject(AuthService);
+  private router = inject(Router);
 
   // Menu definition
   menuItems: MenuItem[] = [
@@ -39,60 +28,55 @@ export class NavbarComponent {
       label: 'Dashboard',
       route: '/home',
       icon: 'bi-speedometer2',
-      roles: ['Admin', 'Manager', 'Employee']
+      roles: ['Admin', 'Manager', 'Employee'],
     },
     {
       label: 'Employees',
       route: '/employees',
       icon: 'bi-people',
-      roles: ['Admin', 'Manager']
+      roles: ['Admin', 'Manager'],
     },
     {
       label: 'Departments',
       route: '/departments',
       icon: 'bi-diagram-3',
-      roles: ['Admin']
+      roles: ['Admin'],
     },
     {
       label: 'Skills',
       route: '/skills',
       icon: 'bi-award',
-      roles: ['Admin', 'Manager', 'Employee']
+      roles: ['Admin', 'Manager', 'Employee'],
     },
     {
       label: 'Employee Skills',
       route: '/employee-skills',
       icon: 'bi-award',
-      roles: ['Admin']
+      roles: ['Admin'],
     },
     {
       label: 'Reports',
       route: '/reports',
       icon: 'bi-file-earmark-bar-graph',
-      roles: ['Admin', 'Manager']
-    }
+      roles: ['Admin', 'Manager'],
+    },
   ];
 
   // Return only menus allowed for the logged-in user
   get visibleMenuItems(): MenuItem[] {
-
-      /*
+    /*
     const roles = this.auth.getUserRoles();
     return this.menuItems.filter(item =>
       !item.roles || item.roles.some(role => roles.includes(role))
     );
     */
 
-     return this.menuItems;
-
+    return this.menuItems;
   }
 
   logout(): void {
-
     this.auth.logout();
 
     this.router.navigate(['/login']);
-
   }
-
 }

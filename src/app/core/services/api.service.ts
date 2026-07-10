@@ -1,12 +1,19 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Department, Employee, EmployeeSkill, DashboardResponse, RegisterRequest, Skill } from '../../shared/models/api.models';
+import {
+  Department,
+  Employee,
+  EmployeeSkill,
+  DashboardResponse,
+  RegisterRequest,
+  Skill,
+} from '../../shared/models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly baseUrl = 'https://localhost:7093/api';
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getDashboard() {
     return this.http.get<DashboardResponse>(`${this.baseUrl}/home/dashboard`);
@@ -72,7 +79,10 @@ export class ApiService {
     return this.http.post<EmployeeSkill>(`${this.baseUrl}/employeeskills`, request);
   }
 
-  updateEmployeeSkill(id: number, request: Pick<EmployeeSkill, 'proficiencyLevel' | 'yearsOfExperience' | 'isPrimary'>) {
+  updateEmployeeSkill(
+    id: number,
+    request: Pick<EmployeeSkill, 'proficiencyLevel' | 'yearsOfExperience' | 'isPrimary'>
+  ) {
     return this.http.put(`${this.baseUrl}/employeeskills/${id}`, request);
   }
 

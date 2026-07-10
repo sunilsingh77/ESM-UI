@@ -22,14 +22,14 @@ export class ErrorInterceptor implements HttpInterceptor {
         title: error.error.title,
         message: error.error.message ?? error.error.title,
         errors: error.error.errors,
-        traceId: error.error.traceId
+        traceId: error.error.traceId,
       };
     }
 
     return {
       status: error.status,
       title: error.statusText || 'Request failed',
-      message: typeof error.error === 'string' ? error.error : 'Something went wrong. Please try again.'
+      message: typeof error.error === 'string' ? error.error : 'Something went wrong. Please try again.',
     };
   }
 }

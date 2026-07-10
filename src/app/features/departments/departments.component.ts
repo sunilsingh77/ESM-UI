@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -37,12 +37,10 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(
-    private fb: FormBuilder,
-    private api: ApiService,
-    private route: ActivatedRoute,
-    private navigationLoad: NavigationLoadService,
-  ) {}
+  private fb = inject(FormBuilder);
+  private api = inject(ApiService);
+  private route = inject(ActivatedRoute);
+  private navigationLoad = inject(NavigationLoadService);
 
   ngOnInit(): void {
     this.initializeForm();
@@ -74,113 +72,85 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
     return this.departmentForm.controls;
   }
 
- loadDepartments(): void {
+  loadDepartments(): void {
+    console.log('Loading departments...');
 
-  console.log('Loading departments...');
+    this.loading = true;
+    this.error = '';
 
-  this.loading = true;
-  this.error = '';
+    this.api.getDepartments().subscribe({
+      next: (data) => {
+        this.departments = [...data];
 
-  this.api.getDepartments().subscribe({
+        console.log('loading before:', this.loading);
 
-    next: (data) => {
+        this.loading = false;
 
+        console.log('loading after:', this.loading);
+      },
 
-    this.departments = [...data];
+      error: (err) => {
+        console.error('Load failed:', err);
 
-    console.log('loading before:', this.loading);
+        this.loading = false;
 
-    this.loading = false;
-
-    console.log('loading after:', this.loading);
-
-    },
-
-    error: (err) => {
-
-      console.error('Load failed:', err);
-
-      this.loading = false;
-
-      this.error = err.message || 'Unable to load departments.';
-
-    }
-
-  });
-
-}
-
- save(): void {
-
-  this.submitted = true;
-
-  this.success = '';
-  this.error = '';
-
-  if (this.departmentForm.invalid) {
-    this.departmentForm.markAllAsTouched();
-    return;
+        this.error = err.message || 'Unable to load departments.';
+      },
+    });
   }
 
-  this.saving = true;
+  save(): void {
+    this.submitted = true;
 
-  const request = this.editingId
+    this.success = '';
+    this.error = '';
+
+    if (this.departmentForm.invalid) {
+      this.departmentForm.markAllAsTouched();
+      return;
+    }
+
+    this.saving = true;
+
+    const request = this.editingId
       ? this.api.updateDepartment(this.editingId, this.departmentForm.value)
       : this.api.createDepartment(this.departmentForm.value);
 
-  request.subscribe({
+    request.subscribe({
+      next: (result: any) => {
+        if (this.editingId) {
+          const index = this.departments.findIndex((d) => d.id === this.editingId);
 
-    next: (result: any) => {
+          if (index > -1) {
+            this.departments[index] = {
+              id: this.editingId,
+              ...this.departmentForm.value,
+            };
 
-      if (this.editingId) {
-
-        // Update existing row locally
-        const index = this.departments.findIndex(d => d.id === this.editingId);
-
-        if (index > -1) {
-
-          this.departments[index] = {
-            id: this.editingId,
-            ...this.departmentForm.value
-          };
-
-          // Force Angular to detect the change
-          this.departments = [...this.departments];
+            // Force Angular to detect the change
+            this.departments = [...this.departments];
+          }
+        } else {
+          // Add new row locally
+          this.departments = [...this.departments, result];
         }
 
-      } else {
+        this.success = this.editingId ? 'Department updated successfully.' : 'Department created successfully.';
 
-        // Add new row locally
-        this.departments = [
-          ...this.departments,
-          result
-        ];
+        this.resetForm();
 
-      }
+        this.saving = false;
 
-      this.success = this.editingId
-        ? 'Department updated successfully.'
-        : 'Department created successfully.';
+        setTimeout(() => (this.success = ''), 3000);
+      },
 
-      this.resetForm();
+      error: (err: ApiError) => {
+        this.saving = false;
 
-      this.saving = false;
-
-      setTimeout(() => this.success = '', 3000);
-
-    },
-
-    error: (err: ApiError) => {
-
-      this.saving = false;
-
-      this.error = err.message || 'Unable to save department.';
-
-    }
-
-  });
-
-}
+        this.error = err.message || 'Unable to save department.';
+      },
+    });
+  }
 
   edit(department: Department): void {
     this.editingId = department.id;

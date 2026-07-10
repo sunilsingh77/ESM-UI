@@ -2,13 +2,15 @@
   <div class="page-header">
     <div>
       <h2>Home</h2>
-      <p *ngIf="dashboard">{{ dashboard.message }}</p>
+      @if (dashboard) {
+        <p>{{ dashboard.message }}</p>
+      }
     </div>
   </div>
-
-  <div class="alert error" *ngIf="error">{{ error }}</div>
-
-  <div class="stats-grid" *ngIf="dashboard">
+  @if (error) {
+    <div class="alert error">{{ error }}</div>
+  }
+  <!--<div class="stats-grid" *ngIf="dashboard">
     <article class="stat-card">
       <span>Email</span>
       <strong>{{ dashboard.email }}</strong>
@@ -17,24 +19,35 @@
       <span>Roles</span>
       <strong>{{ dashboard.roles.join(', ') || 'No roles assigned' }}</strong>
     </article>
-  </div>
+  </div>-->
 
-  <section style="margin-top:20px">
+  <section style="margin-top: 20px">
     <h3>Employee Skill Summary</h3>
-    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px">
       <input placeholder="Search employee by name" [(ngModel)]="searchTerm" />
       <button type="button" class="secondary" (click)="searchByName()">Search</button>
       <select [(ngModel)]="selectedEmployeeId">
         <option [ngValue]="0">-- Select Employee --</option>
-        <option *ngFor="let e of employees" [ngValue]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
+        @for (e of employees; track e.id) {
+          <option [ngValue]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
+        }
       </select>
     </div>
+    @if (selectedEmployeeId === 0) {
+      <div>No employee selected.</div>
+    }
 
-    <div *ngIf="selectedEmployeeId === 0">No employee selected.</div>
-    <ul *ngIf="selectedEmployeeId !== 0">
-      <li *ngFor="let es of employeeSkillsForSelected()">
-        <strong>{{ es.skillName }}</strong> — {{ es.proficiencyLevel }} ({{ es.yearsOfExperience }} yrs)
-      </li>
-    </ul>   
+    @if (selectedEmployeeId !== 0) {
+      <ul>
+        @for (es of employeeSkillsForSelected(); track $index) {
+          <li>
+            <strong>{{ es.skillName }}</strong>
+            — {{ es.proficiencyLevel }} ({{ es.yearsOfExperience }} yrs)
+          </li>
+        } @empty {
+          <li>No skills assigned.</li>
+        }
+      </ul>
+    }
   </section>
 </section>

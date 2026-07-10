@@ -1,240 +1,202 @@
-body{
-    background:#f4f7fb;
+body {
+  background: #f4f7fb;
 }
 
-.login-page{
+.login-page {
+  display: flex;
 
-    display:flex;
+  justify-content: center;
 
-    justify-content:center;
+  align-items: center;
 
-    align-items:center;
+  min-height: 100vh;
 
-    min-height:100vh;
-
-    background:linear-gradient(135deg,#eef4ff,#dcecff);
-
+  background: linear-gradient(135deg, #eef4ff, #dcecff);
 }
 
-.login-card{
+.login-card {
+  width: 420px;
 
-    width:420px;
+  background: white;
 
-    background:white;
+  border-radius: 18px;
 
-    border-radius:18px;
+  padding: 40px;
 
-    padding:40px;
-
-    box-shadow:0 15px 35px rgba(0,0,0,.12);
-
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
 }
 
-.login-header{
+.login-header {
+  text-align: center;
 
-    text-align:center;
-
-    margin-bottom:30px;
-
+  margin-bottom: 30px;
 }
 
-.logo-circle{
+.logo-circle {
+  width: 70px;
 
-    width:70px;
+  height: 70px;
 
-    height:70px;
+  margin: auto;
 
-    margin:auto;
+  border-radius: 50%;
 
-    border-radius:50%;
+  background: #0d6efd;
 
-    background:#0d6efd;
+  color: white;
 
-    color:white;
+  display: flex;
 
-    display:flex;
+  justify-content: center;
 
-    justify-content:center;
+  align-items: center;
 
-    align-items:center;
+  font-size: 34px;
 
-    font-size:34px;
-
-    margin-bottom:15px;
-
+  margin-bottom: 15px;
 }
 
-.login-header h2{
+.login-header h2 {
+  font-size: 28px;
 
-    font-size:28px;
+  color: #183153;
 
-    color:#183153;
-
-    margin-bottom:8px;
-
+  margin-bottom: 8px;
 }
 
-.login-header p{
-
-    color:#6c757d;
-
+.login-header p {
+  color: #6c757d;
 }
 
-.form-group{
-
-    margin-bottom:18px;
-
+.form-group {
+  margin-bottom: 18px;
 }
 
-.form-group label{
+.form-group label {
+  display: block;
 
-    display:block;
+  margin-bottom: 6px;
 
-    margin-bottom:6px;
+  font-weight: 600;
 
-    font-weight:600;
-
-    color:#183153;
-
+  color: #183153;
 }
 
-.form-group input{
+.form-group input {
+  width: 100%;
 
-    width:100%;
+  padding: 12px;
 
-    padding:12px;
+  border: 1px solid #d9e2ef;
 
-    border:1px solid #d9e2ef;
+  border-radius: 10px;
 
-    border-radius:10px;
+  transition: 0.3s;
 
-    transition:.3s;
-
-    box-sizing:border-box;
-
+  box-sizing: border-box;
 }
 
-.form-group input:focus{
+.form-group input:focus {
+  border-color: #0d6efd;
 
-    border-color:#0d6efd;
+  outline: none;
 
-    outline:none;
-
-    box-shadow:0 0 0 4px rgba(13,110,253,.15);
-
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
 }
 
-.login-options{
+.login-options {
+  display: flex;
 
-    display:flex;
+  justify-content: space-between;
 
-    justify-content:space-between;
+  align-items: center;
 
-    align-items:center;
+  margin-bottom: 20px;
 
-    margin-bottom:20px;
-
-    font-size:14px;
-
+  font-size: 14px;
 }
 
-.remember-me{
+.remember-me {
+  display: flex;
 
-    display:flex;
+  align-items: center;
 
-    align-items:center;
+  gap: 8px;
 
-    gap:8px;
-
-    font-weight:500;
-
+  font-weight: 500;
 }
 
-.login-btn{
+.login-btn {
+  width: 100%;
 
-    width:100%;
+  padding: 14px;
 
-    padding:14px;
+  border: none;
 
-    border:none;
+  border-radius: 10px;
 
-    border-radius:10px;
+  background: #0d6efd;
 
-    background:#0d6efd;
+  color: white;
 
-    color:white;
+  font-size: 16px;
 
-    font-size:16px;
+  font-weight: 600;
 
-    font-weight:600;
-
-    transition:.3s;
-
+  transition: 0.3s;
 }
 
-.login-btn:hover{
-
-    background:#0b5ed7;
-
+.login-btn:hover {
+  background: #0b5ed7;
 }
 
-.login-btn:disabled{
-
-    opacity:.7;
-
+.login-btn:disabled {
+  opacity: 0.7;
 }
 
-.validation-status{
+.validation-status {
+  background: #eef5ff;
 
-    background:#eef5ff;
+  padding: 12px;
 
-    padding:12px;
+  border-radius: 10px;
 
-    border-radius:10px;
+  margin-bottom: 20px;
 
-    margin-bottom:20px;
+  display: flex;
 
-    display:flex;
+  align-items: center;
 
-    align-items:center;
-
-    gap:10px;
-
+  gap: 10px;
 }
 
-.loading-dot{
+.loading-dot {
+  width: 12px;
 
-    width:12px;
+  height: 12px;
 
-    height:12px;
+  background: #0d6efd;
 
-    background:#0d6efd;
+  border-radius: 50%;
 
-    border-radius:50%;
-
-    animation:pulse 1s infinite;
-
+  animation: pulse 1s infinite;
 }
 
-.error{
+.error {
+  margin-top: 20px;
 
-    margin-top:20px;
+  padding: 12px;
 
-    padding:12px;
+  border-radius: 10px;
 
-    border-radius:10px;
+  background: #ffe5e5;
 
-    background:#ffe5e5;
-
-    color:#c62828;
-
+  color: #c62828;
 }
 
-@keyframes pulse{
-
-    50%{
-        transform:scale(1.4);
-        opacity:.5;
-    }
-
+@keyframes pulse {
+  50% {
+    transform: scale(1.4);
+    opacity: 0.5;
+  }
 }

@@ -1,69 +1,32 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/home">
+      <div class="logo-circle">
+        <i class="bi bi-people-fill"></i>
+      </div>
 
-    <div class="container-fluid">
+      <div class="ms-3">
+        <div class="brand-title">ESM</div>
+      </div>
+    </a>
 
-        <a class="navbar-brand d-flex align-items-center" routerLink="/home">
+    <ul class="navbar-nav ms-5">
+      @for (item of visibleMenuItems; track item.route) {
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="item.route" routerLinkActive="active">
+            <i class="bi me-2" [ngClass]="item.icon"> </i>
+            {{ item.label }}
+          </a>
+        </li>
+      }
+    </ul>
 
-            <div class="logo-circle">
-
-                <i class="bi bi-people-fill"></i>
-
-            </div>
-
-            <div class="ms-3">
-
-                <div class="brand-title">
-                    ESM
-                </div>
-
-               
-            </div>
-
-        </a>
-
-        <ul class="navbar-nav ms-5">
-
-            <li
-                class="nav-item"
-                *ngFor="let item of visibleMenuItems">
-
-                <a
-                    class="nav-link"
-                    [routerLink]="item.route"
-                    routerLinkActive="active">
-
-                    <i
-                        class="bi me-2"
-                        [ngClass]="item.icon">
-                    </i>
-
-                    {{item.label}}
-
-                </a>
-
-            </li>
-
-        </ul>
-
-        <div class="ms-auto d-flex align-items-center">
-                <div class="user-name">
-                    {{ auth.getUserName() }},
-                </div>
-                <div class="user-role">
-                    {{ auth.getUserRoleLabel() }}
-                </div>
-            <button
-                class="btn btn-danger"
-                (click)="logout()">
-
-                <i class="bi bi-box-arrow-right"></i>
-
-                Logout
-
-            </button>
-
-        </div>
-
+    <div class="ms-auto d-flex align-items-center">
+      <div class="user-name">{{ auth.getUserName() }} | {{ auth.getUserRoleLabel() }}</div>
+      <button class="btn btn-danger btn-sm ms-3" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i>
+        Logout
+      </button>
     </div>
-
+  </div>
 </nav>

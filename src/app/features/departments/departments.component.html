@@ -1,358 +1,202 @@
 <div class="page">
-
-    <!-- =========================================
+  <!-- =========================================
          Page Header
     ========================================== -->
-
-    <div class="page-header">
-
-        <div>
-
-            <h2>Department Management</h2>
-
-            <p>
-                Create, update and manage organization departments.
-            </p>
-
-        </div>
-
-        <button
-            type="button"
-            class="secondary"
-            (click)="loadDepartments()"
-            [disabled]="loading">
-
-            <i class="bi bi-arrow-clockwise"></i>
-            Refresh
-
-        </button>
-
+  <div class="page-header">
+    <div>
+      <h2>Department Management</h2>
+      <p>Create, update and manage organization departments.</p>
     </div>
-
-    <!-- =========================================
+    <button type="button" class="secondary" (click)="loadDepartments()" [disabled]="loading">
+      <i class="bi bi-arrow-clockwise"></i>
+      Refresh
+    </button>
+  </div>
+  <!-- =========================================
          Success Message
     ========================================== -->
-
-    <div
-        class="alert success"
-        *ngIf="success">
-
-        <i class="bi bi-check-circle-fill"></i>
-
-        {{ success }}
-
+  @if (success) {
+    <div class="alert success">
+      <i class="bi bi-check-circle-fill"></i>
+      {{ success }}
     </div>
-
-    <!-- =========================================
+  }
+  <!-- =========================================
          Error Message
     ========================================== -->
-
-    <div
-        class="alert error"
-        *ngIf="error">
-
-        <i class="bi bi-exclamation-circle-fill"></i>
-
-        {{ error }}
-
+  @if (error) {
+    <div class="alert error">
+      <i class="bi bi-exclamation-circle-fill"></i>
+      {{ error }}
     </div>
-
-    <!-- =========================================
+  }
+  <!-- =========================================
          Page Content
     ========================================== -->
-
-    <div class="page-content">
-
-        <!-- =====================================
+  <div class="page-content">
+    <!-- =====================================
              Department Form
         ====================================== -->
 
-        <div class="form-card">
-
-            <div class="card-header">
-
-                <h3>
-
-                    {{ editingId ? 'Edit Department' : 'Add Department' }}
-
-                </h3>
-
-            </div>
-
-            <form
-                [formGroup]="departmentForm"
-                (ngSubmit)="save()">
-
-                <!-- Department Name -->
-
-                <div class="form-group">
-
-                    <label>
-
-                        Department Name
-
-                        <span class="required">*</span>
-
-                    </label>
-
-                    <input
-                        type="text"
-                        class="form-control"
-                        formControlName="name"
-                        placeholder="Enter department name">
-
-                    <small
-                        class="validation-error"
-                        *ngIf="submitted && f['name'].errors">
-
-                        <span *ngIf="f['name'].errors?.['required']">
-
-                            Department Name is required.
-
-                        </span>
-
-                        <span *ngIf="f['name'].errors?.['minlength']">
-
-                            Minimum 3 characters required.
-
-                        </span>
-
-                        <span *ngIf="f['name'].errors?.['maxlength']">
-
-                            Maximum 100 characters allowed.
-
-                        </span>
-
-                    </small>
-
-                </div>
-
-                <!-- Description -->
-
-                <div class="form-group">
-
-                    <label>
-
-                        Description
-
-                        <span class="required">*</span>
-
-                    </label>
-
-                    <textarea
-                        rows="5"
-                        class="form-control"
-                        formControlName="description"
-                        placeholder="Enter department description">
-
-                    </textarea>
-
-                    <small
-                        class="validation-error"
-                        *ngIf="submitted && f['description'].errors">
-
-                        <span *ngIf="f['description'].errors?.['required']">
-
-                            Description is required.
-
-                        </span>
-
-                        <span *ngIf="f['description'].errors?.['minlength']">
-
-                            Minimum 5 characters required.
-
-                        </span>
-
-                        <span *ngIf="f['description'].errors?.['maxlength']">
-
-                            Maximum 250 characters allowed.
-
-                        </span>
-
-                    </small>
-
-                </div>
-
-                <!-- Buttons -->
-
-                <div class="form-actions">
-
-                    <button
-                        type="submit"
-                        [disabled]="saving">
-
-                        <span *ngIf="!saving">
-
-                            <i class="bi bi-check-circle"></i>
-
-                            {{ editingId ? 'Update Department' : 'Save Department' }}
-
-                        </span>
-
-                        <span *ngIf="saving">
-
-                            <span class="spinner-border spinner-border-sm"></span>
-
-                            Saving...
-
-                        </span>
-
-                    </button>
-
-                    <button
-                        type="button"
-                        class="secondary"
-                        (click)="cancel()"
-                        [disabled]="saving">
-
-                        <i class="bi bi-x-circle"></i>
-
-                        Cancel
-
-                    </button>
-
-                </div>
-
-            </form>
-
+    <div class="form-card">
+      <div class="card-header">
+        <h3>
+          {{ editingId ? 'Edit Department' : 'Add Department' }}
+        </h3>
+      </div>
+
+      <form [formGroup]="departmentForm" (ngSubmit)="save()">
+        <!-- Department Name -->
+
+        <div class="form-group">
+          <label for="">
+            Department Name
+            <span class="required">*</span>
+          </label>
+          <input type="text" class="form-control" formControlName="name" placeholder="Enter department name" />
+          @if (submitted && f['name'].errors) {
+            <small class="validation-error">
+              @if (f['name'].errors?.['required']) {
+                <span> Department Name is required. </span>
+              }
+              @if (f['name'].errors?.['minlength']) {
+                <span> Minimum 3 characters required. </span>
+              }
+              @if (f['name'].errors?.['maxlength']) {
+                <span> Maximum 100 characters allowed. </span>
+              }
+            </small>
+          }
+        </div>
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">
+            Description
+            <span class="required">*</span>
+          </label>
+
+          <textarea
+            rows="5"
+            class="form-control"
+            formControlName="description"
+            placeholder="Enter department description"
+          >
+          </textarea>
+          @if (submitted && f['description'].errors) {
+            <small class="validation-error">
+              @if (f['description'].errors?.['required']) {
+                <span> Description is required. </span>
+              }
+              @if (f['description'].errors?.['required']) {
+                <span> Minimum 5 characters required. </span>
+              }
+              @if (f['description'].errors?.['maxlength']) {
+                <span> Maximum 250 characters allowed.</span>
+              }
+            </small>
+          }
         </div>
 
-        <!-- =====================================
+        <!-- Buttons -->
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="saving">
+            @if (!saving) {
+              <span>
+                <i class="bi bi-check-circle"></i>
+                {{ editingId ? 'Update Department' : 'Save Department' }}
+              </span>
+            }
+            @if (saving) {
+              <span>
+                <span class="spinner-border spinner-border-sm"></span>
+                Saving...
+              </span>
+            }
+          </button>
+          <button type="button" class="secondary" (click)="cancel()" [disabled]="saving">
+            <i class="bi bi-x-circle"></i>
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- =====================================
              Department List
         ====================================== -->
 
-        <div class="table-card">
+    <div class="table-card">
+      <div class="card-header">
+        <h3>Department List</h3>
 
-            <div class="card-header">
+        <span class="badge">
+          {{ departments.length }}
+        </span>
+      </div>
 
-                <h3>
-
-                    Department List
-
-                </h3>
-
-                <span class="badge">
-
-                    {{ departments.length }}
-
-                </span>
-
-            </div>
-
-            <!-- Loading -->
-
-            <div
-                class="loading-container"
-                *ngIf="loading">
-
-                <div class="loader"></div>
-
-                <p>Loading departments...</p>
-
-            </div>
-
-            <!-- Empty -->
-
-            <div
-                class="empty-state"
-                *ngIf="!loading && departments.length === 0">
-
-                <i
-                    class="bi bi-folder-x"
-                    style="font-size:48px;"></i>
-
-                <p>
-
-                    No departments found.
-
-                </p>
-
-            </div>
-
-            <!-- Table -->
-
-            <table
-                *ngIf="!loading && departments.length > 0">
-
-                <thead>
-
-                    <tr>
-
-                        <th style="width:80px;">#</th>
-
-                        <th>Name</th>
-
-                        <th>Description</th>
-
-                        <th style="width:170px;">Actions</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    <tr
-                        *ngFor="let department of departments; let i=index">
-
-                        <td>
-
-                            {{ i + 1 }}
-
-                        </td>
-
-                        <td>
-
-                            <strong>
-
-                                {{ department.name }}
-
-                            </strong>
-
-                        </td>
-
-                        <td>
-
-                            {{ department.description }}
-
-                        </td>
-
-                        <td>
-
-                            <div class="actions">
-
-                                <button
-                                    type="button"
-                                    class="edit"
-                                    title="Edit"
-                                    (click)="edit(department)">
-
-                                    <i class="bi bi-pencil-square"></i>
-
-                                </button>
-
-                                <button
-                                    type="button"
-                                    class="delete"
-                                    title="Delete"
-                                    (click)="delete(department.id)">
-
-                                    <i class="bi bi-trash"></i>
-
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
+      <!-- Loading -->
+      @if (loading) {
+        <div class="loading-container">
+          <div class="loader"></div>
+          <p>Loading departments...</p>
         </div>
+      }
+      <!-- Empty -->
+      @if (!loading && departments.length === 0) {
+        <div class="empty-state">
+          <i class="bi bi-folder-x" style="font-size: 48px"></i>
+          <p>No departments found.</p>
+        </div>
+      }
+      <!-- Table -->
+      @if (!loading && departments.length > 0) {
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 80px">#</th>
 
+              <th>Name</th>
+
+              <th>Description</th>
+
+              <th style="width: 170px">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (department of departments; track department.id; let i = $index) {
+              <tr>
+                <td>
+                  {{ i + 1 }}
+                </td>
+
+                <td>
+                  <strong>
+                    {{ department.name }}
+                  </strong>
+                </td>
+
+                <td>
+                  {{ department.description }}
+                </td>
+
+                <td>
+                  <div class="actions">
+                    <button type="button" class="edit" title="Edit" (click)="edit(department)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+
+                    <button type="button" class="delete" title="Delete" (click)="delete(department.id)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
     </div>
-
+  </div>
 </div>

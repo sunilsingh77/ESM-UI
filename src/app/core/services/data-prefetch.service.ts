@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
@@ -12,7 +12,7 @@ export class DataPrefetchService {
   private employeeSkills?: EmployeeSkill[];
   private skills?: Skill[];
 
-  constructor(private api: ApiService) {}
+  private api = inject(ApiService);
 
   getDashboard(): Observable<DashboardResponse> {
     if (this.dashboard) {

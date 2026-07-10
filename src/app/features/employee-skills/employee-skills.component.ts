@@ -1,14 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormsModule,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormsModule, FormGroup, Validators } from '@angular/forms';
 
 import { ActivatedRoute } from '@angular/router';
 
@@ -18,8 +12,8 @@ import { ApiService } from '../../core/services/api.service';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 
 import { Employee, EmployeeSkill, Skill, ApiError } from '../../shared/models/api.models';
+import { HttpErrorResponse } from '@angular/common/http';
 
-type EmployeeSkillForm = Omit<EmployeeSkill, 'id' | 'skillName' | 'acquiredDate'>;
 @Component({
   selector: 'app-employee-skills',
   standalone: true,
@@ -73,16 +67,10 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   // Constructor
   //==========================================================
 
-  constructor(
-    private fb: FormBuilder,
-
-    private api: ApiService,
-
-    private route: ActivatedRoute,
-
-    private navigationLoad: NavigationLoadService,
-  ) {}
-
+  private fb = inject(FormBuilder);
+  private api = inject(ApiService);
+  private route = inject(ActivatedRoute);
+  private navigationLoad = inject(NavigationLoadService);
   //==========================================================
   // OnInit
   //==========================================================
@@ -226,9 +214,7 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
       next: () => {
         this.saving = false;
 
-        this.success = this.editingId
-          ? 'Employee Skill updated successfully.'
-          : 'Employee Skill created successfully.';
+        this.success = this.editingId ? 'Employee Skill updated successfully.' : 'Employee Skill created successfully.';
 
         this.cancel();
 
@@ -343,7 +329,7 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
       (item) =>
         this.employeeName(item.employeeId).toLowerCase().includes(keyword) ||
         item.skillName.toLowerCase().includes(keyword) ||
-        item.proficiencyLevel.toLowerCase().includes(keyword),
+        item.proficiencyLevel.toLowerCase().includes(keyword)
     );
   }
 
@@ -464,27 +450,19 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   // API Error Handler
   //==========================================================
 
-  private handleError(error: ApiError | any): void {
+  private handleError(error: HttpErrorResponse): void {
     this.loading = false;
-
     this.saving = false;
-
     this.success = '';
-
     this.error = error?.message || 'An unexpected error occurred. Please try again.';
-
     this.clearError();
   }
-
   //==========================================================
   // Success Handler
   //==========================================================
-
   private showSuccess(message: string): void {
     this.error = '';
-
     this.success = message;
-
     this.clearSuccess();
   }
 

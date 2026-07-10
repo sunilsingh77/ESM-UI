@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ import { NavigationLoadService } from '../../core/services/navigation-load.servi
   selector: 'app-skills',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './skills.component.html'
+  templateUrl: './skills.component.html',
 })
 export class SkillsComponent implements OnInit, OnDestroy {
   skills: Skill[] = [];
@@ -20,7 +20,9 @@ export class SkillsComponent implements OnInit, OnDestroy {
   editingId?: number;
   error = '';
 
-  constructor(private api: ApiService, private route: ActivatedRoute, private navigationLoad: NavigationLoadService) {}
+  private api = inject(ApiService);
+  private route = inject(ActivatedRoute);
+  private navigationLoad = inject(NavigationLoadService);
 
   ngOnInit(): void {
     const resolved = this.route.snapshot.data['skills'] as Skill[] | undefined;
@@ -38,8 +40,8 @@ export class SkillsComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.api.getSkills().subscribe({
-      next: (items) => this.skills = items,
-      error: (err: ApiError) => this.error = err.message || 'Unable to load skills.'
+      next: (items) => (this.skills = items),
+      error: (err: ApiError) => (this.error = err.message || 'Unable to load skills.'),
     });
   }
 
@@ -50,7 +52,7 @@ export class SkillsComponent implements OnInit, OnDestroy {
         this.reset();
         this.load();
       },
-      error: (err: ApiError) => this.error = err.message || 'Unable to save skill.'
+      error: (err: ApiError) => (this.error = err.message || 'Unable to save skill.'),
     });
   }
 
@@ -62,7 +64,7 @@ export class SkillsComponent implements OnInit, OnDestroy {
   delete(id: number): void {
     this.api.deleteSkill(id).subscribe({
       next: () => this.load(),
-      error: (err: ApiError) => this.error = err.message || 'Unable to delete skill.'
+      error: (err: ApiError) => (this.error = err.message || 'Unable to delete skill.'),
     });
   }
 

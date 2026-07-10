@@ -15,6 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     importProvidersFrom(CoreModule),
     importProvidersFrom(FormsModule),
-    importProvidersFrom(ReactiveFormsModule)
-  ]
+    importProvidersFrom(ReactiveFormsModule),
+  ],
 };

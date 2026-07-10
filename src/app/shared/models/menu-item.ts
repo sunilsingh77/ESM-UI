@@ -1,11 +1,9 @@
 export interface MenuItem {
+  label: string;
 
-    label: string;
+  route: string;
 
-    route: string;
+  icon: string;
 
-    icon: string;
-
-    roles?: string[];
-
+  roles?: string[];
 }

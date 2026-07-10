@@ -1,549 +1,282 @@
 <div class="page">
-
-
-    <!-- =========================================
+  <!-- =========================================
          Page Header
     ========================================== -->
 
-    <div class="page-header">
-
-        <div>
-
-            <h2>Employee Skills Management</h2>
-
-            <p>
-                Create, update and manage employee skill mappings.
-            </p>
-
-        </div>
-
-        <button
-            type="button"
-            class="secondary"
-            (click)="refresh()"
-            [disabled]="loading">
-
-            <i class="bi bi-arrow-clockwise"></i>
-
-            Refresh
-
-        </button>
-
+  <div class="page-header">
+    <div>
+      <h2>Employee Skills Management</h2>
+      <p>Create, update and manage employee skill mappings.</p>
     </div>
+    <button type="button" class="secondary" (click)="refresh()" [disabled]="loading">
+      <i class="bi bi-arrow-clockwise"></i>
+      Refresh
+    </button>
+  </div>
 
-    <!-- =========================================
+  <!-- =========================================
          Success Message
     ========================================== -->
-
-    <div
-        class="alert success"
-        *ngIf="success">
-
-        <i class="bi bi-check-circle-fill"></i>
-
-        {{ success }}
-
+  @if (success) {
+    <div class="alert success">
+      <i class="bi bi-check-circle-fill"></i>
+      {{ success }}
     </div>
-
-    <!-- =========================================
+  }
+  <!-- =========================================
          Error Message
     ========================================== -->
-
-    <div
-        class="alert error"
-        *ngIf="error">
-
-        <i class="bi bi-exclamation-circle-fill"></i>
-
-        {{ error }}
-
+  @if (error) {
+    <div class="alert error">
+      <i class="bi bi-exclamation-circle-fill"></i>
+      {{ error }}
     </div>
-
-    <!-- =========================================
+  }
+  <!-- =========================================
          Page Content
     ========================================== -->
-
-    <div class="page-content">
-
-        <!-- =====================================
+  <div class="page-content">
+    <!-- =====================================
              Employee Skill Form
         ====================================== -->
-
-        <div class="form-card">
-
-            <div class="card-header">
-
-                <h3>
-
-                    {{ editingId ? 'Edit Employee Skill' : 'Add Employee Skill' }}
-
-                </h3>
-
-            </div>
-
-            <form
-                [formGroup]="employeeSkillForm"
-                (ngSubmit)="save()">
-
-                <!-- Employee -->
-
-                <div class="form-group">
-
-                    <label>
-
-                        Employee
-
-                        <span class="required">*</span>
-
-                    </label>
-
-                    <select
-                        class="form-control"
-                        formControlName="employeeId">
-
-                        <option [ngValue]="null">
-
-                            -- Select Employee --
-
-                        </option>
-
-                        <option
-                            *ngFor="let employee of employees"
-                            [ngValue]="employee.id">
-
-                            {{ employee.firstName }}
-                            {{ employee.lastName }}
-
-                        </option>
-
-                    </select>
-
-                    <small
-                        class="validation-error"
-                        *ngIf="submitted && f['employeeId'].errors">
-
-                        Employee is required.
-
-                    </small>
-
-                </div>
-
-                <!-- Skill -->
-
-                <div class="form-group">
-
-                    <label>
-
-                        Skill
-
-                        <span class="required">*</span>
-
-                    </label>
-
-                    <select
-                        class="form-control"
-                        formControlName="skillId">
-
-                        <option [ngValue]="null">
-
-                            -- Select Skill --
-
-                        </option>
-
-                        <option
-                            *ngFor="let skill of skills"
-                            [ngValue]="skill.id">
-
-                            {{ skill.name }}
-
-                        </option>
-
-                    </select>
-
-                    <small
-                        class="validation-error"
-                        *ngIf="submitted && f['skillId'].errors">
-
-                        Skill is required.
-
-                    </small>
-
-                </div>
-
-                <!-- Proficiency Level -->
-
-                <div class="form-group">
-
-                    <label>
-
-                        Proficiency Level
-
-                        <span class="required">*</span>
-
-                    </label>
-
-                    <select
-                        class="form-control"
-                        formControlName="proficiencyLevel">
-
-                        <option value="Beginner">
-
-                            Beginner
-
-                        </option>
-
-                        <option value="Intermediate">
-
-                            Intermediate
-
-                        </option>
-
-                        <option value="Advanced">
-
-                            Advanced
-
-                        </option>
-
-                        <option value="Expert">
-
-                            Expert
-
-                        </option>
-
-                    </select>
-
-                    <small
-                        class="validation-error"
-                        *ngIf="submitted && f['proficiencyLevel'].errors">
-
-                        Proficiency Level is required.
-
-                    </small>
-
-                </div>
-
-                                <!-- Years of Experience -->
-
-                <div class="form-group">
-
-                    <label>
-
-                        Years of Experience
-
-                        <span class="required">*</span>
-
-                    </label>
-
-                    <input
-                        type="number"
-                        class="form-control"
-                        formControlName="yearsOfExperience"
-                        min="0"
-                        max="50"
-                        placeholder="Enter years of experience">
-
-                    <small
-                        class="validation-error"
-                        *ngIf="submitted && f['yearsOfExperience'].errors">
-
-                        <span *ngIf="f['yearsOfExperience'].errors?.['required']">
-
-                            Years of Experience is required.
-
-                        </span>
-
-                        <span *ngIf="f['yearsOfExperience'].errors?.['min']">
-
-                            Experience cannot be less than 0.
-
-                        </span>
-
-                        <span *ngIf="f['yearsOfExperience'].errors?.['max']">
-
-                            Experience cannot exceed 50 years.
-
-                        </span>
-
-                    </small>
-
-                </div>
-
-                <!-- Primary Skill -->
-
-                <div class="form-group">
-
-                    <label>
-
-                        Primary Skill
-
-                    </label>
-
-                    <div class="checkbox-group">
-
-                        <input
-                            type="checkbox"
-                            id="isPrimary"
-                            formControlName="isPrimary">
-
-                        <label
-                            for="isPrimary"
-                            class="checkbox-label">
-
-                            Mark as Primary Skill
-
-                        </label>
-
-                    </div>
-
-                </div>
-
-                <!-- =====================================
+    <div class="form-card">
+      <div class="card-header">
+        <h3>
+          {{ editingId ? 'Edit Employee Skill' : 'Add Employee Skill' }}
+        </h3>
+      </div>
+
+      <form [formGroup]="employeeSkillForm" (ngSubmit)="save()">
+        <!-- Employee -->
+        <div class="form-group">
+          <label for="employeeId">
+            Employee
+            <span class="required">*</span>
+          </label>
+          <select class="form-control" formControlName="employeeId">
+            <option [ngValue]="null">-- Select Employee --</option>
+            @for (employee of employees; track employee.id) {
+              <option [ngValue]="employee.id">{{ employee.firstName }} {{ employee.lastName }}</option>
+            }
+          </select>
+
+          @if (submitted && f['employeeId'].errors) {
+            <small class="validation-error"> Employee is required. </small>
+          }
+        </div>
+
+        <!-- Skill -->
+        <div class="form-group">
+          <label for="skillId">
+            Skill
+            <span class="required">*</span>
+          </label>
+
+          <select class="form-control" formControlName="skillId">
+            <option [ngValue]="null">-- Select Skill --</option>
+            @for (skill of skills; track skill.id) {
+              <option [ngValue]="skill.id">
+                {{ skill.name }}
+              </option>
+            }
+          </select>
+          @if (submitted && f['skillId'].errors) {
+            <small class="validation-error"> Skill is required. </small>
+          }
+        </div>
+
+        <!-- Proficiency Level -->
+        <div class="form-group">
+          <label for="proficiencyLevel">
+            Proficiency Level
+            <span class="required">*</span>
+          </label>
+
+          <select class="form-control" formControlName="proficiencyLevel">
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+            <option value="Expert">Expert</option>
+          </select>
+          @if (submitted && f['proficiencyLevel'].errors) {
+            <small class="validation-error"> Proficiency Level is required. </small>
+          }
+        </div>
+        <!-- Years of Experience -->
+        <div class="form-group">
+          <label for="yearsOfExperience">
+            Years of Experience
+            <span class="required">*</span>
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            formControlName="yearsOfExperience"
+            min="0"
+            max="50"
+            placeholder="Enter years of experience"
+          />
+          @if (submitted && f['yearsOfExperience'].errors) {
+            <small class="validation-error">
+              @if (f['yearsOfExperience'].errors?.['required']) {
+                <span> Years of Experience is required. </span>
+              }
+              @if (f['yearsOfExperience'].errors?.['min']) {
+                <span> Years of Experience is required. </span>
+              }
+              @if (f['yearsOfExperience'].errors?.['required']) {
+                <span> Experience cannot exceed 50 years. </span>
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Primary Skill -->
+        <div class="form-group">
+          <label for="isPrimary"> Primary Skill </label>
+          <div class="checkbox-group">
+            <input type="checkbox" id="isPrimary" formControlName="isPrimary" />
+            <label for="isPrimary" class="checkbox-label"> Mark as Primary Skill </label>
+          </div>
+        </div>
+        <!-- =====================================
                      Form Buttons
                 ====================================== -->
 
-                <div class="form-actions">
+        <div class="form-actions">
+          <button type="submit" [disabled]="saving">
+            @if (!saving) {}
+            <span>
+              <i class="bi bi-check-circle"></i>
+              {{ editingId ? 'Update Employee Skill' : 'Save Employee Skill' }}
+            </span>
+            @if (saving) {
+              <span>
+                <span class="spinner-border spinner-border-sm"></span>
+                Saving...
+              </span>
+            }
+          </button>
 
-                    <button
-                        type="submit"
-                        [disabled]="saving">
-
-                        <span *ngIf="!saving">
-
-                            <i class="bi bi-check-circle"></i>
-
-                            {{ editingId ? 'Update Employee Skill' : 'Save Employee Skill' }}
-
-                        </span>
-
-                        <span *ngIf="saving">
-
-                            <span class="spinner-border spinner-border-sm"></span>
-
-                            Saving...
-
-                        </span>
-
-                    </button>
-
-                    <button
-                        type="button"
-                        class="secondary"
-                        (click)="cancel()"
-                        [disabled]="saving">
-
-                        <i class="bi bi-x-circle"></i>
-
-                        Cancel
-
-                    </button>
-
-                </div>
-
-            </form>
-
+          <button type="button" class="secondary" (click)="cancel()" [disabled]="saving">
+            <i class="bi bi-x-circle"></i>
+            Cancel
+          </button>
         </div>
-
-        <!-- =====================================
+      </form>
+    </div>
+    <!-- =====================================
              Employee Skill List
         ====================================== -->
-
-        <div class="table-card">
-
-            <div class="card-header">
-
-                <h3>
-
-                    Employee Skill List
-
-                </h3>
-
-                <span class="badge">
-
-                    {{ filteredEmployeeSkills.length }}
-
-                </span>
-
-            </div>
+    <div class="table-card">
+      <div class="card-header">
+        <h3>Employee Skill List</h3>
+        <span class="badge">
+          {{ filteredEmployeeSkills.length }}
+        </span>
+      </div>
       <!-- ===============================
               Search Toolbar
           ================================ -->
-
-          <div class="table-toolbar">
-
-              <input
-                  type="text"
-                  placeholder="Search employee, skill or proficiency..."
-                  class="form-control"                  
-                  (input)="filter($event)">
-
-          </div>
-
-          <!-- =====================================
+      <div class="table-toolbar">
+        <input
+          type="text"
+          placeholder="Search employee, skill or proficiency..."
+          class="form-control"
+          (input)="filter($event)"
+        />
+      </div>
+      <!-- =====================================
                  Loading
             ====================================== -->
-
-            <div
-                class="loading-container"
-                *ngIf="loading">
-
-                <div class="loader"></div>
-
-                <p>Loading employee skills...</p>
-
-            </div>
-
-            <!-- =====================================
+      @if (loading) {
+        <div class="loading-container">
+          <div class="loader"></div>
+          <p>Loading employee skills...</p>
+        </div>
+      }
+      <!-- =====================================
                  Empty State
             ====================================== -->
-
-            <div
-                class="empty-state"
-                *ngIf="!loading && filteredEmployeeSkills.length === 0">
-
-                <i
-                    class="bi bi-person-x"
-                    style="font-size:48px;"></i>
-
-                <p>
-
-                    No employee skills found.
-
-                </p>
-
-            </div>
-
-            <!-- =====================================
+      @if (!loading && filteredEmployeeSkills.length === 0) {
+        <div class="empty-state">
+          <i class="bi bi-person-x" style="font-size: 48px"></i>
+          <p>No employee skills found.</p>
+        </div>
+      }
+      <!-- =====================================
                  Employee Skills Table
             ====================================== -->
+      @if (!loading && filteredEmployeeSkills.length > 0) {
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 70px">#</th>
 
-            <table
-                *ngIf="!loading && filteredEmployeeSkills.length > 0">
+              <th>Employee</th>
 
-                <thead>
+              <th>Skill</th>
 
-                    <tr>
+              <th>Proficiency</th>
 
-                        <th style="width:70px;">#</th>
+              <th style="width: 130px">Experience</th>
 
-                        <th>Employee</th>
+              <th style="width: 120px">Primary</th>
 
-                        <th>Skill</th>
+              <th style="width: 170px">Actions</th>
+            </tr>
+          </thead>
 
-                        <th>Proficiency</th>
+          <tbody>
+            @for (item of filteredEmployeeSkills; track item.id; let i = $index) {
+              <tr>
+                <td>
+                  {{ i + 1 }}
+                </td>
 
-                        <th style="width:130px;">Experience</th>
+                <td>
+                  <strong>
+                    {{ employeeName(item.employeeId) }}
+                  </strong>
+                </td>
 
-                        <th style="width:120px;">Primary</th>
+                <td>
+                  {{ item.skillName }}
+                </td>
 
-                        <th style="width:170px;">Actions</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    <tr
-                        *ngFor="let item of filteredEmployeeSkills;
-                                 let i = index;
-                                 trackBy: trackById">
-
-                        <td>
-
-                            {{ i + 1 }}
-
-                        </td>
-
-                        <td>
-
-                            <strong>
-
-                                {{ employeeName(item.employeeId) }}
-
-                            </strong>
-
-                        </td>
-
-                        <td>
-
-                            {{ item.skillName }}
-
-                        </td>
-
-                        <td>
-
-                            <span
-                                class="badge level">
-
-                                {{ item.proficiencyLevel }}
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            {{ item.yearsOfExperience }}
-                            Year{{ item.yearsOfExperience === 1 ? '' : 's' }}
-
-                        </td>
-
-                        <td>
-
-                            <span
-                                class="badge success"
-                                *ngIf="item.isPrimary">
-
-                                Yes
-
-                            </span>
-
-                            <span
-                                class="badge secondary"
-                                *ngIf="!item.isPrimary">
-
-                                No
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <div class="actions">
-
-                                <button
-                                    type="button"
-                                    class="edit"
-                                    title="Edit Employee Skill"
-                                    (click)="edit(item)">
-
-                                    <i class="bi bi-pencil-square"></i>
-
-                                </button>
-
-                                <button
-                                    type="button"
-                                    class="delete"
-                                    title="Delete Employee Skill"
-                                    (click)="delete(item.id)">
-
-                                    <i class="bi bi-trash"></i>
-
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
+                <td>
+                  <span class="badge level">
+                    {{ item.proficiencyLevel }}
+                  </span>
+                </td>
+                <td>
+                  {{ item.yearsOfExperience }}
+                  Year{{ item.yearsOfExperience === 1 ? '' : 's' }}
+                </td>
+                <td>
+                  @if (item.isPrimary) {
+                    <span class="badge success"> Yes </span>
+                  }
+                  @if (!item.isPrimary) {
+                    <span class="badge secondary"> No </span>
+                  }
+                </td>
+                <td>
+                  <div class="actions">
+                    <button type="button" class="edit" title="Edit Employee Skill" (click)="edit(item)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button type="button" class="delete" title="Delete Employee Skill" (click)="delete(item.id)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
     </div>
-
+  </div>
 </div>

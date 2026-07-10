@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { DataPrefetchService } from '../services/data-prefetch.service';
 
 @Injectable({ providedIn: 'root' })
 export class PrefetchGuard implements CanActivate {
-  constructor(private prefetch: DataPrefetchService, private router: Router) {}
+  private prefetch = inject(DataPrefetchService);
+  private router = inject(Router);
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const path = state.url;
@@ -28,7 +29,10 @@ export class PrefetchGuard implements CanActivate {
         data$ = this.prefetch.getSkills();
         break;
       default:
-        return new Observable((observer) => { observer.next(true); observer.complete(); });
+        return new Observable((observer) => {
+          observer.next(true);
+          observer.complete();
+        });
     }
 
     return new Observable((observer) => {
@@ -41,7 +45,7 @@ export class PrefetchGuard implements CanActivate {
         error: () => {
           observer.next(true);
           observer.complete();
-        }
+        },
       });
     });
   }
