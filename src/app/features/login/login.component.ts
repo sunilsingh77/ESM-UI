@@ -13,8 +13,8 @@ import { ApiError } from '../../shared/models/api.models';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  email = '';
-  password = '';
+  email = 'sunilsingh77@gmail.com';
+  password = 'Sanjiv@#$857';
   error = '';
   isSubmitting = false;
   isValidating = false;

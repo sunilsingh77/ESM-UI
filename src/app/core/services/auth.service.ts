@@ -8,7 +8,7 @@ import { LoginResponse } from '../../shared/models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private api = 'http://localhost:5137/api/auth';
+  private api = 'https://localhost:7093/api/auth';
   private loggedInSubject = new BehaviorSubject<boolean>(this.hasStoredToken());
   loggedIn$ = this.loggedInSubject.asObservable();
 

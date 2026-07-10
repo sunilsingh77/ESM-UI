@@ -13,7 +13,8 @@ type EmployeeSkillForm = Omit<EmployeeSkill, 'id' | 'skillName' | 'acquiredDate'
   selector: 'app-employee-skills',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './employee-skills.component.html'
+  templateUrl: './employee-skills.component.html',
+  styleUrls: ['./employee-skills.component.css'],
 })
 export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   employeeSkills: EmployeeSkill[] = [];

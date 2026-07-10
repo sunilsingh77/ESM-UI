@@ -4,7 +4,7 @@ import { Department, Employee, EmployeeSkill, DashboardResponse, RegisterRequest
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private readonly baseUrl = 'http://localhost:5137/api';
+  private readonly baseUrl = 'https://localhost:7093/api';
 
   constructor(private http: HttpClient) {}
 

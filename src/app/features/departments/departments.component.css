@@ -1,0 +1,591 @@
+/* ==========================================================
+   Departments Component
+   Employee Skills Summary
+   ========================================================== */
+
+:host {
+    display: block;
+}
+
+/* ==========================================================
+   Page
+   ========================================================== */
+
+.page {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 24px;
+
+}
+
+/* ==========================================================
+   Header
+   ========================================================== */
+
+.page-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+.page-header h2 {
+
+    margin: 0;
+
+    color: var(--text);
+
+    font-size: 34px;
+
+    font-weight: 700;
+
+}
+
+.page-header p {
+
+    margin-top: 8px;
+
+    color: var(--text-light);
+
+    font-size: 15px;
+
+}
+
+/* ==========================================================
+   Layout
+   ========================================================== */
+
+.page-content {
+
+    display: grid;
+
+    grid-template-columns: 380px 1fr;
+
+    gap: 24px;
+
+    align-items: start;
+
+}
+
+/* ==========================================================
+   Cards
+   ========================================================== */
+
+.form-card,
+.table-card {
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow: 0 8px 30px rgba(15,23,42,.06);
+
+}
+
+/* ==========================================================
+   Card Header
+   ========================================================== */
+
+.card-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 18px 22px;
+
+    border-bottom: 1px solid var(--border);
+
+    background: #F8FAFC;
+
+}
+
+.card-header h3 {
+
+    margin: 0;
+
+    color: var(--text);
+
+    font-size: 19px;
+
+}
+
+/* ==========================================================
+   Badge
+   ========================================================== */
+
+.badge {
+
+    background: var(--primary);
+
+    color: white;
+
+    border-radius: 20px;
+
+    padding: 4px 12px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+}
+
+/* ==========================================================
+   Form
+   ========================================================== */
+
+form {
+
+    padding: 22px;
+
+}
+
+.form-group {
+
+    margin-bottom: 22px;
+
+}
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--text);
+
+    font-weight: 600;
+
+}
+
+.required {
+
+    color: #DC2626;
+
+}
+
+.form-control {
+
+    width: 100%;
+
+    padding: 11px 14px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    background: white;
+
+    font-size: 14px;
+
+    transition: all .25s;
+
+    box-sizing: border-box;
+
+}
+
+textarea.form-control {
+
+    resize: vertical;
+
+    min-height: 120px;
+
+}
+
+.form-control:focus {
+
+    outline: none;
+
+    border-color: var(--primary);
+
+    box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+
+}
+
+/* ==========================================================
+   Angular Validation
+   ========================================================== */
+
+.form-control.ng-invalid.ng-touched {
+
+    border-color: #DC2626;
+
+}
+
+.form-control.ng-valid.ng-touched {
+
+    border-color: #22C55E;
+
+}
+
+.validation-error {
+
+    display: block;
+
+    margin-top: 6px;
+
+    color: #DC2626;
+
+    font-size: 13px;
+
+}
+
+/* ==========================================================
+   Buttons
+   ========================================================== */
+
+.form-actions {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 30px;
+
+}
+
+button {
+
+    min-width: 130px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 11px 18px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .25s;
+
+}
+
+button:hover {
+
+    transform: translateY(-2px);
+
+}
+
+button:disabled {
+
+    opacity: .6;
+
+    cursor: not-allowed;
+
+}
+
+button.secondary {
+
+    background: #F1F5F9;
+
+    color: var(--text);
+
+}
+
+button.secondary:hover {
+
+    background: #E2E8F0;
+
+}
+
+/* ==========================================================
+   Alerts
+   ========================================================== */
+
+.alert {
+
+    padding: 15px 18px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+.alert.success {
+
+    background: #ECFDF5;
+
+    border: 1px solid #BBF7D0;
+
+    color: #166534;
+
+}
+
+.alert.error {
+
+    background: #FEF2F2;
+
+    border: 1px solid #FECACA;
+
+    color: #991B1B;
+
+}
+
+/* ==========================================================
+   Loading
+   ========================================================== */
+
+.loading-container {
+
+    text-align: center;
+
+    padding: 60px;
+
+}
+
+.loader {
+
+    width: 44px;
+
+    height: 44px;
+
+    margin: auto;
+
+    border: 4px solid #E2E8F0;
+
+    border-top: 4px solid var(--primary);
+
+    border-radius: 50%;
+
+    animation: spin .8s linear infinite;
+
+}
+
+.loading-container p {
+
+    margin-top: 16px;
+
+    color: var(--text-light);
+
+}
+
+@keyframes spin {
+
+    to {
+
+        transform: rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================================
+   Table
+   ========================================================== */
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+thead {
+
+    background: #F8FAFC;
+
+}
+
+thead th {
+
+    padding: 14px;
+
+    text-align: left;
+
+    color: var(--text-light);
+
+    font-size: 13px;
+
+    text-transform: uppercase;
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+tbody td {
+
+    padding: 14px;
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+tbody tr {
+
+    transition: .25s;
+
+}
+
+tbody tr:hover {
+
+    background: #F8FAFC;
+
+}
+
+/* ==========================================================
+   Actions
+   ========================================================== */
+
+.actions {
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+.actions button {
+
+    min-width: 40px;
+
+    width: 40px;
+
+    height: 40px;
+
+    padding: 0;
+
+    border-radius: 8px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+.actions .edit {
+
+    background: #2563EB;
+
+    color: white;
+
+}
+
+.actions .edit:hover {
+
+    background: #1D4ED8;
+
+}
+
+.actions .delete {
+
+    background: #DC2626;
+
+    color: white;
+
+}
+
+.actions .delete:hover {
+
+    background: #B91C1C;
+
+}
+
+/* ==========================================================
+   Empty State
+   ========================================================== */
+
+.empty-state {
+
+    padding: 60px;
+
+    text-align: center;
+
+    color: var(--text-light);
+
+}
+
+.empty-state i {
+
+    color: #94A3B8;
+
+    margin-bottom: 12px;
+
+}
+
+.empty-state p {
+
+    margin-top: 10px;
+
+    font-size: 15px;
+
+}
+
+/* ==========================================================
+   Responsive
+   ========================================================== */
+
+@media (max-width: 992px) {
+
+    .page-content {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .page-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+
+    }
+
+    .form-actions {
+
+        flex-direction: column;
+
+    }
+
+    .form-actions button {
+
+        width: 100%;
+
+    }
+
+    .actions {
+
+        justify-content: center;
+
+    }
+
+    table {
+
+        display: block;
+
+        overflow-x: auto;
+
+    }
+
+}

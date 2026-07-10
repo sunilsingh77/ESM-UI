@@ -35,11 +35,6 @@
       <li *ngFor="let es of employeeSkillsForSelected()">
         <strong>{{ es.skillName }}</strong> — {{ es.proficiencyLevel }} ({{ es.yearsOfExperience }} yrs)
       </li>
-    </ul>
-
-    <div style="margin-top:16px">
-      <button type="button" (click)="seedDefaults()">Seed Default Data</button>
-      <span style="margin-left:12px">{{ seedMessage }}</span>
-    </div>
+    </ul>   
   </section>
 </section>

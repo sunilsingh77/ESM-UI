@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 
 (async () => {
   const FRONTEND = 'http://localhost:4200/login';
-  const VALIDATE_URL = 'http://localhost:5137/api/auth/validate';
+  const VALIDATE_URL = 'https://localhost:7093/api/auth/validate';
   const EMAIL = 'admin@localhost';
   const PASSWORD = 'Admin123!';
 

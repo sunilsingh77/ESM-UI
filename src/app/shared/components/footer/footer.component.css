@@ -2,9 +2,9 @@
 
     margin-top: 40px;
 
-    background: #FFFFFF;
+    background: #dae2e3;
 
-    border-top: 1px solid #E2E8F0;
+    border-top: 1px solid #cac2ee;
 
     box-shadow: 0 -1px 4px rgba(15,23,42,.03);
 
@@ -86,7 +86,7 @@
 
     justify-content:space-between;
 
-    color:#64748B;
+    color:hwb(180 6% 93%);
 
     font-size:14px;
 
