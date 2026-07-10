@@ -60,6 +60,12 @@ export class NavbarComponent {
       roles: ['Admin', 'Manager', 'Employee']
     },
     {
+      label: 'Employee Skills',
+      route: '/employee-skills',
+      icon: 'bi-award',
+      roles: ['Admin']
+    },
+    {
       label: 'Reports',
       route: '/reports',
       icon: 'bi-file-earmark-bar-graph',

@@ -14,6 +14,7 @@ import { EmployeesResolver } from './core/resolvers/employees.resolver';
 import { EmployeeSkillsResolver } from './core/resolvers/employee-skills.resolver';
 import { SkillsResolver } from './core/resolvers/skills.resolver';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
+import { ReportsComponent } from './features/reports/reports.component';
 
 export const routes: Routes = [
 
@@ -67,8 +68,8 @@ export const routes: Routes = [
 
       {
         path: 'reports',
-        component: SkillsComponent,
-        resolve: { skills: SkillsResolver }
+        component: ReportsComponent,
+        //resolve: { reports: ReportsComponent }
       },
 
 

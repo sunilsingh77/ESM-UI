@@ -46,25 +46,12 @@
         </ul>
 
         <div class="ms-auto d-flex align-items-center">
-
-            <div class="me-3">
-
-                <strong>
-
-                    {{auth.getUserName()}}
-
-                </strong>
-
-                <br>
-
-                <small>
-
-                    {{auth.getUserRoleLabel()}}
-
-                </small>
-
-            </div>
-
+                <div class="user-name">
+                    {{ auth.getUserName() }},
+                </div>
+                <div class="user-role">
+                    {{ auth.getUserRoleLabel() }}
+                </div>
             <button
                 class="btn btn-danger"
                 (click)="logout()">

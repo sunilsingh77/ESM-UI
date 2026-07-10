@@ -37,3 +37,16 @@
     color:white !important;
 
 }
+
+
+.user-name{
+    font-size:15px;
+    font-weight:600;
+    color:#ffffff;
+}
+
+.user-role{
+    font-size:12px;
+    color:#d1d5db;
+    font-weight:500;
+}
