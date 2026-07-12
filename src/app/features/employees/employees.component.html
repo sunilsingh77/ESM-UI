@@ -1,88 +1,204 @@
-<section class="page">
+<section class="page-container">
+  <!-- =========================
+       Page Header
+  ========================== -->
   <div class="page-header">
     <div>
-      <h2>Employees</h2>
+      <h1>Employees</h1>
       <p>Create and maintain employee records.</p>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="btn btn-secondary" (click)="load()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Refresh
+      </button>
     </div>
   </div>
 
+  <!-- =========================
+       Main Content
+  ========================== -->
+
   <div class="page-content">
-    <form class="form-grid" (ngSubmit)="save()">
-      <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input id="firstName" type="text" [(ngModel)]="form.firstName" name="firstName" required />
-      </div>
-      <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input id="lastName" type="text" [(ngModel)]="form.lastName" name="lastName" required />
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input id="email" type="email" [(ngModel)]="form.email" name="email" required />
-      </div>
-      <div class="form-group">
-        <label for="phoneNumber">Phone</label>
-        <input id="phoneNumber" type="text" [(ngModel)]="form.phoneNumber" name="phoneNumber" required />
-      </div>
-      <div class="form-group">
-        <label for="position">Position</label>
-        <input id="position" type="text" [(ngModel)]="form.position" name="position" required />
-      </div>
-      <div class="form-group">
-        <label for="departmentId"> Department </label>
-        <select id="departmentId" [(ngModel)]="form.departmentId" name="departmentId" required>
-          <option [ngValue]="0">Select Department</option>
-          @for (department of departments; track department.id) {
-            <option [ngValue]="department.id">
-              {{ department.name }}
-            </option>
-          }
-        </select>
-      </div>
-      @if (!editingId) {
-        <div class="form-group">
-          <label for="hireDate"> Hire Date </label>
-          <input id="hireDate" type="date" [(ngModel)]="form.hireDate" name="hireDate" required />
+    <!-- =========================
+         Left Panel
+    ========================== -->
+
+    <div class="form-section">
+      <div class="card">
+        <div class="card-header">
+          <h2>
+            {{ editingId ? 'Edit Employee' : 'Employee Details' }}
+          </h2>
         </div>
-      }
-      <div class="form-actions">
-        <button type="submit">
-          {{ editingId ? 'Update' : 'Create' }}
-        </button>
-        <button type="button" class="secondary" (click)="reset()">Clear</button>
-      </div>
-    </form>
-    <div>
-      @if (error) {
-        <div class="alert error">
-          {{ error }}
+
+        <div class="card-body">
+          <form (ngSubmit)="save()">
+            <div class="form-group">
+              <label>First Name</label>
+              <input class="form-control" type="text" [(ngModel)]="form.firstName" name="firstName" required />
+            </div>
+
+            <div class="form-group">
+              <label>Last Name</label>
+              <input class="form-control" type="text" [(ngModel)]="form.lastName" name="lastName" required />
+            </div>
+
+            <div class="form-group">
+              <label>Email</label>
+              <input class="form-control" type="email" [(ngModel)]="form.email" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input class="form-control" type="text" [(ngModel)]="form.phoneNumber" name="phoneNumber" required />
+            </div>
+
+            <div class="form-group">
+              <label>Position</label>
+              <input class="form-control" type="text" [(ngModel)]="form.position" name="position" required />
+            </div>
+
+            <div class="form-group">
+              <label>Department</label>
+
+              <select class="form-control" [(ngModel)]="form.departmentId" name="departmentId" required>
+                <option [ngValue]="0">Select Department</option>
+
+                @for (department of departments; track department.id) {
+                  <option [ngValue]="department.id">
+                    {{ department.name }}
+                  </option>
+                }
+              </select>
+            </div>
+
+            @if (!editingId) {
+              <div class="form-group">
+                <label>Hire Date</label>
+
+                <input class="form-control" type="date" [(ngModel)]="form.hireDate" name="hireDate" required />
+              </div>
+            }
+
+            <div class="form-buttons">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle"></i>
+
+                {{ editingId ? 'Update' : 'Save' }}
+              </button>
+
+              <button type="button" class="btn btn-secondary" (click)="reset()">
+                <i class="bi bi-x-circle"></i>
+
+                Clear
+              </button>
+            </div>
+          </form>
         </div>
-      }
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Department</th>
-            <th>Position</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (employee of employees; track employee.id) {
-            <tr>
-              <td>{{ employee.firstName }} {{ employee.lastName }}</td>
-              <td>{{ employee.email }}</td>
-              <td>{{ employee.departmentName }}</td>
-              <td>{{ employee.position }}</td>
-              <td class="actions">
-                <button type="button" class="secondary" (click)="edit(employee)">Edit</button>
-                <button type="button" class="danger" (click)="delete(employee.id)">Delete</button>
-              </td>
-            </tr>
+      </div>
+    </div>
+
+    <!-- =========================
+         Right Panel
+    ========================== -->
+
+    <div class="grid-section">
+      <div class="card">
+        <div class="card-header">
+          <div class="grid-header">
+            <h2>Employee List</h2>
+
+            <span>
+              Total Records :
+              <strong>{{ employees.length }}</strong>
+            </span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="grid-toolbar">
+            <div class="search-box">
+              <input type="text" placeholder="🔍 Search employee..." [(ngModel)]="searchText" />
+            </div>
+          </div>
+
+          @if (error) {
+            <div class="alert error">
+              {{ error }}
+            </div>
           }
-        </tbody>
-      </table>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+
+                  <th>Email</th>
+
+                  <th>Department</th>
+
+                  <th>Position</th>
+
+                  <th style="width: 120px; text-align: center">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (employee of employees; track employee.id) {
+                  <tr>
+                    <td>
+                      {{ employee.firstName }}
+
+                      {{ employee.lastName }}
+                    </td>
+
+                    <td>
+                      {{ employee.email }}
+                    </td>
+
+                    <td>
+                      {{ employee.departmentName }}
+                    </td>
+
+                    <td>
+                      {{ employee.position }}
+                    </td>
+
+                    <td>
+                      <div class="actions">
+                        <button type="button" class="edit" title="Edit Employee" (click)="edit(employee)">
+                          <i class="bi bi-pencil-square"></i>
+                        </button>
+
+                        <button type="button" class="delete" title="Delete Employee" (click)="delete(employee.id)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+
+                @if (employees.length === 0) {
+                  <tr>
+                    <td colspan="5">
+                      <div class="empty-state">
+                        <i class="bi bi-people" style="font-size: 48px; color: #94a3b8"> </i>
+
+                        <h4>No Employees Found</h4>
+
+                        <p>Click <strong>Save</strong> to create your first employee.</p>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

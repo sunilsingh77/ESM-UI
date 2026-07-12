@@ -12,6 +12,7 @@ import { NavigationLoadService } from '../../core/services/navigation-load.servi
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './skills.component.html',
+  styleUrls: ['./skills.component.css'],
 })
 export class SkillsComponent implements OnInit, OnDestroy {
   skills: Skill[] = [];
@@ -19,6 +20,7 @@ export class SkillsComponent implements OnInit, OnDestroy {
   form: Omit<Skill, 'id'> = { name: '', description: '', category: '' };
   editingId?: number;
   error = '';
+  searchText = '';
 
   private api = inject(ApiService);
   private route = inject(ActivatedRoute);

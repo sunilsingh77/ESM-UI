@@ -180,13 +180,10 @@
       <!-- ===============================
               Search Toolbar
           ================================ -->
-      <div class="table-toolbar">
-        <input
-          type="text"
-          placeholder="Search employee, skill or proficiency..."
-          class="form-control"
-          (input)="filter($event)"
-        />
+      <div class="grid-toolbar">
+        <div class="search-box">
+          <input type="text" placeholder="🔍 Search skill..." (input)="filter($event)" />
+        </div>
       </div>
       <!-- =====================================
                  Loading

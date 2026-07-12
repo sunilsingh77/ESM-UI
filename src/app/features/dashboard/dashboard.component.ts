@@ -1,17 +1,25 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
-import { DashboardResponse, ApiError, Employee, EmployeeSkill, Skill } from '../../shared/models/api.models';
+import {
+  DashboardResponse,
+  ApiError,
+  Employee,
+  EmployeeSkill,
+  Skill,
+  Department,
+} from '../../shared/models/api.models';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   dashboard?: DashboardResponse;
@@ -22,6 +30,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   searchTerm = '';
   selectedEmployeeId = 0;
   seedMessage = '';
+  departments: Department[] = [];
   private destroy$ = new Subject<void>();
 
   private api = inject(ApiService);
@@ -43,7 +52,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.api.getEmployees().subscribe({ next: (items) => (this.employees = items) });
     this.api.getSkills().subscribe({ next: (items) => (this.skills = items) });
     this.api.getEmployeeSkills().subscribe({ next: (items) => (this.employeeSkills = items) });
-
+    this.api.getDepartments().subscribe({
+      next: (items) => {
+        this.departments = items;
+      },
+    });
     this.navigationLoad.routeChange$.pipe(takeUntil(this.destroy$)).subscribe((route) => {
       if (route === '/home') {
         this.api.getDashboard().subscribe({
@@ -182,12 +195,44 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  employeeSkillsForSelected(): EmployeeSkill[] {
-    return this.employeeSkills.filter((es) => es.employeeId === this.selectedEmployeeId);
+  filteredEmployeeSkills: EmployeeSkill[] = [];
+  updateSelectedEmployeeSkills(): void {
+    this.filteredEmployeeSkills = this.employeeSkills.filter((x) => x.employeeId === this.selectedEmployeeId);
   }
-
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+  refreshDashboard(): void {
+    this.api.getDashboard().subscribe({
+      next: (dashboard) => {
+        this.dashboard = dashboard;
+      },
+      error: (err: ApiError) => {
+        this.error = err.message || 'Unable to load dashboard.';
+      },
+    });
+
+    this.api.getEmployees().subscribe({
+      next: (items) => {
+        this.employees = items;
+      },
+    });
+
+    this.api.getSkills().subscribe({
+      next: (items) => {
+        this.skills = items;
+      },
+    });
+
+    this.api.getEmployeeSkills().subscribe({
+      next: (items) => {
+        this.employeeSkills = items;
+      },
+    });
+  }
+  clearSelection(): void {
+    this.searchTerm = '';
+    this.selectedEmployeeId = 0;
   }
 }

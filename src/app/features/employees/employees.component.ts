@@ -14,6 +14,7 @@ type EmployeeForm = Omit<Employee, 'id' | 'departmentName' | 'skills'>;
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './employees.component.html',
+  styleUrls: ['./employees.component.css'],
 })
 export class EmployeesComponent implements OnInit, OnDestroy {
   employees: Employee[] = [];
@@ -22,7 +23,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   form: EmployeeForm = this.emptyForm();
   editingId?: number;
   error = '';
-
+  searchText = '';
   private api = inject(ApiService);
   private route = inject(ActivatedRoute);
   private navigationLoad = inject(NavigationLoadService);

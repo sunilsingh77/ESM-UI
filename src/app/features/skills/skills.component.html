@@ -1,56 +1,155 @@
-<section class="page">
+<section class="page-container">
+  <!-- Header -->
   <div class="page-header">
     <div>
-      <h2>Skills</h2>
-      <p>Maintain the skill catalog.</p>
+      <h1>Skills</h1>
+      <p>Create and maintain technical and functional skills.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-secondary" type="button" (click)="load()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Refresh
+      </button>
     </div>
   </div>
 
+  <!-- Main Content -->
+
   <div class="page-content">
-    <form class="form-grid" (ngSubmit)="save()">
-      <label>Name <input [(ngModel)]="form.name" name="name" required /></label>
-      <label>Category <input [(ngModel)]="form.category" name="category" required /></label>
-      <label class="wide">Description <input [(ngModel)]="form.description" name="description" required /></label>
-      <div class="form-actions">
-        <button type="submit">{{ editingId ? 'Update' : 'Create' }}</button>
-        <button type="button" class="secondary" (click)="reset()">Clear</button>
-      </div>
-    </form>
+    <!-- Left -->
 
-    <div>
-      @if (error) {
-        <div class="alert error">
-          {{ error }}
+    <div class="form-section">
+      <div class="card">
+        <div class="card-header">
+          <h2>
+            {{ editingId ? 'Edit Skill' : 'Skill Details' }}
+          </h2>
         </div>
-      }
 
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (skill of skills; track skill.id) {
-            <tr>
-              <td>{{ skill.name }}</td>
-              <td>{{ skill.category }}</td>
-              <td>{{ skill.description }}</td>
-              <td class="actions">
-                <button type="button" class="secondary" (click)="edit(skill)">Edit</button>
-                <button type="button" class="danger" (click)="delete(skill.id)">Delete</button>
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="4" class="text-center">No skills found.</td>
-            </tr>
+        <div class="card-body">
+          <form (ngSubmit)="save()">
+            <div class="form-group">
+              <label>Skill Name</label>
+
+              <input class="form-control" [(ngModel)]="form.name" name="name" required />
+            </div>
+
+            <div class="form-group">
+              <label>Category</label>
+
+              <input class="form-control" [(ngModel)]="form.category" name="category" required />
+            </div>
+
+            <div class="form-group">
+              <label>Description</label>
+
+              <textarea class="form-control" [(ngModel)]="form.description" name="description" rows="4" required>
+              </textarea>
+            </div>
+
+            <div class="form-buttons">
+              <button class="btn btn-primary" type="submit">
+                <i class="bi bi-check-circle"></i>
+
+                {{ editingId ? 'Update' : 'Save' }}
+              </button>
+
+              <button class="btn btn-secondary" type="button" (click)="reset()">
+                <i class="bi bi-x-circle"></i>
+
+                Clear
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right -->
+
+    <div class="grid-section">
+      <div class="card">
+        <div class="card-header">
+          <div class="grid-header">
+            <h2>Skill List</h2>
+
+            <span>
+              Total Records :
+
+              <strong>{{ skills.length }}</strong>
+            </span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="grid-toolbar">
+            <div class="search-box">
+              <input type="text" placeholder="🔍 Search skill..." [(ngModel)]="searchText" />
+            </div>
+          </div>
+
+          @if (error) {
+            <div class="alert error">
+              {{ error }}
+            </div>
           }
-        </tbody>
-      </table>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+
+                  <th>Category</th>
+
+                  <th>Description</th>
+
+                  <th style="width: 120px; text-align: center">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (skill of skills; track skill.id) {
+                  <tr>
+                    <td>{{ skill.name }}</td>
+
+                    <td>{{ skill.category }}</td>
+
+                    <td>{{ skill.description }}</td>
+
+                    <td>
+                      <div class="actions">
+                        <button class="edit" type="button" title="Edit Skill" (click)="edit(skill)">
+                          <i class="bi bi-pencil-square"></i>
+                        </button>
+
+                        <button class="delete" type="button" title="Delete Skill" (click)="delete(skill.id)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+
+                @if (skills.length === 0) {
+                  <tr>
+                    <td colspan="4">
+                      <div class="empty-state">
+                        <i class="bi bi-tools" style="font-size: 48px; color: #94a3b8"> </i>
+
+                        <h4>No Skills Found</h4>
+
+                        <p>Click <strong>Save</strong> to create your first skill.</p>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

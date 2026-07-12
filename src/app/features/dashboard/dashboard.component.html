@@ -1,53 +1,342 @@
-<section class="page">
+<section class="page-container">
+  <!-- ==========================================================
+       Page Header
+  =========================================================== -->
+
   <div class="page-header">
     <div>
-      <h2>Home</h2>
-      @if (dashboard) {
-        <p>{{ dashboard.message }}</p>
-      }
+      <h1>Dashboard</h1>
+
+      <p>Employee Skills Summary Management System</p>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="btn btn-secondary" (click)="refreshDashboard()">
+        <i class="bi bi-arrow-clockwise"></i>
+
+        Refresh
+      </button>
     </div>
   </div>
+
+  <!-- ==========================================================
+       Error Message
+  =========================================================== -->
+
   @if (error) {
-    <div class="alert error">{{ error }}</div>
-  }
-  <!--<div class="stats-grid" *ngIf="dashboard">
-    <article class="stat-card">
-      <span>Email</span>
-      <strong>{{ dashboard.email }}</strong>
-    </article>
-    <article class="stat-card">
-      <span>Roles</span>
-      <strong>{{ dashboard.roles.join(', ') || 'No roles assigned' }}</strong>
-    </article>
-  </div>-->
+    <div class="alert error">
+      <i class="bi bi-exclamation-circle-fill"></i>
 
-  <section style="margin-top: 20px">
-    <h3>Employee Skill Summary</h3>
-    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px">
-      <input placeholder="Search employee by name" [(ngModel)]="searchTerm" />
-      <button type="button" class="secondary" (click)="searchByName()">Search</button>
-      <select [(ngModel)]="selectedEmployeeId">
-        <option [ngValue]="0">-- Select Employee --</option>
-        @for (e of employees; track e.id) {
-          <option [ngValue]="e.id">{{ e.firstName }} {{ e.lastName }}</option>
-        }
-      </select>
+      {{ error }}
     </div>
-    @if (selectedEmployeeId === 0) {
-      <div>No employee selected.</div>
-    }
+  }
 
-    @if (selectedEmployeeId !== 0) {
-      <ul>
-        @for (es of employeeSkillsForSelected(); track $index) {
-          <li>
-            <strong>{{ es.skillName }}</strong>
-            — {{ es.proficiencyLevel }} ({{ es.yearsOfExperience }} yrs)
-          </li>
-        } @empty {
-          <li>No skills assigned.</li>
-        }
-      </ul>
-    }
-  </section>
+  <!-- ==========================================================
+       KPI Cards
+  =========================================================== -->
+
+  <div class="dashboard-cards">
+    <!-- Employees -->
+
+    <div class="dashboard-card employees">
+      <div class="card-icon">
+        <i class="bi bi-people-fill"></i>
+      </div>
+
+      <div class="card-content">
+        <span class="card-title"> Employees </span>
+
+        <h2>
+          {{ employees.length }}
+        </h2>
+      </div>
+    </div>
+
+    <!-- Departments -->
+
+    <div class="dashboard-card departments">
+      <div class="card-icon">
+        <i class="bi bi-building"></i>
+      </div>
+
+      <div class="card-content">
+        <span class="card-title"> Departments </span>
+
+        <h2>
+          <!--{{ dashboard?.departmentCount ?? 0 }}-->
+          <h2>{{ departments.length }}</h2>
+        </h2>
+      </div>
+    </div>
+
+    <!-- Skills -->
+
+    <div class="dashboard-card skills">
+      <div class="card-icon">
+        <i class="bi bi-tools"></i>
+      </div>
+
+      <div class="card-content">
+        <span class="card-title"> Skills </span>
+
+        <h2>
+          {{ skills.length }}
+        </h2>
+      </div>
+    </div>
+
+    <!-- Employee Skills -->
+
+    <div class="dashboard-card mappings">
+      <div class="card-icon">
+        <i class="bi bi-award-fill"></i>
+      </div>
+
+      <div class="card-content">
+        <span class="card-title"> Employee Skills </span>
+
+        <h2>
+          {{ employeeSkills.length }}
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       Main Dashboard Content
+  =========================================================== -->
+
+  <div class="dashboard-content">
+    <!-- ==========================================================
+       Employee Skill Lookup
+  =========================================================== -->
+
+    <div class="dashboard-left">
+      <div class="card">
+        <div class="card-header">
+          <h2>Employee Skill Lookup</h2>
+        </div>
+
+        <div class="card-body">
+          <div class="form-group">
+            <label> Search Employee </label>
+
+            <input type="text" class="form-control" placeholder="Search employee by name..." [(ngModel)]="searchTerm" />
+          </div>
+
+          <div class="form-group">
+            <label> Employee </label>
+
+            <select class="form-control" [(ngModel)]="selectedEmployeeId">
+              <option [ngValue]="0">-- Select Employee --</option>
+
+              @for (employee of employees; track employee.id) {
+                <option [ngValue]="employee.id">
+                  {{ employee.firstName }}
+                  {{ employee.lastName }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="form-buttons">
+            <button type="button" class="btn btn-primary" (click)="searchByName()">
+              <i class="bi bi-search"></i>
+
+              Search
+            </button>
+
+            <button type="button" class="btn btn-secondary" (click)="clearSelection()">
+              <i class="bi bi-x-circle"></i>
+
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================================
+         Quick Actions
+    =========================================================== -->
+
+      <div class="card mt-4">
+        <div class="card-header">
+          <h2>Quick Actions</h2>
+        </div>
+
+        <div class="card-body">
+          <div class="quick-actions">
+            <a routerLink="/employees" class="quick-action">
+              <i class="bi bi-person-plus-fill"></i>
+
+              <span> Add Employee </span>
+            </a>
+
+            <a routerLink="/departments" class="quick-action">
+              <i class="bi bi-building-add"></i>
+
+              <span> Add Department </span>
+            </a>
+
+            <a routerLink="/skills" class="quick-action">
+              <i class="bi bi-tools"></i>
+
+              <span> Add Skill </span>
+            </a>
+
+            <a routerLink="/employee-skills" class="quick-action">
+              <i class="bi bi-award-fill"></i>
+
+              <span> Assign Skill </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================
+       Right Panel
+  =========================================================== -->
+
+    <div class="dashboard-right">
+      <div class="card">
+        <div class="card-header">
+          <div class="grid-header">
+            <h2>Assigned Skills</h2>
+
+            <span>
+              Total Skills :
+
+              <strong>
+                {{ filteredEmployeeSkills.length }}
+              </strong>
+            </span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          @if (selectedEmployeeId === 0) {
+            <div class="empty-state">
+              <i class="bi bi-person-badge"></i>
+
+              <h4>No Employee Selected</h4>
+
+              <p>Search or select an employee to view assigned skills.</p>
+            </div>
+          }
+
+          @if (selectedEmployeeId !== 0) {
+            @if (filteredEmployeeSkills.length === 0) {
+              <div class="empty-state">
+                <i class="bi bi-award"></i>
+
+                <h4>No Skills Assigned</h4>
+
+                <p>This employee has no assigned skills.</p>
+              </div>
+            }
+
+            @if (filteredEmployeeSkills.length > 0) {
+              <div class="table-responsive">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+
+                      <th>Skill</th>
+
+                      <th>Proficiency</th>
+
+                      <th>Experience</th>
+
+                      <th>Primary</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    @for (skill of filteredEmployeeSkills; track skill.id; let i = $index) {
+                      <tr>
+                        <td>
+                          {{ i + 1 }}
+                        </td>
+
+                        <td>
+                          <strong>
+                            {{ skill.skillName }}
+                          </strong>
+                        </td>
+
+                        <td>
+                          <span class="badge level">
+                            {{ skill.proficiencyLevel }}
+                          </span>
+                        </td>
+
+                        <td>
+                          {{ skill.yearsOfExperience }}
+
+                          Year{{ skill.yearsOfExperience === 1 ? '' : 's' }}
+                        </td>
+
+                        <td>
+                          @if (skill.isPrimary) {
+                            <span class="badge success"> Yes </span>
+                          } @else {
+                            <span class="badge secondary"> No </span>
+                          }
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          }
+        </div>
+      </div>
+      <!-- ==========================================================
+         Dashboard Footer
+      =========================================================== -->
+
+      <div class="card mt-4">
+        <div class="card-header">
+          <h2>Dashboard Summary</h2>
+        </div>
+
+        <div class="card-body">
+          <div class="dashboard-summary">
+            <div class="summary-item">
+              <label> Total Employees </label>
+
+              <strong>
+                {{ employees.length }}
+              </strong>
+            </div>
+
+            <div class="summary-item">
+              <label> Total Skills </label>
+
+              <strong>
+                {{ skills.length }}
+              </strong>
+            </div>
+
+            <div class="summary-item">
+              <label> Employee Skill Mapping </label>
+
+              <strong>
+                {{ employeeSkills.length }}
+              </strong>
+            </div>
+
+            <div class="summary-item">
+              <label> System Status </label>
+
+              <span class="badge success"> Active </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
