@@ -6,11 +6,10 @@ import { ReactiveFormsModule, FormBuilder, FormsModule, FormGroup, Validators } 
 
 import { ActivatedRoute } from '@angular/router';
 
-import { Subject, takeUntil } from 'rxjs';
-
+import { Subject } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
-
+import { forkJoin } from 'rxjs';
 import { Employee, EmployeeSkill, Skill, ApiError } from '../../shared/models/api.models';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -71,31 +70,47 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   private api = inject(ApiService);
   private route = inject(ActivatedRoute);
   private navigationLoad = inject(NavigationLoadService);
+
+  constructor() {
+    console.log('EmployeeSkillsComponent instance', this);
+  }
   //==========================================================
   // OnInit
   //==========================================================
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.buildForm();
 
-    this.loadMasters();
+    this.loadData();
+  }
 
-    const resolved = this.route.snapshot.data['employeeSkills'] as EmployeeSkill[] | undefined;
+  private loadData(): void {
+    this.loading = true;
+    this.error = '';
+    forkJoin({
+      employees: this.api.getEmployees(),
+      skills: this.api.getSkills(),
+      employeeSkills: this.api.getEmployeeSkills(),
+    }).subscribe({
+      next: ({ employees, skills, employeeSkills }) => {
+        this.employees = [...employees];
+        console.log('After assignment', this.employees.length, this);
+        console.log(this.employees);
+        this.skills = [...skills];
 
-    if (resolved) {
-      this.employeeSkills = resolved;
+        this.employeeSkills = [...employeeSkills];
 
-      this.filteredEmployeeSkills = [...resolved];
-    } else {
-      this.loadEmployeeSkills();
-    }
+        this.filteredEmployeeSkills = [...employeeSkills];
 
-    this.navigationLoad.routeChange$.pipe(takeUntil(this.destroy$)).subscribe((route) => {
-      if (route === '/employee-skills') {
-        this.loadEmployeeSkills();
-      }
+        this.loading = false;
+      },
+
+      error: (err: HttpErrorResponse) => {
+        this.handleError(err);
+      },
     });
   }
+
   //==========================================================
   // Build Form
   //==========================================================
@@ -120,66 +135,13 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   get f() {
     return this.employeeSkillForm.controls;
   }
-  //==========================================================
-  // Load Master Data
-  //==========================================================
-
-  private loadMasters(): void {
-    this.api.getEmployees().subscribe({
-      next: (data) => {
-        this.employees = data;
-      },
-    });
-
-    this.api.getSkills().subscribe({
-      next: (data) => {
-        this.skills = data;
-      },
-    });
-  }
-
-  //==========================================================
-  // Load Employee Skills
-  //==========================================================
-
-  loadEmployeeSkills(): void {
-    this.loading = true;
-    this.error = '';
-
-    this.api.getEmployeeSkills().subscribe({
-      next: (data) => {
-        this.employeeSkills = data;
-        this.filteredEmployeeSkills = [...data];
-
-        this.loading = false;
-      },
-
-      error: (err: ApiError) => {
-        this.loading = false;
-
-        this.error = err.message || 'Unable to load employee skills.';
-      },
-    });
-  }
 
   //==========================================================
   // Refresh
   //==========================================================
 
   refresh(): void {
-    this.loadEmployeeSkills();
-  }
-
-  load(): void {
-    this.api.getEmployeeSkills().subscribe({
-      next: (items) => {
-        this.employeeSkills = items;
-      },
-
-      error: (err: ApiError) => {
-        this.error = err.message || 'Unable to load employee skills.';
-      },
-    });
+    this.loadData();
   }
 
   //==========================================================
@@ -200,6 +162,7 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
 
     const payload = {
       employeeId: Number(this.f['employeeId'].value),
+      employeeName: '',
       skillId: Number(this.f['skillId'].value),
       proficiencyLevel: this.f['proficiencyLevel'].value,
       yearsOfExperience: Number(this.f['yearsOfExperience'].value),
@@ -218,7 +181,7 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
 
         this.cancel();
 
-        this.loadEmployeeSkills();
+        this.loadData();
 
         this.clearSuccess();
       },
@@ -243,13 +206,9 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
 
     this.employeeSkillForm.patchValue({
       employeeId: item.employeeId,
-
       skillId: item.skillId,
-
       proficiencyLevel: item.proficiencyLevel,
-
       yearsOfExperience: item.yearsOfExperience,
-
       isPrimary: item.isPrimary,
     });
 
@@ -280,7 +239,7 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
 
         this.success = 'Employee Skill deleted successfully.';
 
-        this.loadEmployeeSkills();
+        this.loadData();
 
         this.clearSuccess();
       },

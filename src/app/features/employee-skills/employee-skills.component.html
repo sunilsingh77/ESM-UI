@@ -53,6 +53,7 @@
             Employee
             <span class="required">*</span>
           </label>
+          <p>Total Employees: {{ employees.length }}</p>
           <select class="form-control" formControlName="employeeId">
             <option [ngValue]="null">-- Select Employee --</option>
             @for (employee of employees; track employee.id) {
@@ -237,7 +238,7 @@
 
                 <td>
                   <strong>
-                    {{ employeeName(item.employeeId) }}
+                    {{ item.employeeName }}
                   </strong>
                 </td>
 

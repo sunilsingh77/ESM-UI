@@ -45,6 +45,7 @@ export interface Employee {
 export interface EmployeeSkill {
   id: number;
   employeeId: number;
+  employeeName: string;
   skillId: number;
   skillName: string;
   proficiencyLevel: string;
