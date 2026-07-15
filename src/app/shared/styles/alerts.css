@@ -1,0 +1,19 @@
+.alert {
+  padding: 14px 18px;
+
+  border-radius: 8px;
+
+  margin-bottom: 20px;
+}
+
+.alert-success {
+  background: var(--success-light);
+
+  color: var(--success);
+}
+
+.alert-danger {
+  background: var(--danger-light);
+
+  color: var(--danger);
+}

@@ -11,13 +11,16 @@ import {
   EmployeeSkill,
   Skill,
   Department,
-} from '../../shared/models/api.models';
+} from '../../shared/components/models/api.models';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
+import { SearchBoxComponent } from '../../shared/components/search-box/search-box.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, SearchBoxComponent, PageHeaderComponent, LoadingSpinnerComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
@@ -29,6 +32,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   employeeSkills: EmployeeSkill[] = [];
   searchTerm = '';
   selectedEmployeeId = 0;
+  loading = false;
   seedMessage = '';
   departments: Department[] = [];
   private destroy$ = new Subject<void>();

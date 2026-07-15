@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { LoginResponse } from '../../shared/models/api.models';
+import { LoginResponse } from '../../shared/components/models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

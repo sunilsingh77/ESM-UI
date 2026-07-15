@@ -3,23 +3,18 @@
          Page Header
     ========================================== -->
 
-  <div class="page-header">
-    <div>
-      <h2>Employee Skills Management</h2>
-      <p>Create, update and manage employee skill mappings.</p>
-    </div>
-    <button type="button" class="secondary" (click)="refresh()" [disabled]="loading">
-      <i class="bi bi-arrow-clockwise"></i>
-      Refresh
-    </button>
-  </div>
+  <app-page-header title="Employee Skills" subtitle="Assign and manage employee skills">
+    <button headerAction class="btn btn-primary" (click)="save()">
+      <i class="bi bi-plus-circle"></i>
 
+      Assign Skill
+    </button>
+  </app-page-header>
   <!-- =========================================
          Success Message
     ========================================== -->
   @if (success) {
     <div class="alert success">
-      <i class="bi bi-check-circle-fill"></i>
       {{ success }}
     </div>
   }
@@ -170,44 +165,21 @@
     <!-- =====================================
              Employee Skill List
         ====================================== -->
-    <div class="table-card">
-      <div class="card-header">
-        <h3>Employee Skill List</h3>
-        <span class="badge">
-          {{ filteredEmployeeSkills.length }}
-        </span>
-      </div>
-      <!-- ===============================
-              Search Toolbar
-          ================================ -->
+    <app-page-card title="Employee Skill List" [badge]="filteredEmployeeSkills.length">
       <div class="grid-toolbar">
-        <div class="search-box">
-          <input type="text" placeholder="🔍 Search skill..." (input)="filter($event)" />
-        </div>
+        <app-search-box placeholder="Search employee skills..." [(value)]="searchText" (search)="applyFilter()">
+        </app-search-box>
       </div>
-      <!-- =====================================
-                 Loading
-            ====================================== -->
+
       @if (loading) {
-        <div class="loading-container">
-          <div class="loader"></div>
-          <p>Loading employee skills...</p>
-        </div>
+        <app-loading-spinner message="Loading employee skills..."> </app-loading-spinner>
       }
-      <!-- =====================================
-                 Empty State
-            ====================================== -->
-      @if (!loading && filteredEmployeeSkills.length === 0) {
-        <div class="empty-state">
-          <i class="bi bi-person-x" style="font-size: 48px"></i>
-          <p>No employee skills found.</p>
-        </div>
-      }
+      <!-- Table -->
       <!-- =====================================
                  Employee Skills Table
             ====================================== -->
       @if (!loading && filteredEmployeeSkills.length > 0) {
-        <table>
+        <app-table>
           <thead>
             <tr>
               <th style="width: 70px">#</th>
@@ -265,16 +237,38 @@
                     <button type="button" class="edit" title="Edit Employee Skill" (click)="edit(item)">
                       <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button type="button" class="delete" title="Delete Employee Skill" (click)="delete(item.id)">
+                    <button type="button" class="delete" title="Delete Employee Skill" (click)="delete(item)">
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>
                 </td>
               </tr>
             }
+            @if (filteredEmployeeSkills.length === 0) {
+              <tr>
+                <td colspan="5">
+                  <app-empty-state
+                    icon="bi bi-diagram-3"
+                    title="No Employee Skills"
+                    description="No employee skill mappings found."
+                  >
+                  </app-empty-state>
+                </td>
+              </tr>
+            }
           </tbody>
-        </table>
+        </app-table>
       }
-    </div>
+    </app-page-card>
   </div>
+  <app-confirm-dialog
+    [visible]="showDeleteDialog"
+    title="Delete Department"
+    message="Are you sure you want to delete this employee skill.?"
+    confirmText="Delete"
+    cancelText="Cancel"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()"
+  >
+  </app-confirm-dialog>
 </div>

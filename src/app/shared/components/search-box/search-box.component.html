@@ -1,0 +1,20 @@
+<div class="search-box">
+  <div class="search-input">
+    <i class="bi bi-search"></i>
+
+    <input
+      type="text"
+      class="form-control"
+      [placeholder]="placeholder"
+      [value]="value"
+      (input)="onInput($event)"
+      (keyup.enter)="onSearch()"
+    />
+
+    @if (value.length > 0) {
+      <button type="button" class="clear-button" title="Clear" (click)="clear()">
+        <i class="bi bi-x-circle-fill"></i>
+      </button>
+    }
+  </div>
+</div>

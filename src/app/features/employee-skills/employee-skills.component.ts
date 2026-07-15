@@ -10,13 +10,31 @@ import { Subject } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 import { forkJoin } from 'rxjs';
-import { Employee, EmployeeSkill, Skill, ApiError } from '../../shared/models/api.models';
+import { Employee, EmployeeSkill, Skill, ApiError } from '../../shared/components/models/api.models';
 import { HttpErrorResponse } from '@angular/common/http';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { SearchBoxComponent } from '../../shared/components/search-box/search-box.component';
+import { PageCardComponent } from '../../shared/components/page-card/page-card.component';
+import { TableComponent } from '../../shared/components/table/table.component';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-employee-skills',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    PageHeaderComponent,
+    SearchBoxComponent,
+    PageCardComponent,
+    TableComponent,
+    LoadingSpinnerComponent,
+    ConfirmDialogComponent,
+    EmptyStateComponent,
+  ],
   templateUrl: './employee-skills.component.html',
   styleUrls: ['./employee-skills.component.css'],
 })
@@ -81,11 +99,10 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.buildForm();
 
-    this.loadData();
+    this.loadEmployeeSkill();
   }
 
-  private loadData(): void {
-    this.loading = true;
+  private loadEmployeeSkill(): void {
     this.error = '';
     forkJoin({
       employees: this.api.getEmployees(),
@@ -101,8 +118,6 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
         this.employeeSkills = [...employeeSkills];
 
         this.filteredEmployeeSkills = [...employeeSkills];
-
-        this.loading = false;
       },
 
       error: (err: HttpErrorResponse) => {
@@ -141,7 +156,7 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   //==========================================================
 
   refresh(): void {
-    this.loadData();
+    this.loadEmployeeSkill();
   }
 
   //==========================================================
@@ -181,7 +196,7 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
 
         this.cancel();
 
-        this.loadData();
+        this.loadEmployeeSkill();
 
         this.clearSuccess();
       },
@@ -219,38 +234,6 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
     });
   }
 
-  //==========================================================
-  // Delete
-  //==========================================================
-
-  delete(id: number): void {
-    if (!confirm('Are you sure you want to delete this Employee Skill?')) {
-      return;
-    }
-
-    this.success = '';
-    this.error = '';
-
-    this.loading = true;
-
-    this.api.deleteEmployeeSkill(id).subscribe({
-      next: () => {
-        this.loading = false;
-
-        this.success = 'Employee Skill deleted successfully.';
-
-        this.loadData();
-
-        this.clearSuccess();
-      },
-
-      error: (err: ApiError) => {
-        this.loading = false;
-
-        this.error = err.message || 'Unable to delete employee skill.';
-      },
-    });
-  }
   //==========================================================
   // Cancel
   //==========================================================
@@ -387,13 +370,7 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   //==========================================================
 
   private startLoading(): void {
-    this.loading = true;
-
     this.clearMessages();
-  }
-
-  private stopLoading(): void {
-    this.loading = false;
   }
 
   private startSaving(): void {
@@ -410,7 +387,6 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   //==========================================================
 
   private handleError(error: HttpErrorResponse): void {
-    this.loading = false;
     this.saving = false;
     this.success = '';
     this.error = error?.message || 'An unexpected error occurred. Please try again.';
@@ -433,5 +409,47 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
     this.destroy$.next();
 
     this.destroy$.complete();
+  }
+  public applyFilter(): void {
+    const keyword = this.searchText.trim().toLowerCase();
+
+    if (!keyword) {
+      this.filteredEmployeeSkills = [...this.employeeSkills];
+      return;
+    }
+
+    this.filteredEmployeeSkills = this.employeeSkills.filter(
+      (x) => x.employeeName.toLowerCase().includes(keyword) || x.skillName.toLowerCase().includes(keyword)
+    );
+  }
+
+  // Delete
+
+  showDeleteDialog = false;
+  selectedEmployeeSkill: EmployeeSkill | null = null;
+
+  public delete(employeeSkill: EmployeeSkill): void {
+    this.selectedEmployeeSkill = employeeSkill;
+    this.showDeleteDialog = true;
+  }
+
+  public confirmDelete(): void {
+    if (!this.selectedEmployeeSkill) {
+      return;
+    }
+    this.api.deleteEmployeeSkill(this.selectedEmployeeSkill.id).subscribe({
+      next: () => {
+        this.showDeleteDialog = false;
+        this.selectedEmployeeSkill = null;
+        this.loadEmployeeSkill();
+      },
+      error: () => {
+        this.showDeleteDialog = false;
+      },
+    });
+  }
+
+  cancelDelete(): void {
+    this.showDeleteDialog = false;
   }
 }

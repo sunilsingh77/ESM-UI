@@ -2,7 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
-import { DashboardResponse, Department, Employee, EmployeeSkill, Skill } from '../../shared/models/api.models';
+import {
+  DashboardResponse,
+  Department,
+  Employee,
+  EmployeeSkill,
+  Skill,
+} from '../../shared/components/models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class DataPrefetchService {

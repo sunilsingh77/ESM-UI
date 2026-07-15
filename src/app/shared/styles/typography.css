@@ -1,0 +1,45 @@
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  background: var(--gray-50);
+
+  color: var(--gray-900);
+
+  line-height: 1.5;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+}
+
+label {
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+small {
+  color: var(--gray-500);
+}

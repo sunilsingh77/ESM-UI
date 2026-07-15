@@ -1,0 +1,111 @@
+/*==========================================================
+  Login
+==========================================================*/
+
+.login-page {
+  min-height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 24px;
+
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+}
+
+.login-card {
+  width: 100%;
+
+  max-width: 450px;
+
+  background: #ffffff;
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-lg);
+
+  overflow: hidden;
+}
+
+.login-header {
+  text-align: center;
+
+  padding: 32px 24px;
+
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.login-header h1 {
+  color: var(--primary);
+
+  margin-bottom: 10px;
+}
+
+.login-header p {
+  color: var(--gray-500);
+}
+
+.login-body {
+  padding: 32px;
+}
+
+.login-footer {
+  padding: 20px;
+
+  text-align: center;
+
+  border-top: 1px solid var(--gray-200);
+
+  color: var(--gray-500);
+
+  font-size: 0.85rem;
+}
+
+.login-logo {
+  width: 70px;
+
+  height: 70px;
+
+  margin-bottom: 16px;
+}
+
+.login-actions {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-top: 20px;
+}
+
+.remember-me {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 0.9rem;
+}
+
+.login-btn {
+  width: 100%;
+}
+
+/*==========================================================
+  Responsive
+==========================================================*/
+
+@media (max-width: 768px) {
+  .login-card {
+    max-width: 100%;
+  }
+
+  .login-body {
+    padding: 24px;
+  }
+}

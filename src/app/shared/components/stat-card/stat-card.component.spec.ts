@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Breadcrumb } from './breadcrumb';
+import { StatCardComponent } from './stat-card.component';
 
-describe('Breadcrumb', () => {
-  let component: Breadcrumb;
-  let fixture: ComponentFixture<Breadcrumb>;
+describe('StatCardComponent', () => {
+  let component: StatCardComponent;
+  let fixture: ComponentFixture<StatCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Breadcrumb],
+      imports: [StatCardComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Breadcrumb);
+    fixture = TestBed.createComponent(StatCardComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

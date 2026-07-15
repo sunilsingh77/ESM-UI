@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { ApiError } from '../../shared/models/api.models';
+import { ApiError } from '../../shared/components/models/api.models';
 
 @Component({
   selector: 'app-login',
@@ -14,11 +14,11 @@ import { ApiError } from '../../shared/models/api.models';
 })
 export class LoginComponent implements OnInit {
   email = 'sunilsingh77@gmail.com';
-  password = 'Sanjiv@#$857';
+  password = 'Admin123!';
   error = '';
   isSubmitting = false;
   isValidating = false;
-
+  success = '';
   private auth = inject(AuthService);
   private router = inject(Router);
 

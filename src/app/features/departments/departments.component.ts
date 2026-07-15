@@ -7,18 +7,37 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 
-import { ApiError, Department } from '../../shared/models/api.models';
+import { ApiError, Department } from '../../shared/components/models/api.models';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { SearchBoxComponent } from '../../shared/components/search-box/search-box.component';
+import { PageCardComponent } from '../../shared/components/page-card/page-card.component';
+import { TableComponent } from '../../shared/components/table/table.component';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-departments',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    PageHeaderComponent,
+    SearchBoxComponent,
+    PageCardComponent,
+    TableComponent,
+    LoadingSpinnerComponent,
+    ConfirmDialogComponent,
+    EmptyStateComponent,
+  ],
   templateUrl: './departments.component.html',
   styleUrls: ['./departments.component.css'],
 })
 export class DepartmentsComponent implements OnInit, OnDestroy {
   departments: Department[] = [];
+  searchText = '';
 
+  filteredDepartments: Department[] = [];
   departmentForm!: FormGroup;
 
   editingId: number | null = null;
@@ -74,8 +93,6 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
 
   loadDepartments(): void {
     console.log('Loading departments...');
-
-    this.loading = true;
     this.error = '';
 
     this.api.getDepartments().subscribe({
@@ -84,15 +101,11 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
 
         console.log('loading before:', this.loading);
 
-        this.loading = false;
-
         console.log('loading after:', this.loading);
       },
 
       error: (err) => {
         console.error('Load failed:', err);
-
-        this.loading = false;
 
         this.error = err.message || 'Unable to load departments.';
       },
@@ -161,34 +174,6 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
     this.submitted = false;
   }
 
-  delete(id: number): void {
-    if (!confirm('Delete this department?')) {
-      return;
-    }
-
-    this.saving = true;
-
-    this.api.deleteDepartment(id).subscribe({
-      next: () => {
-        this.success = 'Department deleted successfully.';
-
-        this.loadDepartments();
-      },
-
-      error: (err: ApiError) => {
-        this.error = err.message || 'Unable to delete department.';
-      },
-
-      complete: () => {
-        this.saving = false;
-
-        setTimeout(() => {
-          this.success = '';
-        }, 3000);
-      },
-    });
-  }
-
   cancel(): void {
     this.resetForm();
   }
@@ -209,5 +194,45 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
     this.destroy$.next();
 
     this.destroy$.complete();
+  }
+  public applyFilter(): void {
+    const keyword = this.searchText.trim().toLowerCase();
+
+    if (!keyword) {
+      this.filteredDepartments = [...this.departments];
+      return;
+    }
+
+    this.filteredDepartments = this.departments.filter(
+      (x) => x.name.toLowerCase().includes(keyword) || x.description.toLowerCase().includes(keyword)
+    );
+  }
+
+  showDeleteDialog = false;
+  selectedDepartment: Department | null = null;
+
+  public delete(department: Department): void {
+    this.selectedDepartment = department;
+    this.showDeleteDialog = true;
+  }
+
+  public confirmDelete(): void {
+    if (!this.selectedDepartment) {
+      return;
+    }
+    this.api.deleteDepartment(this.selectedDepartment.id).subscribe({
+      next: () => {
+        this.showDeleteDialog = false;
+        this.selectedDepartment = null;
+        this.loadDepartments();
+      },
+      error: () => {
+        this.showDeleteDialog = false;
+      },
+    });
+  }
+
+  cancelDelete(): void {
+    this.showDeleteDialog = false;
   }
 }

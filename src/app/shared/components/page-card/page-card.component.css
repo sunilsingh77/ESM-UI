@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+.card-header small {
+  color: var(--gray-500);
+
+  display: block;
+
+  margin-top: 4px;
+}
+
+.card-body {
+  padding: var(--card-padding);
+}

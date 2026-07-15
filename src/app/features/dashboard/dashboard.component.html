@@ -2,26 +2,14 @@
   <!-- ==========================================================
        Page Header
   =========================================================== -->
+  <app-page-header title="Dashboard" subtitle="Employee Skills Summary Management System">
+    <button headerAction class="btn btn-secondary" (click)="refreshDashboard()">
+      <i class="bi bi-arrow-clockwise"></i>
+      Refresh
+    </button>
+  </app-page-header>
 
-  <div class="page-header">
-    <div>
-      <h1>Dashboard</h1>
-
-      <p>Employee Skills Summary Management System</p>
-    </div>
-
-    <div class="header-actions">
-      <button type="button" class="btn btn-secondary" (click)="refreshDashboard()">
-        <i class="bi bi-arrow-clockwise"></i>
-
-        Refresh
-      </button>
-    </div>
-  </div>
-
-  <!-- ==========================================================
-       Error Message
-  =========================================================== -->
+  <!-- Error Message-->
 
   @if (error) {
     <div class="alert error">
@@ -119,14 +107,14 @@
 
         <div class="card-body">
           <div class="form-group">
-            <label> Search Employee </label>
+            <label for="searchTerm"> Search Employee </label>
 
-            <input type="text" class="form-control" placeholder="Search employee by name..." [(ngModel)]="searchTerm" />
+            <app-search-box placeholder="Search employee..." [(value)]="searchTerm" (search)="searchByName()">
+            </app-search-box>
           </div>
 
           <div class="form-group">
-            <label> Employee </label>
-
+            <label for="selectedEmployeeId"> Employee </label>
             <select class="form-control" [(ngModel)]="selectedEmployeeId">
               <option [ngValue]="0">-- Select Employee --</option>
 
@@ -235,7 +223,9 @@
                 <p>This employee has no assigned skills.</p>
               </div>
             }
-
+            @if (loading) {
+              <app-loading-spinner message="Loading dashboard..."> </app-loading-spinner>
+            }
             @if (filteredEmployeeSkills.length > 0) {
               <div class="table-responsive">
                 <table>
@@ -306,7 +296,7 @@
         <div class="card-body">
           <div class="dashboard-summary">
             <div class="summary-item">
-              <label> Total Employees </label>
+              <label for="employees"> Total Employees </label>
 
               <strong>
                 {{ employees.length }}
@@ -314,24 +304,21 @@
             </div>
 
             <div class="summary-item">
-              <label> Total Skills </label>
-
+              <label for="skills"> Total Skills </label>
               <strong>
                 {{ skills.length }}
               </strong>
             </div>
 
             <div class="summary-item">
-              <label> Employee Skill Mapping </label>
-
+              <label for="employeeSkills"> Employee Skill Mapping </label>
               <strong>
                 {{ employeeSkills.length }}
               </strong>
             </div>
 
             <div class="summary-item">
-              <label> System Status </label>
-
+              <label for=""> System Status </label>
               <span class="badge success"> Active </span>
             </div>
           </div>

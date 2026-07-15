@@ -2,19 +2,13 @@
   <!-- =========================
        Page Header
   ========================== -->
-  <div class="page-header">
-    <div>
-      <h1>Employees</h1>
-      <p>Create and maintain employee records.</p>
-    </div>
+  <app-page-header title="Employees" subtitle="Manage organization employees">
+    <button headerAction class="btn btn-primary" (click)="save()">
+      <i class="bi bi-plus-circle"></i>
 
-    <div class="header-actions">
-      <button type="button" class="btn btn-secondary" (click)="load()">
-        <i class="bi bi-arrow-clockwise"></i>
-        Refresh
-      </button>
-    </div>
-  </div>
+      Add Employee
+    </button>
+  </app-page-header>
 
   <!-- =========================
        Main Content
@@ -36,32 +30,32 @@
         <div class="card-body">
           <form (ngSubmit)="save()">
             <div class="form-group">
-              <label>First Name</label>
+              <label for="firstname">First Name</label>
               <input class="form-control" type="text" [(ngModel)]="form.firstName" name="firstName" required />
             </div>
 
             <div class="form-group">
-              <label>Last Name</label>
+              <label for="lastname">Last Name</label>
               <input class="form-control" type="text" [(ngModel)]="form.lastName" name="lastName" required />
             </div>
 
             <div class="form-group">
-              <label>Email</label>
+              <label for="email">Email</label>
               <input class="form-control" type="email" [(ngModel)]="form.email" name="email" required />
             </div>
 
             <div class="form-group">
-              <label>Phone Number</label>
+              <label for="phonenumber">Phone Number</label>
               <input class="form-control" type="text" [(ngModel)]="form.phoneNumber" name="phoneNumber" required />
             </div>
 
             <div class="form-group">
-              <label>Position</label>
+              <label for="position">Position</label>
               <input class="form-control" type="text" [(ngModel)]="form.position" name="position" required />
             </div>
 
             <div class="form-group">
-              <label>Department</label>
+              <label for="departmentId">Department</label>
 
               <select class="form-control" [(ngModel)]="form.departmentId" name="departmentId" required>
                 <option [ngValue]="0">Select Department</option>
@@ -76,7 +70,7 @@
 
             @if (!editingId) {
               <div class="form-group">
-                <label>Hire Date</label>
+                <label for="hireDate">Hire Date</label>
 
                 <input class="form-control" type="date" [(ngModel)]="form.hireDate" name="hireDate" required />
               </div>
@@ -105,100 +99,104 @@
     ========================== -->
 
     <div class="grid-section">
-      <div class="card">
-        <div class="card-header">
-          <div class="grid-header">
-            <h2>Employee List</h2>
-
-            <span>
-              Total Records :
-              <strong>{{ employees.length }}</strong>
-            </span>
-          </div>
+      <app-page-card title="Employee List" [badge]="filteredEmployees.length">
+        <div class="grid-toolbar">
+          <app-search-box
+            placeholder="Search employees..."
+            [(value)]="searchText"
+            (search)="applyFilter()"
+          ></app-search-box>
         </div>
 
-        <div class="card-body">
-          <div class="grid-toolbar">
-            <div class="search-box">
-              <input type="text" placeholder="🔍 Search employee..." [(ngModel)]="searchText" />
-            </div>
+        <!-- Loading -->
+        @if (loading) {
+          <app-loading-spinner message="Loading employees..."> </app-loading-spinner>
+        }
+
+        @if (success) {
+          <div class="alert success">
+            {{ success }}
           </div>
+        }
 
-          @if (error) {
-            <div class="alert error">
-              {{ error }}
-            </div>
-          }
-
-          <div class="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-
-                  <th>Email</th>
-
-                  <th>Department</th>
-
-                  <th>Position</th>
-
-                  <th style="width: 120px; text-align: center">Actions</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                @for (employee of employees; track employee.id) {
-                  <tr>
-                    <td>
-                      {{ employee.firstName }}
-
-                      {{ employee.lastName }}
-                    </td>
-
-                    <td>
-                      {{ employee.email }}
-                    </td>
-
-                    <td>
-                      {{ employee.departmentName }}
-                    </td>
-
-                    <td>
-                      {{ employee.position }}
-                    </td>
-
-                    <td>
-                      <div class="actions">
-                        <button type="button" class="edit" title="Edit Employee" (click)="edit(employee)">
-                          <i class="bi bi-pencil-square"></i>
-                        </button>
-
-                        <button type="button" class="delete" title="Delete Employee" (click)="delete(employee.id)">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                }
-
-                @if (employees.length === 0) {
-                  <tr>
-                    <td colspan="5">
-                      <div class="empty-state">
-                        <i class="bi bi-people" style="font-size: 48px; color: #94a3b8"> </i>
-
-                        <h4>No Employees Found</h4>
-
-                        <p>Click <strong>Save</strong> to create your first employee.</p>
-                      </div>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
+        @if (error) {
+          <div class="alert error">
+            {{ error }}
           </div>
-        </div>
-      </div>
+        }
+        <!-- Table -->
+
+        <app-table>
+          <thead>
+            <tr>
+              <th>Name</th>
+
+              <th>Email</th>
+
+              <th>Department</th>
+
+              <th>Position</th>
+
+              <th style="width: 120px; text-align: center">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (employee of employees; track employee.id) {
+              <tr>
+                <td>
+                  {{ employee.firstName }}
+
+                  {{ employee.lastName }}
+                </td>
+
+                <td>
+                  {{ employee.email }}
+                </td>
+
+                <td>
+                  {{ employee.departmentName }}
+                </td>
+
+                <td>
+                  {{ employee.position }}
+                </td>
+
+                <td>
+                  <div class="actions">
+                    <button type="button" class="edit" title="Edit Employee" (click)="edit(employee)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+
+                    <button type="button" class="delete" title="Delete Employee" (click)="delete(employee)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+
+            @if (employees.length === 0) {
+              <tr>
+                <td colspan="5">
+                  <app-empty-state icon="bi bi-people" title="No Employees" description="No employees available.">
+                  </app-empty-state>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </app-table>
+      </app-page-card>
     </div>
+    <app-confirm-dialog
+      [visible]="showDeleteDialog"
+      title="Delete Employee"
+      message="Are you sure you want to delete this employee.?"
+      confirmText="Delete"
+      cancelText="Cancel"
+      (confirmed)="confirmDelete()"
+      (cancelled)="cancelDelete()"
+    >
+    </app-confirm-dialog>
   </div>
 </section>

@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="card-header">
+    <div>
+      <h3>{{ title }}</h3>
+
+      @if (subtitle) {
+        <small>{{ subtitle }}</small>
+      }
+    </div>
+
+    @if (badge !== null) {
+      <span class="badge">
+        {{ badge }}
+      </span>
+    }
+  </div>
+
+  <div class="card-body">
+    <ng-content></ng-content>
+  </div>
+</div>

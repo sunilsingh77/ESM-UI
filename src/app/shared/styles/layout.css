@@ -1,0 +1,25 @@
+.page-container {
+  padding: var(--page-padding);
+
+  min-height: calc(100vh - var(--header-height));
+
+  background: var(--gray-50);
+}
+
+.page-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 24px;
+}
+
+.page-content {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 24px;
+}

@@ -7,7 +7,7 @@ import {
   DashboardResponse,
   RegisterRequest,
   Skill,
-} from '../../shared/models/api.models';
+} from '../../shared/components/models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {

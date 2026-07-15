@@ -3,7 +3,7 @@ import { Resolve } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ApiService } from '../services/api.service';
-import { Department } from '../../shared/models/api.models';
+import { Department } from '../../shared/components/models/api.models';
 
 @Injectable({ providedIn: 'root' })
 export class DepartmentsResolver implements Resolve<Department[]> {

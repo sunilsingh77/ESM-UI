@@ -1,0 +1,58 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.search-box {
+  width: 100%;
+}
+
+.search-input {
+  position: relative;
+}
+
+.search-input i.bi-search {
+  position: absolute;
+
+  left: 14px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: var(--gray-500);
+
+  pointer-events: none;
+}
+
+.search-input .form-control {
+  padding-left: 42px;
+  padding-right: 42px;
+}
+
+.clear-button {
+  position: absolute;
+
+  right: 10px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 28px;
+  height: 28px;
+
+  border: none;
+
+  background: transparent;
+
+  color: var(--gray-500);
+
+  cursor: pointer;
+
+  transition: var(--transition);
+}
+
+.clear-button:hover {
+  color: var(--danger);
+}

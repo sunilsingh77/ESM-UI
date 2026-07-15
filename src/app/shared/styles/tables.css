@@ -1,0 +1,31 @@
+.table-responsive {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+thead {
+  background: var(--gray-50);
+}
+
+thead th {
+  padding: 16px;
+
+  text-align: left;
+
+  border-bottom: 1px solid var(--gray-200);
+}
+
+tbody td {
+  padding: 16px;
+
+  border-bottom: 1px solid var(--gray-100);
+}
+
+tbody tr:hover {
+  background: #f9fafb;
+}

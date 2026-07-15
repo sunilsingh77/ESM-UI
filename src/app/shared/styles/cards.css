@@ -1,0 +1,29 @@
+.card {
+  background: #ffffff;
+
+  border: 1px solid var(--gray-200);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-md);
+
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 18px 24px;
+
+  background: var(--gray-50);
+
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.card-body {
+  padding: var(--card-padding);
+}

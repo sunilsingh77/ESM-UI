@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
-import { ApiError, RegisterRequest } from '../../shared/models/api.models';
+import { ApiError, RegisterRequest } from '../../shared/components/models/api.models';
 
 @Component({
   selector: 'app-account',
