@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
-import { ApiService } from '../../core/services/api.service';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 
 import { ApiError, Department } from '../../shared/components/models/api.models';
@@ -15,6 +14,8 @@ import { TableComponent } from '../../shared/components/table/table.component';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { NotificationService } from '../../core/services/notification.service';
+import { DepartmentService } from './services/department.service';
 
 @Component({
   selector: 'app-departments',
@@ -34,30 +35,25 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
   styleUrls: ['./departments.component.css'],
 })
 export class DepartmentsComponent implements OnInit, OnDestroy {
+  private readonly notification = inject(NotificationService);
   departments: Department[] = [];
   searchText = '';
-
   filteredDepartments: Department[] = [];
   departmentForm!: FormGroup;
-
   editingId: number | null = null;
 
   /** Page loading */
   loading = false;
-
   /** Save/Update/Delete loading */
   saving = false;
-
   submitted = false;
-
   success = '';
-
   error = '';
 
   private destroy$ = new Subject<void>();
 
   private fb = inject(FormBuilder);
-  private api = inject(ApiService);
+  private api = inject(DepartmentService);
   private route = inject(ActivatedRoute);
   private navigationLoad = inject(NavigationLoadService);
 
@@ -92,22 +88,15 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
   }
 
   loadDepartments(): void {
-    console.log('Loading departments...');
     this.error = '';
 
     this.api.getDepartments().subscribe({
       next: (data) => {
         this.departments = [...data];
-
-        console.log('loading before:', this.loading);
-
-        console.log('loading after:', this.loading);
       },
 
-      error: (err) => {
-        console.error('Load failed:', err);
-
-        this.error = err.message || 'Unable to load departments.';
+      error: (error) => {
+        this.notification.error(error.message);
       },
     });
   }

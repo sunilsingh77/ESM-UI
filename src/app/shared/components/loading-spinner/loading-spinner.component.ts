@@ -1,19 +1,15 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
-import { LoadingService } from '../../services/loading.service';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { LoadingService } from '../../../core/services/loading.service';
 
 @Component({
   selector: 'app-loading-spinner',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AsyncPipe],
   templateUrl: './loading-spinner.component.html',
   styleUrls: ['./loading-spinner.component.css'],
 })
 export class LoadingSpinnerComponent {
-  @Input()
-  message = 'Loading...';
-
-  @Input()
-  fullHeight = false;
-  readonly loading$ = inject(LoadingService).loading$;
+  private readonly loadingService = inject(LoadingService);
+  protected readonly loading$ = this.loadingService.loading$;
 }

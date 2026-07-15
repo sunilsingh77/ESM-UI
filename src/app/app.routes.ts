@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+
 import { LoginComponent } from './features/login/login.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { AccountComponent } from './features/account/account.component';
@@ -6,19 +7,28 @@ import { DepartmentsComponent } from './features/departments/departments.compone
 import { EmployeesComponent } from './features/employees/employees.component';
 import { EmployeeSkillsComponent } from './features/employee-skills/employee-skills.component';
 import { SkillsComponent } from './features/skills/skills.component';
-import { LoginRedirectGuard } from './core/guards/login-redirect.guard';
+import { ReportsComponent } from './features/reports/reports.component';
+
+import { MainLayoutComponent } from './layouts/main-layout/main-layout';
+
 import { AuthGuard } from './core/guards/auth.guard';
+import { LoginRedirectGuard } from './core/guards/login-redirect.guard';
+// import { RoleGuard } from './core/guards/role.guard';
+
 import { HomeResolver } from './core/resolvers/home.resolver';
 import { DepartmentsResolver } from './core/resolvers/departments.resolver';
 import { EmployeesResolver } from './core/resolvers/employees.resolver';
 import { EmployeeSkillsResolver } from './core/resolvers/employee-skills.resolver';
 import { SkillsResolver } from './core/resolvers/skills.resolver';
-import { MainLayoutComponent } from './layouts/main-layout/main-layout';
-import { ReportsComponent } from './features/reports/reports.component';
+
+// Future
+// import { NotFoundComponent } from './features/not-found/not-found.component';
+// import { AccessDeniedComponent } from './features/access-denied/access-denied.component';
 
 export const routes: Routes = [
   {
     path: 'login',
+    title: 'Login',
     component: LoginComponent,
     canActivate: [LoginRedirectGuard],
   },
@@ -27,55 +37,99 @@ export const routes: Routes = [
     path: '',
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
+
     children: [
-      {
-        path: 'home',
-        component: DashboardComponent,
-        resolve: { dashboard: HomeResolver },
-      },
-
-      {
-        path: 'account',
-        component: AccountComponent,
-      },
-
-      {
-        path: 'departments',
-        component: DepartmentsComponent,
-        resolve: { departments: DepartmentsResolver },
-      },
-
-      {
-        path: 'employees',
-        component: EmployeesComponent,
-        resolve: { employees: EmployeesResolver },
-      },
-
-      {
-        path: 'employee-skills',
-        component: EmployeeSkillsComponent,
-        resolve: { employeeSkills: EmployeeSkillsResolver },
-      },
-
-      {
-        path: 'skills',
-        component: SkillsComponent,
-        resolve: { skills: SkillsResolver },
-      },
-
-      {
-        path: 'reports',
-        component: ReportsComponent,
-        //resolve: { reports: ReportsComponent }
-      },
-
       {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
       },
+
+      {
+        path: 'home',
+        title: 'Dashboard',
+        component: DashboardComponent,
+        resolve: {
+          dashboard: HomeResolver,
+        },
+      },
+
+      {
+        path: 'account',
+        title: 'My Account',
+        component: AccountComponent,
+      },
+
+      {
+        path: 'departments',
+        title: 'Departments',
+        component: DepartmentsComponent,
+        resolve: {
+          departments: DepartmentsResolver,
+        },
+
+        // Future
+        // canActivate: [RoleGuard],
+        // data: {
+        //   roles: ['Admin']
+        // }
+      },
+
+      {
+        path: 'employees',
+        title: 'Employees',
+        component: EmployeesComponent,
+        resolve: {
+          employees: EmployeesResolver,
+        },
+      },
+
+      {
+        path: 'employee-skills',
+        title: 'Employee Skills',
+        component: EmployeeSkillsComponent,
+        resolve: {
+          employeeSkills: EmployeeSkillsResolver,
+        },
+      },
+
+      {
+        path: 'skills',
+        title: 'Skills',
+        component: SkillsComponent,
+        resolve: {
+          skills: SkillsResolver,
+        },
+      },
+
+      {
+        path: 'reports',
+        title: 'Reports',
+        component: ReportsComponent,
+
+        // Future
+        // canActivate: [RoleGuard],
+        // data: {
+        //   roles: ['Admin']
+        // }
+      },
     ],
   },
+
+  // Future
+  /*
+  {
+      path: 'access-denied',
+      title: 'Access Denied',
+      component: AccessDeniedComponent
+  },
+
+  {
+      path: '**',
+      title: 'Page Not Found',
+      component: NotFoundComponent
+  }
+  */
 
   {
     path: '**',

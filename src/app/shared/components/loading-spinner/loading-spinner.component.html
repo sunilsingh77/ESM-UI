@@ -1,15 +1,11 @@
-<div class="loading-container" [class.full-height]="fullHeight">
-  <div class="spinner-border text-primary"></div>
-  <p>
-    {{ message }}
-  </p>
-</div>
-
 @if (loading$ | async) {
   <div class="loading-overlay">
-    <div class="loading-box">
-      <div class="spinner-border text-primary"></div>
-      <p>Loading...</p>
+    <div class="loading-card">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden"> Loading... </span>
+      </div>
+      <h5>Please wait...</h5>
+      <p>Processing your request.</p>
     </div>
   </div>
 }

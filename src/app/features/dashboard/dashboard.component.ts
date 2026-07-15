@@ -3,7 +3,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { ApiService } from '../../core/services/api.service';
 import {
   DashboardResponse,
   ApiError,
@@ -16,6 +15,11 @@ import { NavigationLoadService } from '../../core/services/navigation-load.servi
 import { SearchBoxComponent } from '../../shared/components/search-box/search-box.component';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
+import { DashboardService } from './services/dashboard.service';
+import { EmployeeService } from '../employees/services/employee.service';
+import { SkillService } from '../skills/services/skill.service';
+import { DepartmentService } from '../departments/services/department.service';
+import { EmployeeSkillService } from '../employee-skills/services/employee-skill.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,7 +41,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   departments: Department[] = [];
   private destroy$ = new Subject<void>();
 
-  private api = inject(ApiService);
+  private api = inject(DashboardService);
+  private apiEmployee = inject(EmployeeService);
+  private apiSkill = inject(SkillService);
+  private apiDepartment = inject(DepartmentService);
+  private apiEmployeeSkill = inject(EmployeeSkillService);
   private route = inject(ActivatedRoute);
   private navigationLoad = inject(NavigationLoadService);
 
@@ -53,10 +61,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     // preload lists for search and summary
-    this.api.getEmployees().subscribe({ next: (items) => (this.employees = items) });
-    this.api.getSkills().subscribe({ next: (items) => (this.skills = items) });
-    this.api.getEmployeeSkills().subscribe({ next: (items) => (this.employeeSkills = items) });
-    this.api.getDepartments().subscribe({
+    this.apiEmployee.getEmployees().subscribe({ next: (items) => (this.employees = items) });
+    this.apiSkill.getSkills().subscribe({ next: (items) => (this.skills = items) });
+    this.apiEmployeeSkill.getEmployeeSkills().subscribe({ next: (items) => (this.employeeSkills = items) });
+    this.apiDepartment.getDepartments().subscribe({
       next: (items) => {
         this.departments = items;
       },
@@ -82,19 +90,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.seedMessage = 'Seeding default data...';
 
     // Load current data then create missing entities in sequence
-    this.api.getDepartments().subscribe({
+    this.apiDepartment.getDepartments().subscribe({
       next: (departments) => {
         const createDepartments = departments.length === 0;
         const createSkills = () =>
-          this.api.getSkills().subscribe({
+          this.apiSkill.getSkills().subscribe({
             next: (skills) => {
               const needSkills = skills.length === 0;
               const createEmployees = () =>
-                this.api.getEmployees().subscribe({
+                this.apiEmployee.getEmployees().subscribe({
                   next: (employees) => {
                     const needEmployees = employees.length === 0;
                     const createEmployeeSkills = () =>
-                      this.api.getEmployeeSkills().subscribe({
+                      this.apiEmployeeSkill.getEmployeeSkills().subscribe({
                         next: (es) => {
                           const needES = es.length === 0;
                           if (needES && employees.length > 0 && skills.length > 0) {
@@ -117,7 +125,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                             ];
                             let done = 0;
                             payloads.forEach((p) =>
-                              this.api.createEmployeeSkill(p as any).subscribe({
+                              this.apiEmployeeSkill.createEmployeeSkill(p as any).subscribe({
                                 next: () => {
                                   done++;
                                   if (done === payloads.length) this.seedMessage = 'Seeding complete.';
@@ -143,7 +151,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                         departmentId: deptId,
                         hireDate: new Date().toISOString(),
                       };
-                      this.api.createEmployee(empPayload as any).subscribe({
+                      this.apiEmployee.createEmployee(empPayload as any).subscribe({
                         next: () => createEmployeeSkills(),
                         error: () => (this.seedMessage = 'Unable to create employees.'),
                       });
@@ -161,7 +169,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 ];
                 let done = 0;
                 skillPayloads.forEach((s) =>
-                  this.api.createSkill(s as any).subscribe({
+                  this.apiSkill.createSkill(s as any).subscribe({
                     next: () => {
                       done++;
                       if (done === skillPayloads.length) createEmployees();
@@ -183,7 +191,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           ];
           let done = 0;
           deptPayloads.forEach((d) =>
-            this.api.createDepartment(d as any).subscribe({
+            this.apiDepartment.createDepartment(d as any).subscribe({
               next: () => {
                 done++;
                 if (done === deptPayloads.length) createSkills();
@@ -217,19 +225,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
       },
     });
 
-    this.api.getEmployees().subscribe({
+    this.apiEmployee.getEmployees().subscribe({
       next: (items) => {
         this.employees = items;
       },
     });
 
-    this.api.getSkills().subscribe({
+    this.apiSkill.getSkills().subscribe({
       next: (items) => {
         this.skills = items;
       },
     });
 
-    this.api.getEmployeeSkills().subscribe({
+    this.apiEmployeeSkill.getEmployeeSkills().subscribe({
       next: (items) => {
         this.employeeSkills = items;
       },

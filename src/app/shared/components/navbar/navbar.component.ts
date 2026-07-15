@@ -1,8 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-
 import { AuthService } from '../../../core/services/auth.service';
 
 export interface MenuItem {
@@ -76,7 +74,6 @@ export class NavbarComponent {
 
   logout(): void {
     this.auth.logout();
-
     this.router.navigate(['/login']);
   }
 }

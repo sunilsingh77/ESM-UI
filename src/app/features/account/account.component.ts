@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../../core/services/api.service';
 import { ApiError, RegisterRequest } from '../../shared/components/models/api.models';
+import { AccountService } from './services/account.service';
 
 @Component({
   selector: 'app-account',
@@ -16,7 +16,7 @@ export class AccountComponent {
   message = '';
   error = '';
 
-  private api = inject(ApiService);
+  private api = inject(AccountService);
 
   toggleRole(role: string, checked: boolean): void {
     this.form.roles = checked

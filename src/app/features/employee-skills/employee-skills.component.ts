@@ -1,13 +1,9 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
-
 import { ReactiveFormsModule, FormBuilder, FormsModule, FormGroup, Validators } from '@angular/forms';
-
 import { ActivatedRoute } from '@angular/router';
 
 import { Subject } from 'rxjs';
-import { ApiService } from '../../core/services/api.service';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 import { forkJoin } from 'rxjs';
 import { Employee, EmployeeSkill, Skill, ApiError } from '../../shared/components/models/api.models';
@@ -19,6 +15,9 @@ import { TableComponent } from '../../shared/components/table/table.component';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { EmployeeSkillService } from './services/employee-skill.service';
+import { EmployeeService } from '../employees/services/employee.service';
+import { SkillService } from '../skills/services/skill.service';
 
 @Component({
   selector: 'app-employee-skills',
@@ -85,7 +84,9 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   //==========================================================
 
   private fb = inject(FormBuilder);
-  private api = inject(ApiService);
+  private api = inject(EmployeeSkillService);
+  private apiEmployee = inject(EmployeeService);
+  private apiSkill = inject(SkillService);
   private route = inject(ActivatedRoute);
   private navigationLoad = inject(NavigationLoadService);
 
@@ -105,8 +106,8 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   private loadEmployeeSkill(): void {
     this.error = '';
     forkJoin({
-      employees: this.api.getEmployees(),
-      skills: this.api.getSkills(),
+      employees: this.apiEmployee.getEmployees(),
+      skills: this.apiSkill.getSkills(),
       employeeSkills: this.api.getEmployeeSkills(),
     }).subscribe({
       next: ({ employees, skills, employeeSkills }) => {

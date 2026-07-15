@@ -1,135 +1,168 @@
 import { inject, Injectable } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+
+import { environment } from '../../../environments/environment';
 import { LoginResponse } from '../../shared/components/models/api.models';
 
-@Injectable({ providedIn: 'root' })
+import { TokenStorageService } from './token-storage.service';
+import { JwtPayload } from '../models/jwt-payload.model';
+
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService {
-  private api = 'https://localhost:7093/api/auth';
-  private loggedInSubject = new BehaviorSubject<boolean>(this.hasStoredToken());
-  loggedIn$ = this.loggedInSubject.asObservable();
-
-  private http = inject(HttpClient);
-  private platformId = inject(PLATFORM_ID);
-
-  login(email: string, password: string) {
-    return this.http.post<LoginResponse>(`${this.api}/login`, { email, password }).pipe(
-      tap((res) => {
-        this.storeAuthTokens(res);
-        this.loggedInSubject.next(true);
+  private readonly http = inject(HttpClient);
+  private readonly tokenStorage = inject(TokenStorageService);
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
+  //private readonly authenticatedSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
+  private readonly authenticatedSubject = new BehaviorSubject<boolean>(false);
+  public readonly authenticated$ = this.authenticatedSubject.asObservable();
+  constructor() {
+    this.authenticatedSubject.next(this.isAuthenticated());
+  }
+  public login(email: string, password: string): Observable<LoginResponse> {
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/login`, {
+        email,
+        password,
       })
-    );
+      .pipe(
+        tap((response) => {
+          this.storeTokens(response);
+
+          this.authenticatedSubject.next(true);
+        })
+      );
   }
 
-  logout() {
-    const rt = this.getRefreshToken();
-    if (rt) {
-      this.http.post(`${this.api}/logout`, { refreshToken: rt }).subscribe();
+  public logout(): void {
+    const refreshToken = this.tokenStorage.getRefreshToken();
+
+    if (refreshToken) {
+      this.http.post(`${this.apiUrl}/logout`, { refreshToken }).subscribe({
+        error: () => {
+          // Ignore logout API errors.
+        },
+      });
     }
-    if (this.isBrowser()) {
-      sessionStorage.removeItem('access_token');
-      sessionStorage.removeItem('refresh_token');
-    }
-    this.loggedInSubject.next(false);
+
+    this.tokenStorage.clear();
+
+    this.authenticatedSubject.next(false);
   }
 
-  validateToken(): Observable<boolean> {
-    const token = this.getAccessToken();
-    if (!token) {
+  public refreshToken(): Observable<LoginResponse | null> {
+    const refreshToken = this.tokenStorage.getRefreshToken();
+
+    if (!refreshToken) {
+      return of(null);
+    }
+
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/refresh`, {
+        refreshToken,
+      })
+      .pipe(
+        tap((response) => {
+          this.storeTokens(response);
+        })
+      );
+  }
+
+  public validateToken(): Observable<boolean> {
+    if (!this.isAuthenticated()) {
       return of(false);
     }
 
-    return this.http.get<void>(`${this.api}/validate`).pipe(
+    return this.http.get<void>(`${this.apiUrl}/validate`).pipe(
       map(() => true),
+
       catchError(() => of(false))
     );
   }
 
-  private storeAuthTokens(response: any) {
-    const accessToken = response?.accessToken || response?.AccessToken || response?.access_token || response?.token;
-    const refreshToken = response?.refreshToken || response?.RefreshToken || response?.refresh_token;
-    if (!this.isBrowser() || !accessToken) {
+  public isLoggedIn(): boolean {
+    return this.isAuthenticated();
+  }
+
+  public getAccessToken(): string | null {
+    return this.tokenStorage.getAccessToken();
+  }
+  public isAuthenticated(): boolean {
+    return this.tokenStorage.hasAccessToken() && !this.isTokenExpired();
+  }
+
+  public getRefreshToken(): string | null {
+    return this.tokenStorage.getRefreshToken();
+  }
+
+  public getUserName(): string {
+    const payload = this.getTokenPayload();
+    return payload?.unique_name ?? payload?.email ?? 'User';
+  }
+
+  public getUserRoles(): string[] {
+    const payload = this.getTokenPayload();
+
+    if (!payload?.role) {
+      return [];
+    }
+
+    return Array.isArray(payload.role) ? payload.role : [payload.role];
+  }
+  public hasRole(role: string): boolean {
+    return this.getUserRoles().includes(role);
+  }
+
+  public hasAnyRole(roles: string[]): boolean {
+    return roles.some((role) => this.hasRole(role));
+  }
+
+  public getCurrentRole(): string | null {
+    const roles = this.getUserRoles();
+
+    return roles.length > 0 ? roles[0] : null;
+  }
+
+  private storeTokens(response: LoginResponse): void {
+    if (!response?.accessToken) {
       return;
     }
 
-    sessionStorage.setItem('access_token', accessToken);
-    if (refreshToken) {
-      sessionStorage.setItem('refresh_token', refreshToken);
-    }
-  }
+    this.tokenStorage.saveTokens(
+      response.accessToken,
 
-  private hasStoredToken() {
-    return this.isBrowser() && !!sessionStorage.getItem('access_token');
-  }
-
-  getAccessToken() {
-    if (!this.isBrowser()) {
-      return null;
-    }
-    return sessionStorage.getItem('access_token');
-  }
-
-  getRefreshToken() {
-    if (!this.isBrowser()) {
-      return null;
-    }
-    return sessionStorage.getItem('refresh_token');
-  }
-
-  getUserName(): string {
-    const payload = this.getTokenPayload();
-    return payload?.['unique_name'] || payload?.['email'] || 'User';
-  }
-
-  getUserRoles(): string[] {
-    const payload = this.getTokenPayload();
-    const roleClaim = payload?.['role'] || payload?.['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-    if (Array.isArray(roleClaim)) {
-      return roleClaim;
-    }
-    return roleClaim ? [roleClaim] : [];
-  }
-
-  getUserRoleLabel(): string {
-    return this.getUserRoles().join(', ') || 'User';
-  }
-
-  refresh() {
-    const rt = this.getRefreshToken();
-    if (!rt) return of(null);
-    return this.http.post<LoginResponse>(`${this.api}/refresh`, { refreshToken: rt }).pipe(
-      tap((res) => {
-        if (this.isBrowser()) {
-          sessionStorage.setItem('access_token', res.accessToken);
-          sessionStorage.setItem('refresh_token', res.refreshToken);
-        }
-      })
+      response.refreshToken
     );
   }
 
-  isLoggedIn() {
-    return !!this.getAccessToken();
-  }
-
-  private isBrowser(): boolean {
-    return isPlatformBrowser(this.platformId);
-  }
-
-  private getTokenPayload(): Record<string, any> | null {
+  private getTokenPayload(): JwtPayload | null {
     const token = this.getAccessToken();
+
     if (!token) {
       return null;
     }
 
     try {
       const payload = token.split('.')[1];
+
       const normalizedPayload = payload.replace(/-/g, '+').replace(/_/g, '/');
-      return JSON.parse(atob(normalizedPayload));
+
+      return JSON.parse(atob(normalizedPayload)) as Record<string, unknown>;
     } catch {
       return null;
     }
+  }
+  public isTokenExpired(): boolean {
+    const payload = this.getTokenPayload();
+
+    if (!payload?.exp) {
+      return true;
+    }
+
+    const expiration = payload.exp * 1000;
+    return Date.now() >= expiration;
   }
 }

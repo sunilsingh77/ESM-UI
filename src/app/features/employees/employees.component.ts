@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { ApiService } from '../../core/services/api.service';
 import { ApiError, Department, Employee } from '../../shared/components/models/api.models';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 import { SearchBoxComponent } from '../../shared/components/search-box/search-box.component';
@@ -13,6 +12,8 @@ import { TableComponent } from '../../shared/components/table/table.component';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import { EmployeeService } from './services/employee.service';
+import { DepartmentService } from '../departments/services/department.service';
 
 type EmployeeForm = Omit<Employee, 'id' | 'departmentName' | 'skills'>;
 
@@ -43,7 +44,8 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   loading = false;
   success = '';
   searchText = '';
-  private api = inject(ApiService);
+  private api = inject(EmployeeService);
+  private apiDepartment = inject(DepartmentService);
   private route = inject(ActivatedRoute);
   private navigationLoad = inject(NavigationLoadService);
   filteredEmployees: Employee[] = [];
@@ -54,7 +56,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     } else {
       this.loadEmployees();
     }
-    this.api.getDepartments().subscribe({ next: (items) => (this.departments = items) });
+    this.apiDepartment.getDepartments().subscribe({ next: (items) => (this.departments = items) });
     this.navigationLoad.routeChange$.pipe(takeUntil(this.destroy$)).subscribe((route) => {
       if (route === '/employees') {
         this.loadEmployees();
