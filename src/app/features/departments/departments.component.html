@@ -2,46 +2,41 @@
   <!-- =========================================
          Page Header
     ========================================== -->
-  <app-page-header title="Departments" subtitle="Manage organization departments">
-    <button headerAction class="btn btn-primary" (click)="save()">
-      <i class="bi bi-plus-circle"></i>
+  <app-page-header
+    icon="bi-diagram-3"
+    title="Departments"
+    subtitle="Manage organization departments and their descriptions."
+  >
+    <button headerAction class="btn btn-primary" (click)="cancel()">
+      <i class="bi bi-plus-circle me-2"></i>
 
-      Add Department
+      {{ editingId ? 'New Department' : 'Add Department' }}
     </button>
   </app-page-header>
-
-  <!-- =========================================
-         Success Message
-    ========================================== -->
+  <!-- Success Message-->
   @if (success) {
     <div class="alert success">
       {{ success }}
     </div>
   }
-  <!-- =========================================
-         Error Message
-    ========================================== -->
+  <!-- Error Message -->
+
   @if (error) {
     <div class="alert error">
       <i class="bi bi-exclamation-circle-fill"></i>
       {{ error }}
     </div>
   }
-  <!-- =========================================
-         Page Content
-    ========================================== -->
+  <!-- Page Content -->
+
   <div class="page-content">
-    <!-- =====================================
-             Department Form
-        ====================================== -->
+    <!-- Department Form -->
 
-    <div class="form-card">
-      <div class="card-header">
-        <h3>
-          {{ editingId ? 'Edit Department' : 'Add Department' }}
-        </h3>
-      </div>
-
+    <app-page-card
+      title="{{ editingId ? 'Edit Department' : 'Department Information' }}"
+      subtitle="Enter department details."
+      icon="bi-building"
+    >
       <form [formGroup]="departmentForm" (ngSubmit)="save()">
         <!-- Department Name -->
 
@@ -50,11 +45,19 @@
             Department Name
             <span class="required">*</span>
           </label>
-          <input type="text" class="form-control" formControlName="name" placeholder="Enter department name" />
+          <div class="input-group">
+            <span class="input-group-text">
+              <i class="bi bi-building"></i>
+            </span>
+            <input class="form-control" formControlName="name" placeholder="Enter department name" />
+          </div>
           @if (submitted && f['name'].errors) {
             <small class="validation-error">
               @if (f['name'].errors?.['required']) {
-                <span> Department Name is required. </span>
+                <small class="validation-error">
+                  <i class="bi bi-exclamation-circle-fill"></i>
+                  Department Name is required.
+                </small>
               }
               @if (f['name'].errors?.['minlength']) {
                 <span> Minimum 3 characters required. </span>
@@ -71,18 +74,19 @@
             Description
             <span class="required">*</span>
           </label>
-
-          <textarea
-            rows="5"
-            class="form-control"
-            formControlName="description"
-            placeholder="Enter department description"
-          >
-          </textarea>
+          <div class="input-group">
+            <span class="input-group-text">
+              <i class="bi bi-card-text"></i>
+            </span>
+            <textarea rows="5" class="form-control" formControlName="description"> </textarea>
+          </div>
           @if (submitted && f['description'].errors) {
             <small class="validation-error">
               @if (f['description'].errors?.['required']) {
-                <span> Description is required. </span>
+                <small class="validation-error">
+                  <i class="bi bi-exclamation-circle-fill"></i>
+                  Description is required.
+                </small>
               }
               @if (f['description'].errors?.['required']) {
                 <span> Minimum 5 characters required. </span>
@@ -97,11 +101,11 @@
         <!-- Buttons -->
 
         <div class="form-actions">
-          <button type="submit" [disabled]="saving">
+          <button type="submit" class="btn btn-outline-secondary" [disabled]="saving">
             @if (!saving) {
               <span>
                 <i class="bi bi-check-circle"></i>
-                {{ editingId ? 'Update Department' : 'Save Department' }}
+                {{ editingId ? 'Update' : 'Save' }}
               </span>
             }
             @if (saving) {
@@ -111,24 +115,32 @@
               </span>
             }
           </button>
-          <button type="button" class="secondary" (click)="cancel()" [disabled]="saving">
+          <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving">
             <i class="bi bi-x-circle"></i>
-            Cancel
+            Reset
           </button>
         </div>
       </form>
-    </div>
-
-    <!-- =====================================
-             Department List
-        ====================================== -->
-    <app-page-card title="Department List" [badge]="filteredDepartments.length">
+    </app-page-card>
+    <!-- Department List -->
+    <app-page-card
+      title="Department List"
+      subtitle="Browse and manage departments"
+      icon="bi-building"
+      [badge]="filteredDepartments.length"
+    >
       <!-- Search Toolbar -->
-      <div class="grid-toolbar">
+
+      <div class="card-toolbar">
         <app-search-box placeholder="Search departments..." [(value)]="searchText" (search)="applyFilter()">
         </app-search-box>
-      </div>
 
+        <div class="record-count">
+          <i class="bi bi-building me-2"></i>
+          {{ filteredDepartments.length }}
+          Departments
+        </div>
+      </div>
       <!-- Loading -->
       @if (loading) {
         <app-loading-spinner message="Loading departments..."> </app-loading-spinner>
@@ -156,9 +168,12 @@
                 </td>
 
                 <td>
-                  <strong>
-                    {{ department.name }}
-                  </strong>
+                  <div class="department-name">
+                    <i class="bi bi-building"></i>
+                    <strong>
+                      {{ department.name }}
+                    </strong>
+                  </div>
                 </td>
 
                 <td>
@@ -167,11 +182,21 @@
 
                 <td>
                   <div class="actions">
-                    <button type="button" class="edit" title="Edit" (click)="edit(department)">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-icon"
+                      title="Edit"
+                      (click)="edit(department)"
+                    >
                       <i class="bi bi-pencil-square"></i>
                     </button>
 
-                    <button type="button" class="delete" title="Delete" (click)="delete(department)">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger btn-icon"
+                      title="Delete"
+                      (click)="delete(department)"
+                    >
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>

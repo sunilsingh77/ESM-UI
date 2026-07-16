@@ -1,32 +1,77 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
-  <div class="container-fluid">
+<nav class="navbar navbar-expand-lg shadow-sm">
+  <div class="container">
+    <!-- Brand -->
     <a class="navbar-brand d-flex align-items-center" routerLink="/home">
       <div class="logo-circle">
         <i class="bi bi-people-fill"></i>
       </div>
 
       <div class="ms-3">
-        <div class="brand-title">ESM</div>
+        <div class="brand-title">Employee Skills</div>
+
+        <div class="brand-subtitle">Management System</div>
       </div>
     </a>
 
-    <ul class="navbar-nav ms-5">
-      @for (item of visibleMenuItems; track item.route) {
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="item.route" routerLinkActive="active">
-            <i class="bi me-2" [ngClass]="item.icon"> </i>
-            {{ item.label }}
-          </a>
-        </li>
-      }
-    </ul>
+    <!-- Mobile Toggle -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mainNavbar"
+      aria-controls="mainNavbar"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <div class="ms-auto d-flex align-items-center">
-      <div class="user-name">{{ auth.getUserName() }} | {{ auth.getUserRoles() }}</div>
-      <button class="btn btn-danger btn-sm ms-3" (click)="logout()">
-        <i class="bi bi-box-arrow-right"></i>
-        Logout
-      </button>
+    <!-- Menu -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <!-- Left Menu -->
+      <ul class="navbar-nav ms-lg-5">
+        @for (item of visibleMenuItems; track item.route) {
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [routerLink]="item.route"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: item.route === '/home' }"
+            >
+              <i class="bi me-2" [ngClass]="item.icon"> </i>
+
+              {{ item.label }}
+            </a>
+          </li>
+        }
+      </ul>
+
+      <!-- Right Side -->
+      <div class="ms-auto d-flex align-items-center mt-3 mt-lg-0">
+        <!-- User -->
+
+        <div class="user-info me-3">
+          <div class="avatar">
+            {{ userInitial }}
+          </div>
+
+          <div>
+            <div class="user-name">
+              {{ userName }}
+            </div>
+
+            <div class="user-role">
+              {{ userRole }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Logout -->
+        <button class="btn btn-outline-secondary btn-signout" (click)="logout()">
+          <i class="bi bi-box-arrow-right me-2"></i>
+          Sign Out
+        </button>
+      </div>
     </div>
   </div>
 </nav>

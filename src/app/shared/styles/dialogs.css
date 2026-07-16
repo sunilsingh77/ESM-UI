@@ -1,0 +1,15 @@
+.modal-content {
+  border-radius: 18px;
+
+  border: none;
+
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border);
+}

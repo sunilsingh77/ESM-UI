@@ -6,7 +6,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApiError, Skill } from '../../shared/components/models/api.models';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 import { SearchBoxComponent } from '../../shared/components/search-box/search-box.component';
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { PageCardComponent } from '../../shared/components/page-card/page-card.component';
 import { TableComponent } from '../../shared/components/table/table.component';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
@@ -20,7 +19,6 @@ import { SkillService } from './services/skill.service';
   imports: [
     CommonModule,
     FormsModule,
-    PageHeaderComponent,
     SearchBoxComponent,
     PageCardComponent,
     TableComponent,

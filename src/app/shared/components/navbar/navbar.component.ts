@@ -20,6 +20,10 @@ export class NavbarComponent {
   public auth = inject(AuthService);
   private router = inject(Router);
 
+  readonly userName = this.auth.getUserName();
+  readonly userRole = this.auth.getUserRoles().join(', ');
+  readonly userInitial = this.userName?.charAt(0).toUpperCase() ?? 'U';
+
   // Menu definition
   menuItems: MenuItem[] = [
     {

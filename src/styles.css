@@ -17,24 +17,23 @@
 @import './app/shared/styles/navigation.css';
 @import './app/shared/styles/login.css';
 @import './app/shared/styles/footer.css';
+@import './app/shared/styles/theme.css';
+@import './app/shared/styles/utilities.css';
+@import './app/shared/styles/components.css';
+@import './app/shared/styles/responsive.css';
 
 /* ==========================================================
    Global Reset
 ========================================================== */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  font-size: 16px;
+html,
+body {
+  height: 100%;
 }
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: var(--gray-50);
-  color: #1f2937;
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
 }

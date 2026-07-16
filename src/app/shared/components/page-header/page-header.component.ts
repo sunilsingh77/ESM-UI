@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,9 +9,21 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./page-header.component.css'],
 })
 export class PageHeaderComponent {
+  @Input()
+  icon = '';
+
   @Input({ required: true })
   title = '';
 
   @Input()
   subtitle = '';
+
+  @Input()
+  badge = '';
+
+  @Input()
+  showDivider = true;
+
+  @Output()
+  action = new EventEmitter<void>();
 }

@@ -1,21 +1,13 @@
-.badge {
-  display: inline-flex;
-
-  align-items: center;
-
-  padding: 4px 10px;
-
-  border-radius: 999px;
-
-  font-size: 0.75rem;
-
-  font-weight: 600;
-}
-
 .badge-success {
   background: var(--success-light);
 
   color: var(--success);
+}
+
+.badge-warning {
+  background: var(--warning-light);
+
+  color: var(--warning);
 }
 
 .badge-danger {
@@ -24,8 +16,10 @@
   color: var(--danger);
 }
 
-.badge-warning {
-  background: var(--warning-light);
+.badge {
+  padding: 8px 14px;
 
-  color: var(--warning);
+  border-radius: 999px;
+
+  font-weight: 600;
 }

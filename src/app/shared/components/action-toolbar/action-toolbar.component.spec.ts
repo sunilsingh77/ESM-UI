@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageCardComponent } from './page-card.component';
+import { ActionToolbarComponent } from './action-toolbar.component';
 
-describe('PageCardComponent', () => {
-  let component: PageCardComponent;
-  let fixture: ComponentFixture<PageCardComponent>;
+describe('ActionToolbarComponent', () => {
+  let component: ActionToolbarComponent;
+  let fixture: ComponentFixture<ActionToolbarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PageCardComponent],
+      imports: [ActionToolbarComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PageCardComponent);
+    fixture = TestBed.createComponent(ActionToolbarComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -1,0 +1,27 @@
+.page-toolbar {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 16px;
+
+  margin-bottom: 20px;
+
+  flex-wrap: wrap;
+}
+
+.toolbar-left {
+  display: flex;
+
+  gap: 12px;
+
+  align-items: center;
+}
+
+.toolbar-right {
+  display: flex;
+
+  gap: 12px;
+}

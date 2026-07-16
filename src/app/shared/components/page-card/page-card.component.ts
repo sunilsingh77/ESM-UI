@@ -9,12 +9,24 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./page-card.component.css'],
 })
 export class PageCardComponent {
-  @Input({ required: true })
+  @Input()
   title = '';
+
+  @Input()
+  subtitle = '';
+
+  @Input()
+  icon = '';
 
   @Input()
   badge: string | number | null = null;
 
   @Input()
-  subtitle = '';
+  showHeader = true;
+
+  @Input()
+  showDivider = true;
+
+  @Input()
+  hover = false;
 }

@@ -1,21 +1,39 @@
-<div class="card">
-  <div class="card-header">
-    <div>
-      <h3>{{ title }}</h3>
+<div class="page-card" [class.card-hover]="hover">
+  @if (showHeader) {
+    <div class="page-card-header">
+      <div class="page-card-title">
+        @if (icon) {
+          <i class="bi page-card-icon" [ngClass]="icon"></i>
+        }
 
-      @if (subtitle) {
-        <small>{{ subtitle }}</small>
-      }
+        <div>
+          @if (title) {
+            <h3>{{ title }}</h3>
+          }
+
+          @if (subtitle) {
+            <p>{{ subtitle }}</p>
+          }
+        </div>
+      </div>
+
+      <div class="page-card-actions">
+        @if (badge !== null) {
+          <span class="badge bg-primary">
+            {{ badge }}
+          </span>
+        }
+
+        <ng-content select="[cardAction]"></ng-content>
+      </div>
     </div>
 
-    @if (badge !== null) {
-      <span class="badge">
-        {{ badge }}
-      </span>
+    @if (showDivider) {
+      <hr class="page-card-divider" />
     }
-  </div>
+  }
 
-  <div class="card-body">
+  <div class="page-card-body">
     <ng-content></ng-content>
   </div>
 </div>

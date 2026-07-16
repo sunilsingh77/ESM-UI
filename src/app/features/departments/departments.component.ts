@@ -7,15 +7,16 @@ import { Subject, takeUntil } from 'rxjs';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 
 import { ApiError, Department } from '../../shared/components/models/api.models';
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { SearchBoxComponent } from '../../shared/components/search-box/search-box.component';
-import { PageCardComponent } from '../../shared/components/page-card/page-card.component';
+
 import { TableComponent } from '../../shared/components/table/table.component';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { NotificationService } from '../../core/services/notification.service';
 import { DepartmentService } from './services/department.service';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { PageCardComponent } from '../../shared/components/page-card/page-card.component';
 
 @Component({
   selector: 'app-departments',
@@ -23,13 +24,13 @@ import { DepartmentService } from './services/department.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    PageHeaderComponent,
     SearchBoxComponent,
-    PageCardComponent,
+    PageHeaderComponent,
     TableComponent,
     LoadingSpinnerComponent,
     ConfirmDialogComponent,
     EmptyStateComponent,
+    PageCardComponent,
   ],
   templateUrl: './departments.component.html',
   styleUrls: ['./departments.component.css'],

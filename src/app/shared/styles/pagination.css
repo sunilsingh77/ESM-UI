@@ -1,0 +1,17 @@
+.pagination {
+  margin-top: 24px;
+
+  justify-content: flex-end;
+}
+
+.page-link {
+  border-radius: 8px;
+
+  margin: 0 4px;
+}
+
+.page-item.active .page-link {
+  background: var(--primary);
+
+  border-color: var(--primary);
+}

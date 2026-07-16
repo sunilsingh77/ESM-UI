@@ -1,13 +1,35 @@
 <div class="page-header">
   <div class="page-header-content">
-    <h1>{{ title }}</h1>
+    <div class="page-title">
+      @if (icon) {
+        <i class="bi page-icon" [ngClass]="icon"></i>
+      }
 
-    @if (subtitle) {
-      <p>{{ subtitle }}</p>
-    }
+      <div>
+        <div class="title-row">
+          <h1>{{ title }}</h1>
+
+          @if (badge) {
+            <span class="badge rounded-pill bg-primary ms-2">
+              {{ badge }}
+            </span>
+          }
+        </div>
+
+        @if (subtitle) {
+          <p class="page-subtitle">
+            {{ subtitle }}
+          </p>
+        }
+      </div>
+    </div>
   </div>
 
   <div class="page-header-actions">
     <ng-content select="[headerAction]"></ng-content>
   </div>
 </div>
+
+@if (showDivider) {
+  <hr class="page-divider" />
+}

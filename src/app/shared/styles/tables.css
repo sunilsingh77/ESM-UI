@@ -1,31 +1,31 @@
-.table-responsive {
-  overflow-x: auto;
+.table {
+  margin-bottom: 0;
 }
 
-table {
-  width: 100%;
-
-  border-collapse: collapse;
+.table thead {
+  background: var(--gray-100);
 }
 
-thead {
-  background: var(--gray-50);
-}
+.table thead th {
+  border: none;
 
-thead th {
+  font-size: 15px;
+
+  font-weight: 700;
+
   padding: 16px;
-
-  text-align: left;
-
-  border-bottom: 1px solid var(--gray-200);
 }
 
-tbody td {
+.table tbody td {
+  vertical-align: middle;
+
   padding: 16px;
-
-  border-bottom: 1px solid var(--gray-100);
 }
 
-tbody tr:hover {
-  background: #f9fafb;
+.table tbody tr {
+  transition: 0.25s;
+}
+
+.table tbody tr:hover {
+  background: var(--primary-light);
 }

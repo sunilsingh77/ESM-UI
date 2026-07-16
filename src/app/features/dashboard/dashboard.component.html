@@ -2,13 +2,17 @@
   <!-- ==========================================================
        Page Header
   =========================================================== -->
-  <app-page-header title="Dashboard" subtitle="Employee Skills Summary Management System">
+
+  <app-page-card
+    title="Dashboard"
+    icon="bi-speedometer2"
+    subtitle="Overview of employees, departments, skills and employee skill assignments."
+  >
     <button headerAction class="btn btn-secondary" (click)="refreshDashboard()">
       <i class="bi bi-arrow-clockwise"></i>
       Refresh
     </button>
-  </app-page-header>
-
+  </app-page-card>
   <!-- Error Message-->
 
   @if (error) {
@@ -37,6 +41,8 @@
         <h2>
           {{ employees.length }}
         </h2>
+
+        <!--<pre>{{ employees | json }}</pre>-->
       </div>
     </div>
 
@@ -50,10 +56,9 @@
       <div class="card-content">
         <span class="card-title"> Departments </span>
 
-        <h2>
-          <!--{{ dashboard?.departmentCount ?? 0 }}-->
-          <h2>{{ departments.length }}</h2>
-        </h2>
+        <!--{{ dashboard?.departmentCount ?? 0 }}-->
+
+        <h2>{{ departments.length }}</h2>
       </div>
     </div>
 
@@ -67,9 +72,7 @@
       <div class="card-content">
         <span class="card-title"> Skills </span>
 
-        <h2>
-          {{ skills.length }}
-        </h2>
+        <h2>{{ skills.length }}</h2>
       </div>
     </div>
 
@@ -83,9 +86,7 @@
       <div class="card-content">
         <span class="card-title"> Employee Skills </span>
 
-        <h2>
-          {{ employeeSkills.length }}
-        </h2>
+        <h2>{{ employeeSkills.length }}</h2>
       </div>
     </div>
   </div>

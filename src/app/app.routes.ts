@@ -15,7 +15,6 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { LoginRedirectGuard } from './core/guards/login-redirect.guard';
 // import { RoleGuard } from './core/guards/role.guard';
 
-import { HomeResolver } from './core/resolvers/home.resolver';
 import { DepartmentsResolver } from './core/resolvers/departments.resolver';
 import { EmployeesResolver } from './core/resolvers/employees.resolver';
 import { EmployeeSkillsResolver } from './core/resolvers/employee-skills.resolver';
@@ -44,14 +43,10 @@ export const routes: Routes = [
         redirectTo: 'home',
         pathMatch: 'full',
       },
-
       {
         path: 'home',
         title: 'Dashboard',
         component: DashboardComponent,
-        resolve: {
-          dashboard: HomeResolver,
-        },
       },
 
       {

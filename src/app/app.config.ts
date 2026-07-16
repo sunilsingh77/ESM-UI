@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideRouter(routes),
 
-    provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor, authInterceptor, loadingInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor])),
     //importProvidersFrom(CoreModule),
     importProvidersFrom(FormsModule),
     importProvidersFrom(ReactiveFormsModule),

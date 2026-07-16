@@ -1,45 +1,47 @@
-html {
-  font-size: 16px;
-}
-
 body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
 
-  background: var(--gray-50);
+  font-size: 15px;
 
-  color: var(--gray-900);
+  background: var(--background);
 
-  line-height: 1.5;
+  color: var(--text-primary);
 }
 
 h1 {
-  margin: 0;
-  font-size: 2rem;
+  font-size: 42px;
+
   font-weight: 700;
 }
 
 h2 {
-  margin: 0;
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-size: 34px;
+
+  font-weight: 700;
 }
 
 h3 {
-  margin: 0;
-  font-size: 1.1rem;
+  font-size: 26px;
+
   font-weight: 600;
 }
 
-p {
-  margin: 0;
-}
+h4 {
+  font-size: 22px;
 
-label {
   font-weight: 600;
-  color: var(--gray-700);
 }
 
-small {
-  color: var(--gray-500);
+.page-title {
+  font-size: 42px;
+
+  font-weight: 700;
+
+  margin-bottom: 6px;
+}
+
+.page-subtitle {
+  color: var(--text-secondary);
+
+  font-size: 18px;
 }
