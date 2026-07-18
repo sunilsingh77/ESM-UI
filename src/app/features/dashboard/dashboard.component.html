@@ -2,17 +2,16 @@
   <!-- ==========================================================
        Page Header
   =========================================================== -->
-
-  <app-page-card
+  <app-page-header
     title="Dashboard"
     icon="bi-speedometer2"
     subtitle="Overview of employees, departments, skills and employee skill assignments."
   >
-    <button headerAction class="btn btn-secondary" (click)="refreshDashboard()">
+    <button headerAction class="btn btn-primary" (click)="refreshDashboard()">
       <i class="bi bi-arrow-clockwise"></i>
       Refresh
     </button>
-  </app-page-card>
+  </app-page-header>
   <!-- Error Message-->
 
   @if (error) {

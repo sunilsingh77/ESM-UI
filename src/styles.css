@@ -1,25 +1,27 @@
 /* ==========================================================
    Global Style Imports
+   styles/
+│
+├── theme.css          ✅ Colors, shadows, spacing, fonts
+├── utilities.css      ✅ Utility/helper classes
+├── layout.css         ✅ App layout (header, footer spacing, containers)
+├── components.css     ✅ All reusable UI components
+├── crud-page.css      ✅ CRUD page layout only
+├── dashboard.css      ✅ Dashboard-specific styles
+├── login.css          ✅ Login page
+├── navigation.css     ✅ Navbar
+├── footer.css         ✅ Footer
+├── responsive.css
 ========================================================== */
-
-@import './app/shared/styles/variables.css';
-@import './app/shared/styles/typography.css';
-@import './app/shared/styles/layout.css';
-@import './app/shared/styles/cards.css';
-@import './app/shared/styles/buttons.css';
-@import './app/shared/styles/forms.css';
-@import './app/shared/styles/tables.css';
-@import './app/shared/styles/badges.css';
-@import './app/shared/styles/alerts.css';
-@import './app/shared/styles/utilities.css';
-@import './app/shared/styles/crud-page.css';
-@import './app/shared/styles/dashboard.css';
-@import './app/shared/styles/navigation.css';
-@import './app/shared/styles/login.css';
-@import './app/shared/styles/footer.css';
 @import './app/shared/styles/theme.css';
 @import './app/shared/styles/utilities.css';
+@import './app/shared/styles/layout.css';
 @import './app/shared/styles/components.css';
+@import './app/shared/styles/crud-page.css';
+@import './app/shared/styles/dashboard.css';
+@import './app/shared/styles/login.css';
+@import './app/shared/styles/navigation.css';
+@import './app/shared/styles/footer.css';
 @import './app/shared/styles/responsive.css';
 
 /* ==========================================================
