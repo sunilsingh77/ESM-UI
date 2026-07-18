@@ -1,36 +1,36 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin, Subject } from 'rxjs';
 import {
-  DashboardResponse,
   ApiError,
   Employee,
   EmployeeSkill,
   Skill,
   Department,
+  DashboardResponse,
 } from '../../shared/components/models/api.models';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 import { SearchBoxComponent } from '../../shared/components/search-box/search-box.component';
 
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
-import { DashboardService } from './services/dashboard.service';
+
 import { EmployeeService } from '../employees/services/employee.service';
 import { SkillService } from '../skills/services/skill.service';
 import { DepartmentService } from '../departments/services/department.service';
 import { EmployeeSkillService } from '../employee-skills/services/employee-skill.service';
-import { PageCardComponent } from '../../shared/components/page-card/page-card.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { DashboardService } from './services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, SearchBoxComponent, LoadingSpinnerComponent, PageCardComponent],
+  imports: [CommonModule, FormsModule, RouterLink, SearchBoxComponent, LoadingSpinnerComponent, PageHeaderComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  dashboard?: DashboardResponse;
   error = '';
   employees: Employee[] = [];
   skills: Skill[] = [];
@@ -38,25 +38,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
   searchTerm = '';
   selectedEmployeeId = 0;
   loading = false;
-  seedMessage = '';
+
   departments: Department[] = [];
   private destroy$ = new Subject<void>();
 
-  private api = inject(DashboardService);
   private apiEmployee = inject(EmployeeService);
   private apiSkill = inject(SkillService);
   private apiDepartment = inject(DepartmentService);
   private apiEmployeeSkill = inject(EmployeeSkillService);
-  private route = inject(ActivatedRoute);
+  private dashboardService = inject(DashboardService);
   private navigationLoad = inject(NavigationLoadService);
-  private initialized = false;
-
-  constructor() {
-    console.log('Dashboard Constructor');
-  }
+  dashboard?: DashboardResponse;
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
-    console.log('Dashboard OnInit');
     this.reloadDashboard();
   }
 
@@ -77,7 +72,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.filteredEmployeeSkills = this.employeeSkills.filter((x) => x.employeeId === this.selectedEmployeeId);
   }
   ngOnDestroy(): void {
-    console.log('Dashboard Destroy');
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -90,8 +84,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.filteredEmployeeSkills = [];
   }
   private loadDashboardData(): void {
-    console.log('loadDashboardData called');
-
     this.loading = true;
 
     forkJoin({
@@ -101,26 +93,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       employeeSkills: this.apiEmployeeSkill.getEmployeeSkills(),
     }).subscribe({
       next: (result) => {
-        console.log('API returned');
-
-        console.log('Employees:', result.employees.length);
-        console.log('Departments:', result.departments.length);
-        console.log('Skills:', result.skills.length);
-        console.log('EmployeeSkills:', result.employeeSkills.length);
-
-        this.employees = result.employees;
-        this.departments = result.departments;
-        this.skills = result.skills;
-        this.employeeSkills = result.employeeSkills;
-
-        setTimeout(() => {
-          console.log('1 second later:', this.employees.length);
-        }, 1000);
-        console.log('Assigned Employees:', this.employees.length);
-
+        this.employees = [...result.employees];
+        this.departments = [...result.departments];
+        this.skills = [...result.skills];
+        this.employeeSkills = [...result.employeeSkills];
+        this.updateSelectedEmployeeSkills();
         this.loading = false;
+        this.cdr.detectChanges();
       },
-
       error: (err) => {
         console.error('Dashboard Load Error', err);
         this.loading = false;
@@ -128,7 +108,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
   private loadDashboard(): void {
-    this.api.getDashboard().subscribe({
+    this.dashboardService.getDashboard().subscribe({
       next: (dashboard) => {
         this.dashboard = dashboard;
       },
@@ -138,7 +118,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
   private reloadDashboard(): void {
-    //this.loadDashboard();
     this.loadDashboardData();
   }
 }

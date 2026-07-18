@@ -2,13 +2,13 @@
   <!-- =========================
        Page Header
   ========================== -->
-  <app-page-card title="Employees" icon="bi-people" subtitle="Manage organization employees">
-    <button headerAction class="btn btn-primary" (click)="save()">
-      <i class="bi bi-plus-circle"></i>
 
-      Add Employee
+  <app-page-header title="Employees" icon="bi-people" subtitle="Manage organization employees">
+    <button headerAction class="btn btn-primary" (click)="addEmployee()">
+      <i class="bi bi-plus-circle"></i>
+      {{ editingId ? 'New Employee' : 'Add Employee' }}
     </button>
-  </app-page-card>
+  </app-page-header>
 
   <!-- =========================
        Main Content
@@ -20,78 +20,187 @@
     ========================== -->
 
     <div class="form-section">
-      <div class="card">
-        <div class="card-header">
-          <h2>
-            {{ editingId ? 'Edit Employee' : 'Employee Details' }}
-          </h2>
-        </div>
+      <app-page-card title="Employees Details">
+        <i class="bi bi-plus-circle"></i>
+        {{ editingId ? 'Edit Employee' : 'Add Employee' }}
 
         <div class="card-body">
-          <form (ngSubmit)="save()">
+          <form [formGroup]="employeeForm" (ngSubmit)="save()">
             <div class="form-group">
-              <label for="firstname">First Name</label>
-              <input class="form-control" type="text" [(ngModel)]="form.firstName" name="firstName" required />
-            </div>
-
-            <div class="form-group">
-              <label for="lastname">Last Name</label>
-              <input class="form-control" type="text" [(ngModel)]="form.lastName" name="lastName" required />
-            </div>
-
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input class="form-control" type="email" [(ngModel)]="form.email" name="email" required />
-            </div>
-
-            <div class="form-group">
-              <label for="phonenumber">Phone Number</label>
-              <input class="form-control" type="text" [(ngModel)]="form.phoneNumber" name="phoneNumber" required />
-            </div>
-
-            <div class="form-group">
-              <label for="position">Position</label>
-              <input class="form-control" type="text" [(ngModel)]="form.position" name="position" required />
-            </div>
-
-            <div class="form-group">
-              <label for="departmentId">Department</label>
-
-              <select class="form-control" [(ngModel)]="form.departmentId" name="departmentId" required>
-                <option [ngValue]="0">Select Department</option>
-
-                @for (department of departments; track department.id) {
-                  <option [ngValue]="department.id">
-                    {{ department.name }}
-                  </option>
+              <label for="">
+                First Name
+                <span class="required">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-person"></i>
+                </span>
+                <input class="form-control" formControlName="firstName" placeholder="First Name" />
+              </div>
+              @if (submitted && f['firstName'].errors) {
+                @if (f['firstName'].errors?.['required']) {
+                  <small class="validation-error">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    First Name is required.
+                  </small>
                 }
-              </select>
+                @if (f['firstName'].errors?.['minlength']) {
+                  <span> Minimum 3 characters required. </span>
+                }
+                @if (f['firstName'].errors?.['maxlength']) {
+                  <span> Maximum 50 characters allowed. </span>
+                }
+              }
             </div>
+            <div class="form-group">
+              <label for="">
+                Last Name
+                <span class="required">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-person"></i>
+                </span>
+                <input class="form-control" formControlName="lastName" placeholder="Last Name" />
+              </div>
+              @if (submitted && f['lastName'].errors) {
+                @if (f['lastName'].errors?.['required']) {
+                  <small class="validation-error">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    LastName is required.
+                  </small>
+                }
+                @if (f['lastName'].errors?.['minlength']) {
+                  <span> Minimum 3 characters required. </span>
+                }
+                @if (f['lastName'].errors?.['maxlength']) {
+                  <span> Maximum 50 characters allowed. </span>
+                }
+              }
+            </div>
+            <div class="form-group">
+              <label for="email">
+                Email
+                <span class="required">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-envelope"></i>
+                </span>
 
+                <input class="form-control" type="email" formControlName="email" placeholder="Email" />
+              </div>
+              @if (submitted && f['email'].errors) {
+                @if (f['email'].errors?.['required']) {
+                  <small class="validation-error">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    Email is required.
+                  </small>
+                }
+                @if (f['email'].errors?.['minlength']) {
+                  <span> Minimum 3 characters required. </span>
+                }
+                @if (f['email'].errors?.['maxlength']) {
+                  <span> Maximum 50 characters allowed. </span>
+                }
+              }
+            </div>
+            <div class="form-group">
+              <label for="phoneNumber">
+                Phone Number
+                <span class="required">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-telephone"></i>
+                </span>
+
+                <input
+                  class="form-control"
+                  type="text"
+                  formControlName="phoneNumber"
+                  placeholder="Phone Number"
+                  name="phoneNumber"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="position">
+                Position
+                <span class="required">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-person"></i>
+                </span>
+                <input
+                  class="form-control"
+                  type="text"
+                  formControlName="position"
+                  name="position"
+                  placeholder="Position"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="departmentId">
+                Select Department
+                <span class="required">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-diagram-3"></i>
+                </span>
+
+                <select class="form-control" formControlName="departmentId">
+                  <option [ngValue]="0">Select Department</option>
+
+                  @for (department of departments; track department.id) {
+                    <option [ngValue]="department.id">
+                      {{ department.name }}
+                    </option>
+                  }
+                </select>
+              </div>
+            </div>
             @if (!editingId) {
               <div class="form-group">
-                <label for="hireDate">Hire Date</label>
-
-                <input class="form-control" type="date" [(ngModel)]="form.hireDate" name="hireDate" required />
+                <label for="departmentId">
+                  Hire Date
+                  <span class="required">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text"> </span>
+                  <input class="form-control" type="date" formControlName="hireDate" name="hireDate" required />
+                </div>
               </div>
             }
 
-            <div class="form-buttons">
-              <button type="submit" class="btn btn-primary">
-                <i class="bi bi-check-circle"></i>
-
-                {{ editingId ? 'Update' : 'Save' }}
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" [disabled]="saving">
+                @if (!saving) {
+                  <span>
+                    <i class="bi bi-check-circle me-2"></i>
+                    {{ editingId ? 'Update' : 'Save' }}
+                  </span>
+                }
+                @if (saving) {
+                  <span>
+                    <span class="spinner-border spinner-border-sm"></span>
+                    Saving...
+                  </span>
+                }
               </button>
-
-              <button type="button" class="btn btn-secondary" (click)="reset()">
-                <i class="bi bi-x-circle"></i>
-
-                Clear
+              <button type="button" class="btn btn-secondary" (click)="reset()" [disabled]="saving">
+                <i class="bi bi-arrow-counterclockwise me-2"></i>
+                Reset
               </button>
             </div>
           </form>
         </div>
-      </div>
+      </app-page-card>
     </div>
 
     <!-- =========================
@@ -100,12 +209,18 @@
 
     <div class="grid-section">
       <app-page-card title="Employee List" [badge]="filteredEmployees.length">
-        <div class="grid-toolbar">
-          <app-search-box
-            placeholder="Search employees..."
-            [(value)]="searchText"
-            (search)="applyFilter()"
-          ></app-search-box>
+        <div class="card-toolbar">
+          <div class="toolbar-left">
+            <app-search-box placeholder="Search employee..." [(value)]="searchText" (search)="applyFilter()">
+            </app-search-box>
+          </div>
+
+          <div class="toolbar-right">
+            <div class="record-count">
+              <i class="bi bi-building"></i>
+              {{ filteredEmployees.length }} Employees
+            </div>
+          </div>
         </div>
 
         <!-- Loading -->
@@ -142,12 +257,22 @@
           </thead>
 
           <tbody>
-            @for (employee of employees; track employee.id) {
+            @for (employee of filteredEmployees; track employee.id) {
               <tr>
                 <td>
-                  {{ employee.firstName }}
+                  <div class="entity-cell">
+                    <div class="entity-icon">
+                      <i class="bi bi-building"></i>
+                    </div>
 
-                  {{ employee.lastName }}
+                    <div>
+                      <div class="entity-title">
+                        {{ employee.firstName }}
+
+                        {{ employee.lastName }}
+                      </div>
+                    </div>
+                  </div>
                 </td>
 
                 <td>
@@ -163,12 +288,22 @@
                 </td>
 
                 <td>
-                  <div class="actions">
-                    <button type="button" class="edit" title="Edit Employee" (click)="edit(employee)">
+                  <div class="table-actions">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-icon"
+                      title="Edit"
+                      (click)="edit(employee)"
+                    >
                       <i class="bi bi-pencil-square"></i>
                     </button>
 
-                    <button type="button" class="delete" title="Delete Employee" (click)="delete(employee)">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger btn-icon"
+                      title="Delete"
+                      (click)="delete(employee)"
+                    >
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>
@@ -176,7 +311,7 @@
               </tr>
             }
 
-            @if (employees.length === 0) {
+            @if (filteredEmployees.length === 0) {
               <tr>
                 <td colspan="5">
                   <app-empty-state icon="bi bi-people" title="No Employees" description="No employees available.">

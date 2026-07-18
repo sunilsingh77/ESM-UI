@@ -1,7 +1,10 @@
-<nav class="navbar navbar-expand-lg shadow-sm">
-  <div class="container">
-    <!-- Brand -->
-    <a class="navbar-brand d-flex align-items-center" routerLink="/home">
+<nav class="navbar navbar-expand-lg app-header">
+  <div class="container-fluid">
+    <!-- ==========================================================
+         BRAND
+    =========================================================== -->
+
+    <a class="navbar-brand" routerLink="/dashboard">
       <div class="logo-circle">
         <i class="bi bi-people-fill"></i>
       </div>
@@ -13,64 +16,117 @@
       </div>
     </a>
 
-    <!-- Mobile Toggle -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#mainNavbar"
-      aria-controls="mainNavbar"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <!-- ==========================================================
+         MOBILE MENU
+    =========================================================== -->
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Menu -->
-    <div class="collapse navbar-collapse" id="mainNavbar">
-      <!-- Left Menu -->
-      <ul class="navbar-nav ms-lg-5">
-        @for (item of visibleMenuItems; track item.route) {
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              [routerLink]="item.route"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: item.route === '/home' }"
-            >
-              <i class="bi me-2" [ngClass]="item.icon"> </i>
+    <!-- ==========================================================
+         NAVIGATION
+    =========================================================== -->
 
-              {{ item.label }}
-            </a>
-          </li>
-        }
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <!-- ===========================
+           LEFT MENU
+      ============================ -->
+
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a
+            routerLink="/dashboard"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link"
+          >
+            <i class="bi bi-speedometer2 me-2"></i>
+
+            Dashboard
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/departments" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-diagram-3 me-2"></i>
+
+            Departments
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/employees" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-people me-2"></i>
+
+            Employees
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/skills" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-award me-2"></i>
+
+            Skills
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/employee-skills" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-stars me-2"></i>
+
+            Employee Skills
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a routerLink="/reports" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-bar-chart-line me-2"></i>
+
+            Reports
+          </a>
+        </li>
       </ul>
 
-      <!-- Right Side -->
-      <div class="ms-auto d-flex align-items-center mt-3 mt-lg-0">
-        <!-- User -->
-
-        <div class="user-info me-3">
-          <div class="avatar">
-            {{ userInitial }}
+      <!-- ===========================
+           USER MENU
+      ============================ -->
+      <div class="dropdown">
+        <button class="user-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <div class="user-avatar">
+            {{ userName.charAt(0) }}
           </div>
 
-          <div>
-            <div class="user-name">
-              {{ userName }}
-            </div>
-
-            <div class="user-role">
-              {{ userRole }}
-            </div>
+          <div class="user-info">
+            <div class="user-name">{{ userName }}</div>
+            <div class="user-role">{{ userRole }}</div>
           </div>
-        </div>
-
-        <!-- Logout -->
-        <button class="btn btn-outline-secondary btn-signout" (click)="logout()">
-          <i class="bi bi-box-arrow-right me-2"></i>
-          Sign Out
         </button>
+
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <a class="dropdown-item" routerLink="/account">
+              <i class="bi bi-person"></i>
+              My Profile
+            </a>
+          </li>
+
+          <li>
+            <a class="dropdown-item" href="#">
+              <i class="bi bi-key"></i>
+              Change Password
+            </a>
+          </li>
+
+          <li><hr class="dropdown-divider" /></li>
+
+          <li>
+            <button class="dropdown-item text-danger" (click)="logout()">
+              <i class="bi bi-box-arrow-right"></i>
+              Sign Out
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

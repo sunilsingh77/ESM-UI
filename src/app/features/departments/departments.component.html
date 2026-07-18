@@ -7,10 +7,10 @@
     title="Departments"
     subtitle="Manage organization departments and their descriptions."
   >
-    <button headerAction class="btn btn-primary" (click)="cancel()">
+    <button headerAction class="btn btn-primary" (click)="addDepartment()">
       <i class="bi bi-plus-circle me-2"></i>
 
-      {{ editingId ? 'New Department' : 'Add Department' }}
+      Add Department
     </button>
   </app-page-header>
   <!-- Success Message-->
@@ -32,38 +32,34 @@
   <div class="page-content">
     <!-- Department Form -->
 
-    <app-page-card
-      title="{{ editingId ? 'Edit Department' : 'Department Information' }}"
-      subtitle="Enter department details."
-      icon="bi-building"
-    >
+    <app-page-card title="Department Details" subtitle="Enter department details.">
+      <i class="bi bi-plus-circle"></i>
+      {{ editingId ? 'Edit Department' : 'Department Information' }}
       <form [formGroup]="departmentForm" (ngSubmit)="save()">
         <!-- Department Name -->
-
         <div class="form-group">
-          <label for="">
-            Department Name
-            <span class="required">*</span>
-          </label>
+          <label for="name" class="form-label"> Department Name <span class="required">*</span> </label>
+
           <div class="input-group">
             <span class="input-group-text">
-              <i class="bi bi-building"></i>
+              <i class="bi bi-card-text"></i>
             </span>
-            <input class="form-control" formControlName="name" placeholder="Enter department name" />
+
+            <input id="name" type="text" class="form-control" formControlName="name" placeholder="Department Name" />
           </div>
+
           @if (submitted && f['name'].errors) {
             <small class="validation-error">
               @if (f['name'].errors?.['required']) {
-                <small class="validation-error">
-                  <i class="bi bi-exclamation-circle-fill"></i>
-                  Department Name is required.
-                </small>
+                Department Name is required.
               }
+
               @if (f['name'].errors?.['minlength']) {
-                <span> Minimum 3 characters required. </span>
+                Minimum 3 characters required.
               }
+
               @if (f['name'].errors?.['maxlength']) {
-                <span> Maximum 100 characters allowed. </span>
+                Maximum 100 characters allowed.
               }
             </small>
           }
@@ -78,33 +74,32 @@
             <span class="input-group-text">
               <i class="bi bi-card-text"></i>
             </span>
-            <textarea rows="5" class="form-control" formControlName="description"> </textarea>
+            <textarea rows="4" class="form-control" formControlName="description" placeholder="Department Description">
+            </textarea>
           </div>
           @if (submitted && f['description'].errors) {
-            <small class="validation-error">
-              @if (f['description'].errors?.['required']) {
-                <small class="validation-error">
-                  <i class="bi bi-exclamation-circle-fill"></i>
-                  Description is required.
-                </small>
-              }
-              @if (f['description'].errors?.['required']) {
-                <span> Minimum 5 characters required. </span>
-              }
-              @if (f['description'].errors?.['maxlength']) {
-                <span> Maximum 250 characters allowed.</span>
-              }
-            </small>
+            @if (f['description'].errors?.['required']) {
+              <small class="validation-error">
+                <i class="bi bi-exclamation-circle-fill"></i>
+                Description is required.
+              </small>
+            }
+            @if (f['description'].errors?.['minlength']) {
+              <span>Minimum 5 characters required.</span>
+            }
+            @if (f['description'].errors?.['maxlength']) {
+              <span> Maximum 250 characters allowed.</span>
+            }
           }
         </div>
 
         <!-- Buttons -->
 
         <div class="form-actions">
-          <button type="submit" class="btn btn-outline-secondary" [disabled]="saving">
+          <button type="submit" class="btn btn-primary" [disabled]="saving">
             @if (!saving) {
               <span>
-                <i class="bi bi-check-circle"></i>
+                <i class="bi bi-check-circle me-2"></i>
                 {{ editingId ? 'Update' : 'Save' }}
               </span>
             }
@@ -115,8 +110,8 @@
               </span>
             }
           </button>
-          <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving">
-            <i class="bi bi-x-circle"></i>
+          <button type="button" class="btn btn-secondary" (click)="reset()" [disabled]="saving">
+            <i class="bi bi-arrow-counterclockwise me-2"></i>
             Reset
           </button>
         </div>
@@ -132,13 +127,16 @@
       <!-- Search Toolbar -->
 
       <div class="card-toolbar">
-        <app-search-box placeholder="Search departments..." [(value)]="searchText" (search)="applyFilter()">
-        </app-search-box>
+        <div class="toolbar-left">
+          <app-search-box placeholder="Search departments..." [(value)]="searchText" (search)="applyFilter()">
+          </app-search-box>
+        </div>
 
-        <div class="record-count">
-          <i class="bi bi-building me-2"></i>
-          {{ filteredDepartments.length }}
-          Departments
+        <div class="toolbar-right">
+          <div class="record-count">
+            <i class="bi bi-building"></i>
+            {{ filteredDepartments.length }} Departments
+          </div>
         </div>
       </div>
       <!-- Loading -->
@@ -146,17 +144,28 @@
         <app-loading-spinner message="Loading departments..."> </app-loading-spinner>
       }
       <!-- Table -->
-      @if (!loading && departments.length > 0) {
+      @if (!loading && filteredDepartments.length > 0) {
         <app-table>
           <thead>
             <tr>
-              <th style="width: 80px">#</th>
+              <th class="col-index">
+                <i class="bi bi-hash me-1"></i>
+              </th>
 
-              <th>Name</th>
+              <th>
+                <i class="bi bi-building me-1"></i>
+                Department
+              </th>
 
-              <th>Description</th>
+              <th>
+                <i class="bi bi-card-text me-1"></i>
+                Description
+              </th>
 
-              <th style="width: 170px">Actions</th>
+              <th class="col-actions">
+                <i class="bi bi-gear me-1"></i>
+                Actions
+              </th>
             </tr>
           </thead>
 
@@ -168,11 +177,17 @@
                 </td>
 
                 <td>
-                  <div class="department-name">
-                    <i class="bi bi-building"></i>
-                    <strong>
-                      {{ department.name }}
-                    </strong>
+                  <div class="entity-cell">
+                    <div class="entity-icon">
+                      <i class="bi bi-building"></i>
+                    </div>
+
+                    <div>
+                      <div class="entity-title">
+                        {{ department.name }}
+                      </div>
+                      <div class="entity-subtitle">Department</div>
+                    </div>
                   </div>
                 </td>
 
@@ -181,7 +196,7 @@
                 </td>
 
                 <td>
-                  <div class="actions">
+                  <div class="table-actions">
                     <button
                       type="button"
                       class="btn btn-outline-primary btn-icon"
@@ -203,7 +218,7 @@
                 </td>
               </tr>
             }
-            @if (departments.length === 0) {
+            @if (filteredDepartments.length === 0) {
               <tr>
                 <td colspan="5">
                   <app-empty-state

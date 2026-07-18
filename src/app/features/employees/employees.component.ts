@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { ApiError, Department, Employee } from '../../shared/components/models/api.models';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
@@ -13,21 +13,21 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { EmployeeService } from './services/employee.service';
 import { DepartmentService } from '../departments/services/department.service';
-
-type EmployeeForm = Omit<Employee, 'id' | 'departmentName' | 'skills'>;
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-employees',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     SearchBoxComponent,
     PageCardComponent,
     TableComponent,
     LoadingSpinnerComponent,
     EmptyStateComponent,
     ConfirmDialogComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './employees.component.html',
   styleUrls: ['./employees.component.css'],
@@ -36,25 +36,31 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   employees: Employee[] = [];
   departments: Department[] = [];
   private destroy$ = new Subject<void>();
-  form: EmployeeForm = this.emptyForm();
+  private fb = inject(FormBuilder);
+  employeeForm!: FormGroup;
+  submitted = false;
   editingId?: number;
+  saving = false;
   error = '';
   loading = false;
   success = '';
   searchText = '';
-  private api = inject(EmployeeService);
-  private apiDepartment = inject(DepartmentService);
+  private employeeService = inject(EmployeeService);
+  private departmentService = inject(DepartmentService);
   private route = inject(ActivatedRoute);
   private navigationLoad = inject(NavigationLoadService);
   filteredEmployees: Employee[] = [];
+
   ngOnInit(): void {
+    this.createForm();
     const resolved = this.route.snapshot.data['employees'] as Employee[] | undefined;
     if (resolved) {
-      this.employees = resolved;
+      this.employees = [...resolved];
+      this.filteredEmployees = [...resolved];
     } else {
       this.loadEmployees();
     }
-    this.apiDepartment.getDepartments().subscribe({ next: (items) => (this.departments = items) });
+    this.departmentService.getDepartments().subscribe({ next: (items) => (this.departments = items) });
     this.navigationLoad.routeChange$.pipe(takeUntil(this.destroy$)).subscribe((route) => {
       if (route === '/employees') {
         this.loadEmployees();
@@ -62,37 +68,85 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     });
   }
 
+  private createForm(): void {
+    this.employeeForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required],
+      position: ['', Validators.required],
+      departmentId: [0, [Validators.required, Validators.min(1)]],
+      hireDate: [new Date().toISOString().substring(0, 10), Validators.required],
+    });
+  }
+
   loadEmployees(): void {
-    this.api.getEmployees().subscribe({
-      next: (items) => (this.employees = items),
-      error: (err: ApiError) => (this.error = err.message || 'Unable to load employees.'),
+    this.loading = true;
+
+    this.employeeService.getEmployees().subscribe({
+      next: (items) => {
+        this.employees = [...items];
+        this.filteredEmployees = [...items];
+        this.loading = false;
+      },
+
+      error: (err) => {
+        this.loading = false;
+        this.error = err.message;
+      },
     });
   }
 
   save(): void {
+    this.submitted = true;
+    this.error = '';
+    this.success = '';
+
+    if (this.employeeForm.invalid) {
+      this.employeeForm.markAllAsTouched();
+      return;
+    }
+    this.saving = true;
+    const employee = this.employeeForm.getRawValue();
+
     const request = this.editingId
-      ? this.api.updateEmployee(this.editingId, {
-          firstName: this.form.firstName,
-          lastName: this.form.lastName,
-          email: this.form.email,
-          phoneNumber: this.form.phoneNumber,
-          position: this.form.position,
-          departmentId: Number(this.form.departmentId),
+      ? this.employeeService.updateEmployee(this.editingId, {
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+          email: employee.email,
+          phoneNumber: employee.phoneNumber,
+          position: employee.position,
+          departmentId: Number(employee.departmentId),
         })
-      : this.api.createEmployee({ ...this.form, departmentId: Number(this.form.departmentId) });
+      : this.employeeService.createEmployee({
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+          email: employee.email,
+          phoneNumber: employee.phoneNumber,
+          position: employee.position,
+          departmentId: Number(employee.departmentId),
+          hireDate: employee.hireDate,
+        });
 
     request.subscribe({
       next: () => {
+        this.success = this.editingId ? 'Employee updated successfully.' : 'Employee created successfully.';
+
         this.reset();
         this.loadEmployees();
+        this.applyFilter();
+        this.saving = false;
       },
-      error: (err: ApiError) => (this.error = err.message || 'Unable to save employee.'),
+      error: (err: ApiError) => {
+        this.error = err.message || 'Unable to save employee.';
+        this.saving = false;
+      },
     });
   }
 
   edit(employee: Employee): void {
     this.editingId = employee.id;
-    this.form = {
+    this.employeeForm.patchValue({
       firstName: employee.firstName,
       lastName: employee.lastName,
       email: employee.email,
@@ -100,22 +154,16 @@ export class EmployeesComponent implements OnInit, OnDestroy {
       position: employee.position,
       departmentId: employee.departmentId,
       hireDate: employee.hireDate.substring(0, 10),
-    };
+    });
   }
 
   reset(): void {
     this.editingId = undefined;
-    this.form = this.emptyForm();
+    this.submitted = false;
     this.error = '';
-  }
+    this.success = '';
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  private emptyForm(): EmployeeForm {
-    return {
+    this.employeeForm.reset({
       firstName: '',
       lastName: '',
       email: '',
@@ -123,8 +171,17 @@ export class EmployeesComponent implements OnInit, OnDestroy {
       position: '',
       departmentId: 0,
       hireDate: new Date().toISOString().substring(0, 10),
-    };
+    });
   }
+  get f(): FormGroup['controls'] {
+    return this.employeeForm.controls;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   public applyFilter(): void {
     const keyword = this.searchText.trim().toLowerCase();
 
@@ -150,11 +207,12 @@ export class EmployeesComponent implements OnInit, OnDestroy {
     if (!this.selectedEmployee) {
       return;
     }
-    this.api.deleteEmployee(this.selectedEmployee.id).subscribe({
+    this.employeeService.deleteEmployee(this.selectedEmployee.id).subscribe({
       next: () => {
         this.showDeleteDialog = false;
         this.selectedEmployee = null;
-        this.loadEmployees();
+        this.employees = this.employees.filter((x) => x.id !== this.selectedEmployee!.id);
+        this.filteredEmployees = [...this.employees];
       },
       error: () => {
         this.showDeleteDialog = false;
@@ -164,5 +222,9 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
   cancelDelete(): void {
     this.showDeleteDialog = false;
+  }
+
+  addEmployee(): void {
+    this.reset();
   }
 }

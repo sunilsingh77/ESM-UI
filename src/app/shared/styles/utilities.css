@@ -1,6 +1,17 @@
 .page-section {
   margin-bottom: 24px;
 }
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
 .content-card {
   background: var(--surface);

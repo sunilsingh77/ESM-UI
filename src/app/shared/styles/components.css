@@ -3,9 +3,9 @@
    Employee Skills Management System
 ========================================================== */
 
-/* ===========================================
-   Page Card
-=========================================== */
+/* ==========================================================
+   PAGE CARD
+========================================================== */
 
 .page-card {
   background: var(--surface);
@@ -16,24 +16,24 @@
   margin-bottom: 24px;
 }
 
-/* ===========================================
-   Page Header
-=========================================== */
+/* ==========================================================
+   PAGE HEADER
+========================================================== */
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
   gap: 16px;
   flex-wrap: wrap;
+  margin-bottom: 24px;
 }
 
 .page-title {
   margin: 0;
+  color: var(--text-primary);
   font-size: 30px;
   font-weight: 700;
-  color: var(--text-primary);
 }
 
 .page-subtitle {
@@ -42,22 +42,33 @@
   font-size: 14px;
 }
 
-/* ===========================================
-   Toolbar
-=========================================== */
+/* ==========================================================
+   CARD TOOLBAR
+========================================================== */
 
-.toolbar {
+.card-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+
+  padding: 8px 12px; /* Previously around 12–16px */
+  margin-bottom: 12px;
+}
+.toolbar-left {
+  flex: 1;
+  min-width: 280px;
 }
 
-/* ===========================================
-   Search Box
-=========================================== */
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+/* ==========================================================
+   SEARCH BOX
+========================================================== */
 
 .search-box {
   position: relative;
@@ -74,16 +85,104 @@
 }
 
 .search-box input {
+  width: 100%;
   padding-left: 42px;
 }
 
-/* ===========================================
-   Buttons
-=========================================== */
+/* ==========================================================
+   RECORD COUNT
+========================================================== */
+
+.record-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 2px 8px;
+  min-height: 26px;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  border-radius: 5px;
+}
+
+/* ==========================================================
+   FORM
+========================================================== */
+
+.form-card {
+  max-width: 900px;
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.required {
+  color: var(--danger);
+}
+
+.input-group-text {
+  background: #f8fafc;
+  border-color: var(--border);
+  color: var(--primary);
+  min-width: 46px;
+  justify-content: center;
+}
+
+.form-control,
+.form-select {
+  height: 42px;
+  padding: 0.5rem 0.75rem;
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+textarea.form-control {
+  min-height: 100px;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.12);
+}
+
+.validation-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.form-actions button {
+  min-width: 130px;
+  height: 44px;
+}
+
+/* ==========================================================
+   BUTTONS
+========================================================== */
 
 .btn {
-  border-radius: 10px;
   font-weight: 600;
+  border-radius: 10px;
 }
 
 .btn-primary {
@@ -100,9 +199,29 @@
   border-radius: 10px;
 }
 
-/* ===========================================
-   Tables
-=========================================== */
+.btn-icon {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.25s ease;
+}
+
+.btn-icon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-icon i {
+  font-size: 0.95rem;
+}
+
+/* ==========================================================
+   TABLE
+========================================================== */
 
 .table-container {
   overflow-x: auto;
@@ -113,66 +232,88 @@
 }
 
 .table thead {
-  background: #f8fafc;
+  background: var(--gray-50);
 }
 
 .table thead th {
   font-weight: 700;
-  border-bottom: 2px solid var(--border);
   color: var(--text-primary);
-}
-
-.table tbody tr:hover {
-  background: #f8fafc;
-}
-
-.table td,
-.table th {
+  border-bottom: 2px solid var(--border);
   vertical-align: middle;
 }
 
-/* ===========================================
-   Cards Hover
-=========================================== */
-
-.card-hover {
-  transition: all 0.25s ease;
+.table td {
+  vertical-align: middle;
 }
 
-.card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+/* ==========================================================
+   TABLE ACTIONS
+========================================================== */
+
+.table-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
-/* ===========================================
-   Form Controls
-=========================================== */
+/* ==========================================================
+   ENTITY CELL
+========================================================== */
 
-.form-control,
-.form-select {
-  border-radius: 10px;
-  min-height: 42px;
+.entity-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.form-control:focus,
-.form-select:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+.entity-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ===========================================
-   Badges
-=========================================== */
-
-.badge {
-  border-radius: 999px;
-  padding: 6px 12px;
+.entity-title {
   font-weight: 600;
 }
 
-/* ===========================================
-   Empty State
-=========================================== */
+.entity-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================
+   BADGES
+========================================================== */
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.status-active {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.status-inactive {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
 
 .empty-state {
   text-align: center;
@@ -182,16 +323,117 @@
 
 .empty-state i {
   font-size: 48px;
-  margin-bottom: 12px;
   color: var(--primary);
+  margin-bottom: 12px;
 }
 
-/* ===========================================
-   Loading
-=========================================== */
+/* ==========================================================
+   LOADING
+========================================================== */
 
 .loading-spinner {
   display: flex;
   justify-content: center;
   padding: 40px;
+}
+
+/* ==========================================================
+   COLUMN WIDTHS
+========================================================== */
+
+.col-index {
+  width: 80px;
+}
+
+.col-actions {
+  width: 170px;
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 992px) {
+  .page-header,
+  .card-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar-left,
+  .toolbar-right {
+    width: 100%;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-actions {
+    justify-content: flex-start;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+/* ==========================================
+   BADGES
+========================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 70px;
+  padding: 0.35rem 0.75rem;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Proficiency Level */
+
+.badge.level {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* Success */
+
+.badge.success {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* Secondary */
+
+.badge.secondary {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+/* Optional Warning */
+
+.badge.warning {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+/* Optional Danger */
+
+.badge.danger {
+  background: #fee2e2;
+  color: #dc2626;
 }

@@ -1,12 +1,12 @@
 <section class="page-container">
   <!-- Header -->
-  <app-page-card title="Skills" icon="bi-tools" subtitle="Manage organization skills">
+  <app-page-header title="Skills" icon="bi-tools" subtitle="Manage organization skills">
     <button headerAction class="btn btn-primary" (click)="save()">
       <i class="bi bi-plus-circle"></i>
 
       Add Skill
     </button>
-  </app-page-card>
+  </app-page-header>
 
   <!-- Main Content -->
 
@@ -14,59 +14,114 @@
     <!-- Left -->
 
     <div class="form-section">
-      <div class="card">
-        <div class="card-header">
-          <h2>
-            {{ editingId ? 'Edit Skill' : 'Skill Details' }}
-          </h2>
-        </div>
+      <app-page-card title="Skill Details">
+        <i class="bi bi-plus-circle"></i>
+        {{ editingId ? 'Edit Skill' : 'Add Skill' }}
 
-        <div class="card-body">
-          <form (ngSubmit)="save()">
-            <div class="form-group">
-              <label for="name">Skill Name</label>
+        <form [formGroup]="skillForm" (ngSubmit)="save()">
+          <div class="form-group">
+            <label for="name" class="form-label"> Skill Name <span class="required">*</span> </label>
 
-              <input class="form-control" [(ngModel)]="form.name" name="name" required />
+            <div class="input-group">
+              <span class="input-group-text"> </span>
+
+              <input class="form-control" formControlName="name" placeholder="Name" />
             </div>
 
-            <div class="form-group">
-              <label for="category">Category</label>
+            @if (submitted && f['name'].errors) {
+              <small class="validation-error">
+                @if (f['name'].errors?.['required']) {
+                  Skill Name is required.
+                }
 
-              <input class="form-control" [(ngModel)]="form.category" name="category" required />
+                @if (f['name'].errors?.['minlength']) {
+                  Minimum 3 characters required.
+                }
+
+                @if (f['name'].errors?.['maxlength']) {
+                  Maximum 100 characters allowed.
+                }
+              </small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="name" class="form-label"> Skill Category <span class="required">*</span> </label>
+
+            <div class="input-group">
+              <span class="input-group-text"> </span>
+
+              <input class="form-control" formControlName="category" placeholder="Category" />
             </div>
 
-            <div class="form-group">
-              <label for="description">Description</label>
+            @if (submitted && f['category'].errors) {
+              <small class="validation-error">
+                @if (f['category'].errors?.['required']) {
+                  Category is required.
+                }
 
-              <textarea class="form-control" [(ngModel)]="form.description" name="description" rows="4" required>
+                @if (f['category'].errors?.['minlength']) {
+                  Minimum 3 characters required.
+                }
+
+                @if (f['category'].errors?.['maxlength']) {
+                  Maximum 50 characters allowed.
+                }
+              </small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="name" class="form-label"> Description <span class="required">*</span> </label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-card-text"></i>
+              </span>
+              <textarea class="form-control" formControlName="description" rows="4" placeholder="Description">
               </textarea>
             </div>
+          </div>
 
-            <div class="form-buttons">
-              <button class="btn btn-primary" type="submit">
-                <i class="bi bi-check-circle"></i>
-
-                {{ editingId ? 'Update' : 'Save' }}
-              </button>
-
-              <button class="btn btn-secondary" type="button" (click)="reset()">
-                <i class="bi bi-x-circle"></i>
-
-                Clear
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" [disabled]="saving">
+              @if (!saving) {
+                <span>
+                  <i class="bi bi-check-circle me-2"></i>
+                  {{ editingId ? 'Update' : 'Save' }}
+                </span>
+              }
+              @if (saving) {
+                <span>
+                  <span class="spinner-border spinner-border-sm"></span>
+                  Saving...
+                </span>
+              }
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="reset()" [disabled]="saving">
+              <i class="bi bi-arrow-counterclockwise me-2"></i>
+              Reset
+            </button>
+          </div>
+        </form>
+      </app-page-card>
     </div>
 
     <!-- Right -->
 
     <div class="grid-section">
       <app-page-card title="Skill List" [badge]="filteredSkills.length">
-        <div class="grid-toolbar">
-          <app-search-box placeholder="Search skill..." [(value)]="searchText" (search)="applyFilter()">
-          </app-search-box>
+        <div class="card-toolbar">
+          <div class="toolbar-left">
+            <app-search-box placeholder="Search skill..." [(value)]="searchText" (search)="applyFilter()">
+            </app-search-box>
+          </div>
+
+          <div class="toolbar-right">
+            <div class="record-count">
+              <i class="bi bi-building"></i>
+              {{ filteredSkills.length }} Skills
+            </div>
+          </div>
         </div>
 
         @if (success) {
@@ -99,21 +154,38 @@
           </thead>
 
           <tbody>
-            @for (skill of skills; track skill.id) {
+            @for (skill of filteredSkills; track skill.id) {
               <tr>
-                <td>{{ skill.name }}</td>
+                <td>
+                  <div class="entity-cell">
+                    <div class="entity-icon">
+                      <i class="bi bi-building"></i>
+                    </div>
+
+                    <div>
+                      <div class="entity-title">
+                        {{ skill.name }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
 
                 <td>{{ skill.category }}</td>
 
                 <td>{{ skill.description }}</td>
 
                 <td>
-                  <div class="actions">
-                    <button class="edit" type="button" title="Edit Skill" (click)="edit(skill)">
+                  <div class="table-actions">
+                    <button type="button" class="btn btn-outline-primary btn-icon" title="Edit" (click)="edit(skill)">
                       <i class="bi bi-pencil-square"></i>
                     </button>
 
-                    <button class="delete" type="button" title="Delete Skill" (click)="delete(skill)">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger btn-icon"
+                      title="Delete"
+                      (click)="delete(skill)"
+                    >
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>
@@ -121,7 +193,7 @@
               </tr>
             }
 
-            @if (skills.length === 0) {
+            @if (filteredSkills.length === 0) {
               <tr>
                 <td colspan="4">
                   <app-empty-state icon="bi bi-award" title="No Skills" description="No skills have been added yet.">

@@ -1,13 +1,12 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormsModule, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { Subject } from 'rxjs';
 import { NavigationLoadService } from '../../core/services/navigation-load.service';
 import { forkJoin } from 'rxjs';
 import { Employee, EmployeeSkill, Skill, ApiError } from '../../shared/components/models/api.models';
-import { HttpErrorResponse } from '@angular/common/http';
+
 import { SearchBoxComponent } from '../../shared/components/search-box/search-box.component';
 import { PageCardComponent } from '../../shared/components/page-card/page-card.component';
 import { TableComponent } from '../../shared/components/table/table.component';
@@ -17,13 +16,14 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { EmployeeSkillService } from './services/employee-skill.service';
 import { EmployeeService } from '../employees/services/employee.service';
 import { SkillService } from '../skills/services/skill.service';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-employee-skills',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     SearchBoxComponent,
     PageCardComponent,
@@ -31,11 +31,12 @@ import { SkillService } from '../skills/services/skill.service';
     LoadingSpinnerComponent,
     ConfirmDialogComponent,
     EmptyStateComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './employee-skills.component.html',
   styleUrls: ['./employee-skills.component.css'],
 })
-export class EmployeeSkillsComponent implements OnInit, OnDestroy {
+export class EmployeeSkillsComponent implements OnInit {
   // Collections
 
   employeeSkills: EmployeeSkill[] = [];
@@ -55,14 +56,11 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   error = '';
   searchText = '';
 
-  // RxJS
-  private destroy$ = new Subject<void>();
-
   // Constructor
   private fb = inject(FormBuilder);
-  private api = inject(EmployeeSkillService);
-  private apiEmployee = inject(EmployeeService);
-  private apiSkill = inject(SkillService);
+  private employeeSkillService = inject(EmployeeSkillService);
+  private employeeService = inject(EmployeeService);
+  private skillService = inject(SkillService);
   private route = inject(ActivatedRoute);
   private navigationLoad = inject(NavigationLoadService);
 
@@ -77,22 +75,26 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   }
 
   private loadEmployeeSkill(): void {
+    this.loading = true;
     this.error = '';
+
     forkJoin({
-      employees: this.apiEmployee.getEmployees(),
-      skills: this.apiSkill.getSkills(),
-      employeeSkills: this.api.getEmployeeSkills(),
+      employees: this.employeeService.getEmployees(),
+      skills: this.skillService.getSkills(),
+      employeeSkills: this.employeeSkillService.getEmployeeSkills(),
     }).subscribe({
       next: ({ employees, skills, employeeSkills }) => {
         this.employees = [...employees];
-        console.log('After assignment', this.employees.length, this);
-        console.log(this.employees);
         this.skills = [...skills];
         this.employeeSkills = [...employeeSkills];
-        this.filteredEmployeeSkills = [...employeeSkills];
+
+        this.applyFilter();
+
+        this.loading = false;
       },
 
-      error: (err: HttpErrorResponse) => {
+      error: (err) => {
+        this.loading = false;
         this.handleError(err);
       },
     });
@@ -112,11 +114,6 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   // Getter
   get f() {
     return this.employeeSkillForm.controls;
-  }
-
-  // Refresh
-  refresh(): void {
-    this.loadEmployeeSkill();
   }
 
   // Save
@@ -139,16 +136,16 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
     };
 
     const request = this.editingId
-      ? this.api.updateEmployeeSkill(this.editingId, payload)
-      : this.api.createEmployeeSkill(payload);
+      ? this.employeeSkillService.updateEmployeeSkill(this.editingId, payload)
+      : this.employeeSkillService.createEmployeeSkill(payload);
 
     request.subscribe({
       next: () => {
         this.saving = false;
         this.success = this.editingId ? 'Employee Skill updated successfully.' : 'Employee Skill created successfully.';
-        this.cancel();
+        this.reset();
         this.loadEmployeeSkill();
-        this.clearSuccess();
+        //this.applyFilter();
       },
 
       error: (err: ApiError) => {
@@ -179,7 +176,7 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
   }
 
   // Cancel
-  cancel(): void {
+  reset(): void {
     this.submitted = false;
     this.editingId = undefined;
     this.employeeSkillForm.reset({
@@ -223,11 +220,6 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
     return skill ? skill.name : '-';
   }
 
-  // Primary Skill Badge
-  getPrimarySkillText(value: boolean): string {
-    return value ? 'Yes' : 'No';
-  }
-
   // Track By
   trackById(index: number, item: EmployeeSkill): number {
     return item.id;
@@ -239,74 +231,11 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
     this.error = '';
   }
 
-  // Reset Form
-  private resetForm(): void {
-    this.employeeSkillForm.reset({
-      employeeId: null,
-      skillId: null,
-      proficiencyLevel: 'Beginner',
-      yearsOfExperience: 0,
-      isPrimary: false,
-    });
-
-    this.submitted = false;
-    this.editingId = undefined;
-  }
-
-  // Auto Hide Messages
-  private clearSuccess(): void {
-    if (!this.success) {
-      return;
-    }
-
-    setTimeout(() => {
-      this.success = '';
-    }, 3000);
-  }
-
-  private clearError(): void {
-    if (!this.error) {
-      return;
-    }
-
-    setTimeout(() => {
-      this.error = '';
-    }, 5000);
-  }
-
-  // Loading Helpers
-  private startLoading(): void {
-    this.clearMessages();
-  }
-
-  private startSaving(): void {
-    this.saving = true;
-    this.clearMessages();
-  }
-
-  private stopSaving(): void {
-    this.saving = false;
-  }
-
   // API Error Handler
   private handleError(error: HttpErrorResponse): void {
     this.saving = false;
     this.success = '';
     this.error = error?.message || 'An unexpected error occurred. Please try again.';
-    this.clearError();
-  }
-
-  // Success Handler
-  private showSuccess(message: string): void {
-    this.error = '';
-    this.success = message;
-    this.clearSuccess();
-  }
-
-  // Destroy
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   //applyFilter
@@ -336,7 +265,7 @@ export class EmployeeSkillsComponent implements OnInit, OnDestroy {
     if (!this.selectedEmployeeSkill) {
       return;
     }
-    this.api.deleteEmployeeSkill(this.selectedEmployeeSkill.id).subscribe({
+    this.employeeSkillService.deleteEmployeeSkill(this.selectedEmployeeSkill.id).subscribe({
       next: () => {
         this.showDeleteDialog = false;
         this.selectedEmployeeSkill = null;

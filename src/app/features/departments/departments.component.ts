@@ -42,7 +42,6 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
   filteredDepartments: Department[] = [];
   departmentForm!: FormGroup;
   editingId: number | null = null;
-
   /** Page loading */
   loading = false;
   /** Save/Update/Delete loading */
@@ -64,7 +63,8 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
     const resolved = this.route.snapshot.data['departments'] as Department[];
 
     if (resolved && resolved.length > 0) {
-      this.departments = resolved;
+      this.departments = [...resolved];
+      this.filteredDepartments = [...resolved];
     } else {
       this.loadDepartments();
     }
@@ -89,14 +89,17 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
   }
 
   loadDepartments(): void {
+    this.loading = true;
     this.error = '';
 
     this.api.getDepartments().subscribe({
       next: (data) => {
-        this.departments = [...data];
+        console.log(data);
+        this.refreshDepartmentList(data);
+        this.loading = false;
       },
-
       error: (error) => {
+        this.loading = false;
         this.notification.error(error.message);
       },
     });
@@ -104,7 +107,6 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
 
   save(): void {
     this.submitted = true;
-
     this.success = '';
     this.error = '';
 
@@ -120,36 +122,23 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
       : this.api.createDepartment(this.departmentForm.value);
 
     request.subscribe({
-      next: (result: any) => {
-        if (this.editingId) {
-          const index = this.departments.findIndex((d) => d.id === this.editingId);
-
-          if (index > -1) {
-            this.departments[index] = {
-              id: this.editingId,
-              ...this.departmentForm.value,
-            };
-
-            // Force Angular to detect the change
-            this.departments = [...this.departments];
-          }
-        } else {
-          // Add new row locally
-          this.departments = [...this.departments, result];
-        }
-
-        this.success = this.editingId ? 'Department updated successfully.' : 'Department created successfully.';
-
-        this.resetForm();
-
+      next: () => {
         this.saving = false;
+        this.success = this.editingId ? 'Department updated successfully.' : 'Department created successfully.';
+        this.resetForm();
+        this.loadDepartments();
 
-        setTimeout(() => (this.success = ''), 3000);
+        //this.applyFilter();
+
+        //this.saving = false;
+
+        setTimeout(() => {
+          this.success = '';
+        }, 3000);
       },
 
       error: (err: ApiError) => {
         this.saving = false;
-
         this.error = err.message || 'Unable to save department.';
       },
     });
@@ -164,19 +153,19 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
     this.submitted = false;
   }
 
-  cancel(): void {
+  reset(): void {
     this.resetForm();
+    this.error = '';
+    this.success = '';
   }
 
   resetForm(): void {
-    this.departmentForm.reset();
-
-    this.departmentForm.markAsPristine();
-
-    this.departmentForm.markAsUntouched();
+    this.departmentForm.reset({
+      name: '',
+      description: '',
+    });
 
     this.editingId = null;
-
     this.submitted = false;
   }
 
@@ -206,15 +195,22 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
     this.showDeleteDialog = true;
   }
 
+  private refreshDepartmentList(data: Department[]): void {
+    this.departments = [...data];
+    this.filteredDepartments = [...data];
+  }
+
   public confirmDelete(): void {
     if (!this.selectedDepartment) {
       return;
     }
     this.api.deleteDepartment(this.selectedDepartment.id).subscribe({
       next: () => {
+        this.departments = this.departments.filter((x) => x.id !== this.selectedDepartment!.id);
+        this.filteredDepartments = [...this.departments];
+
         this.showDeleteDialog = false;
         this.selectedDepartment = null;
-        this.loadDepartments();
       },
       error: () => {
         this.showDeleteDialog = false;
@@ -224,5 +220,8 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
 
   cancelDelete(): void {
     this.showDeleteDialog = false;
+  }
+  addDepartment(): void {
+    this.resetForm();
   }
 }

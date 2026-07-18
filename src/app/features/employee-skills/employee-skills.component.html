@@ -2,14 +2,13 @@
   <!-- =========================================
          Page Header
     ========================================== -->
-
-  <app-page-card title="Employee Skills" icon="bi-award" subtitle="Assign and manage employee skills">
+  <app-page-header title="Employee Skills" icon="bi-award" subtitle="Assign and manage employee skills">
     <button headerAction class="btn btn-primary" (click)="save()">
       <i class="bi bi-plus-circle"></i>
 
       Assign Skill
     </button>
-  </app-page-card>
+  </app-page-header>
   <!-- =========================================
          Success Message
     ========================================== -->
@@ -34,106 +33,96 @@
     <!-- =====================================
              Employee Skill Form
         ====================================== -->
-    <div class="form-card">
-      <div class="card-header">
-        <h3>
-          {{ editingId ? 'Edit Employee Skill' : 'Add Employee Skill' }}
-        </h3>
-      </div>
+
+    <app-page-card title="Employee Skills">
+      <i class="bi bi-plus-circle"></i>
+      {{ editingId ? 'Edit Employee Skill' : 'Add Employee Skill' }}
 
       <form [formGroup]="employeeSkillForm" (ngSubmit)="save()">
         <!-- Employee -->
-        <div class="form-group">
-          <label for="employeeId">
-            Employee
-            <span class="required">*</span>
-          </label>
-          <p>Total Employees: {{ employees.length }}</p>
-          <select class="form-control" formControlName="employeeId">
-            <option [ngValue]="null">-- Select Employee --</option>
-            @for (employee of employees; track employee.id) {
-              <option [ngValue]="employee.id">{{ employee.firstName }} {{ employee.lastName }}</option>
-            }
-          </select>
 
-          @if (submitted && f['employeeId'].errors) {
-            <small class="validation-error"> Employee is required. </small>
-          }
+        <div class="form-group">
+          <label for="name" class="form-label"> Select Employee <span class="required">*</span> </label>
+
+          <div class="input-group">
+            <span class="input-group-text"> </span>
+
+            <select class="form-control" formControlName="employeeId">
+              <option [ngValue]="null">-- Select Employee --</option>
+              @for (employee of employees; track employee.id) {
+                <option [ngValue]="employee.id">{{ employee.firstName }} {{ employee.lastName }}</option>
+              }
+            </select>
+
+            @if (submitted && f['employeeId'].errors) {
+              <small class="validation-error"> Employee is required. </small>
+            }
+          </div>
         </div>
 
         <!-- Skill -->
-        <div class="form-group">
-          <label for="skillId">
-            Skill
-            <span class="required">*</span>
-          </label>
 
-          <select class="form-control" formControlName="skillId">
-            <option [ngValue]="null">-- Select Skill --</option>
-            @for (skill of skills; track skill.id) {
-              <option [ngValue]="skill.id">
-                {{ skill.name }}
-              </option>
+        <div class="form-group">
+          <label for="name" class="form-label"> Select Skill <span class="required">*</span> </label>
+
+          <div class="input-group">
+            <span class="input-group-text"> </span>
+            <select class="form-control" formControlName="skillId">
+              <option [ngValue]="null">-- Select Skill --</option>
+              @for (skill of skills; track skill.id) {
+                <option [ngValue]="skill.id">
+                  {{ skill.name }}
+                </option>
+              }
+            </select>
+            @if (submitted && f['skillId'].errors) {
+              <small class="validation-error"> Skill is required. </small>
             }
-          </select>
-          @if (submitted && f['skillId'].errors) {
-            <small class="validation-error"> Skill is required. </small>
-          }
+          </div>
         </div>
 
         <!-- Proficiency Level -->
         <div class="form-group">
-          <label for="proficiencyLevel">
-            Proficiency Level
-            <span class="required">*</span>
-          </label>
+          <label for="name" class="form-label"> Proficiency Level </label>
 
-          <select class="form-control" formControlName="proficiencyLevel">
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-            <option value="Expert">Expert</option>
-          </select>
-          @if (submitted && f['proficiencyLevel'].errors) {
-            <small class="validation-error"> Proficiency Level is required. </small>
-          }
+          <div class="input-group">
+            <span class="input-group-text"> </span>
+            <select class="form-control" formControlName="proficiencyLevel">
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+              <option value="Expert">Expert</option>
+            </select>
+            @if (submitted && f['proficiencyLevel'].errors) {
+              <small class="validation-error"> Proficiency Level is required. </small>
+            }
+          </div>
         </div>
         <!-- Years of Experience -->
         <div class="form-group">
-          <label for="yearsOfExperience">
-            Years of Experience
-            <span class="required">*</span>
-          </label>
+          <label for="name" class="form-label"> Year of Experience </label>
 
-          <input
-            type="number"
-            class="form-control"
-            formControlName="yearsOfExperience"
-            min="0"
-            max="50"
-            placeholder="Enter years of experience"
-          />
-          @if (submitted && f['yearsOfExperience'].errors) {
-            <small class="validation-error">
-              @if (f['yearsOfExperience'].errors?.['required']) {
-                <span> Years of Experience is required. </span>
-              }
-              @if (f['yearsOfExperience'].errors?.['min']) {
-                <span> Years of Experience is required. </span>
-              }
-              @if (f['yearsOfExperience'].errors?.['required']) {
-                <span> Experience cannot exceed 50 years. </span>
-              }
-            </small>
-          }
+          <div class="input-group">
+            <span class="input-group-text"> </span>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="yearsOfExperience"
+              min="0"
+              max="50"
+              placeholder="Enter years of experience"
+            />
+          </div>
         </div>
 
         <!-- Primary Skill -->
         <div class="form-group">
-          <label for="isPrimary"> Primary Skill </label>
-          <div class="checkbox-group">
-            <input type="checkbox" id="isPrimary" formControlName="isPrimary" />
-            <label for="isPrimary" class="checkbox-label"> Mark as Primary Skill </label>
+          <div class="input-group">
+            <span class="input-group-text"> </span>
+            <div class="checkbox-group">
+              <input type="checkbox" id="isPrimary" formControlName="isPrimary" /> -
+              <label for="isPrimary" class="checkbox-label"> Mark as Primary Skill </label>
+            </div>
           </div>
         </div>
         <!-- =====================================
@@ -141,7 +130,7 @@
                 ====================================== -->
 
         <div class="form-actions">
-          <button type="submit" [disabled]="saving">
+          <button type="submit" class="btn btn-primary" [disabled]="saving">
             @if (!saving) {}
             <span>
               <i class="bi bi-check-circle"></i>
@@ -155,20 +144,29 @@
             }
           </button>
 
-          <button type="button" class="secondary" (click)="cancel()" [disabled]="saving">
+          <button type="button" class="btn btn-secondary" (click)="reset()" [disabled]="saving">
             <i class="bi bi-x-circle"></i>
-            Cancel
+            Reset
           </button>
         </div>
       </form>
-    </div>
+    </app-page-card>
     <!-- =====================================
              Employee Skill List
         ====================================== -->
     <app-page-card title="Employee Skill List" [badge]="filteredEmployeeSkills.length">
-      <div class="grid-toolbar">
-        <app-search-box placeholder="Search employee skills..." [(value)]="searchText" (search)="applyFilter()">
-        </app-search-box>
+      <div class="card-toolbar">
+        <div class="toolbar-left">
+          <app-search-box placeholder="Search employee skills..." [(value)]="searchText" (search)="applyFilter()">
+          </app-search-box>
+        </div>
+
+        <div class="toolbar-right">
+          <div class="record-count">
+            <i class="bi bi-building"></i>
+            {{ filteredEmployeeSkills.length }} Employee Skills
+          </div>
+        </div>
       </div>
 
       @if (loading) {
@@ -206,9 +204,17 @@
                 </td>
 
                 <td>
-                  <strong>
-                    {{ item.employeeName }}
-                  </strong>
+                  <div class="entity-cell">
+                    <div class="entity-icon">
+                      <i class="bi bi-building"></i>
+                    </div>
+
+                    <div>
+                      <div class="entity-title">
+                        {{ item.employeeName }}
+                      </div>
+                    </div>
+                  </div>
                 </td>
 
                 <td>
@@ -233,11 +239,12 @@
                   }
                 </td>
                 <td>
-                  <div class="actions">
-                    <button type="button" class="edit" title="Edit Employee Skill" (click)="edit(item)">
+                  <div class="table-actions">
+                    <button type="button" class="btn btn-outline-primary btn-icon" title="Edit" (click)="edit(item)">
                       <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button type="button" class="delete" title="Delete Employee Skill" (click)="delete(item)">
+
+                    <button type="button" class="btn btn-outline-danger btn-icon" title="Delete" (click)="delete(item)">
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>
