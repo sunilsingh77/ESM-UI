@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ApiError } from '../../core/models/api-error.model';
+import { ApiError } from '../components/models/api.models';
 
 export class HttpErrorHelper {
   static getErrorMessage(error: HttpErrorResponse): string {
